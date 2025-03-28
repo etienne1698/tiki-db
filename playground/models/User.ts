@@ -1,4 +1,4 @@
-import { Relation } from "../../src/runtime/lib/Relation";
+import Relation from "../../src/runtime/lib/Relation";
 import { Pet } from "./Pet";
 
 export class User extends Model {
