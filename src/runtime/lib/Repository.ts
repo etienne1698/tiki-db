@@ -4,13 +4,22 @@ import type { MaybeAsArray, ModelConstructor, PrimaryKey } from "./types";
 import QueryBuilder from "./QueryBuilder";
 import Database from "./Database";
 
+export type RepositoryOptions<M extends Model = Model> = {
+  use: ModelConstructor<M>;
+  database?: Database;
+};
+
 export default class Repository<M extends Model = Model> {
   declare use: ModelConstructor<M>;
   declare state: Ref<Record<PrimaryKey, M>>;
   declare database: Database;
 
-  constructor(database?: Database) {
-    this.database = database || new Database();
+  constructor(opts?: RepositoryOptions<M>) {
+    this.database = opts?.database || new Database();
+    if (opts?.use) {
+      this.use = opts.use;
+    }
+    this.init();
   }
 
   init() {
