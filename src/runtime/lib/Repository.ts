@@ -34,6 +34,6 @@ export default class Repository<M extends Model = Model> {
   }
 
   with(...relations: string[]) {
-    new QueryBuilder(this.state).with(...relations);
+    return new QueryBuilder(this.state).with(...relations);
   }
 }
