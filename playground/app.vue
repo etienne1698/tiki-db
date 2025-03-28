@@ -53,11 +53,15 @@ function add() {
         />
       </div>
 
-      <button @click="add">Add user</button>
+      <button @click="add" style="height: 35px; background: blue; color: white">
+        Add user
+      </button>
     </div>
     <div style="display: grid; gap: 16px">
       <div v-for="u of all" :key="u.$primaryKey()">
-        <div style="font-weight: 600">{{ u.id }} - {{ u.fullName }}</div>
+        <div style="font-weight: 600; font-size: 18px">
+          {{ u.id }} - {{ u.fullName }}
+        </div>
         <pre>{{ u }}</pre>
       </div>
     </div>

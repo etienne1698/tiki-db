@@ -5,7 +5,9 @@ import {
   addImportsDir,
 } from "@nuxt/kit";
 
-export interface NuxtORMModuleOptions {}
+export interface NuxtORMModuleOptions {
+  prefix: string;
+}
 
 export default defineNuxtModule<NuxtORMModuleOptions>({
   meta: {

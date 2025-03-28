@@ -2,15 +2,15 @@ import type { Ref } from "vue";
 import Model from "./Model";
 import type { MaybeAsArray, ModelConstructor, PrimaryKey } from "./types";
 import QueryBuilder from "./QueryBuilder";
-import type Database from "./Database";
+import Database from "./Database";
 
 export default class Repository<M extends Model = Model> {
   declare use: ModelConstructor<M>;
   declare state: Ref<Record<PrimaryKey, M>>;
   declare database: Database;
 
-  constructor(database: Database) {
-    this.database = database;
+  constructor(database?: Database) {
+    this.database = database || new Database();
   }
 
   init() {
