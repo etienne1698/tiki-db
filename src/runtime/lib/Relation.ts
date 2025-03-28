@@ -3,7 +3,7 @@ import QueryBuilder from "./QueryBuilder";
 import type { ModelConstructor, PrimaryKey } from "./types";
 import useRepo from "./useRepo";
 
-export abstract class Relation<M extends Model = Model> {
+export default abstract class Relation<M extends Model = Model> {
   abstract queryFor(primary: PrimaryKey): QueryBuilder<M>;
 
   static hasMany<M extends Model>(model: ModelConstructor<M>, field: string) {

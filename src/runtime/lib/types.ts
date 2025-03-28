@@ -1,5 +1,5 @@
 import type Model from "./Model";
-import type { Relation } from "./Relation";
+import type Relation from "./Relation";
 
 export interface Constructor<T> {
   new (): T;

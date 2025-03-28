@@ -1,4 +1,4 @@
-import type { Relation } from "./Relation";
+import type Relation from "./Relation";
 
 export default abstract class Model {
   static primaryKey: string | string[] = "id";
