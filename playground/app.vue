@@ -1,5 +1,5 @@
 <template>
-  <div v-for="u of repo.all().value" :key="u.id">
+  <div v-for="u of repo.all().value" :key="u.$primaryKey()">
     {{ u }}
   </div>
 </template>
@@ -14,4 +14,6 @@ if (import.meta.server) {
     id: Math.random().toString(),
   });
 }
+
+// console.error(repo.all().value);
 </script>

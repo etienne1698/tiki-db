@@ -8,5 +8,6 @@ export default function useRepo<M extends Model>(m: Constructor<M>) {
   repository.use = m;
   const entity = m.prototype.constructor.name as string;
   repository.state = useState(entity, () => ({}));
+  repository.init();
   return repository;
 }
