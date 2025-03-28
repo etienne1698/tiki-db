@@ -40,6 +40,7 @@ export class BelongsToRelation<M extends Model> extends Relation<M> {
 
   queryFor<T extends Model>(model: T) {
     return new QueryBuilder<M>(useRepo(this.related)).filter((r) => {
+      // @ts-ignore
       return r.$primaryKey() == model[this.field];
     });
   }

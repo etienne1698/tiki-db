@@ -78,6 +78,7 @@ export default class QueryBuilder<M extends Model> {
       data = data.filter(filter);
     }
     for (const [key, value] of Object.entries(this.#filters.$eq)) {
+      // @ts-ignore
       data = data.filter((model) => model[key] == value);
     }
     return data;
