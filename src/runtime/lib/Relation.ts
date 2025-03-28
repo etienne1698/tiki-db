@@ -5,6 +5,7 @@ import useRepo from "./useRepo";
 
 export default abstract class Relation<M extends Model = Model> {
   abstract queryFor<T extends Model>(model: T): QueryBuilder<M>;
+  abstract getFor<T extends Model>(model: T): M | M[];
 
   static hasMany<M extends Model>(model: ModelConstructor<M>, field: string) {
     const relation = new HasManyRelation();
@@ -32,6 +33,10 @@ export class HasManyRelation<M extends Model> extends Relation<M> {
       model.$primaryKey()
     );
   }
+
+  override getFor<T extends Model>(model: T): M[] {
+    return this.queryFor(model).get();
+  }
 }
 
 export class BelongsToRelation<M extends Model> extends Relation<M> {
@@ -43,5 +48,9 @@ export class BelongsToRelation<M extends Model> extends Relation<M> {
       // @ts-ignore
       return r.$primaryKey() == model[this.field];
     });
+  }
+
+  override getFor<T extends Model>(model: T): M {
+    return this.queryFor(model).one();
   }
 }
