@@ -3,6 +3,7 @@ import Model from "./Model";
 import type { MaybeAsArray, ModelConstructor, PrimaryKey } from "./types";
 import QueryBuilder from "./QueryBuilder";
 import Database from "./Database";
+import useRepo from "./useRepo";
 
 export type RepositoryOptions<M extends Model = Model> = {
   use: ModelConstructor<M>;
@@ -39,8 +40,19 @@ export default class Repository<M extends Model = Model> {
     return Object.assign(new this.use(), data);
   }
 
+  saveRelations(model: M) {
+    const modelRelations = this.use.relations();
+    for (const [key, value] of Object.entries(model)) {
+      if (modelRelations[key]) {
+        const repo = useRepo(modelRelations[key].related, this.database);
+        repo.save(value);
+      }
+    }
+  }
+
   saveOne(data: Partial<M & Record<string, any>>) {
     const model = this.map(data);
+    this.saveRelations(model);
     const state = this.state.value[model.$primaryKey()];
     if (state) {
       this.state.value[model.$primaryKey()] = state.$merge(model);

@@ -9,10 +9,10 @@ const userRepo = useRepo(User);
 if (import.meta.server) {
   const firstUserID = crypto.randomUUID();
 
-  petRepo.save([{ id: crypto.randomUUID(), user_id: firstUserID }]);
   userRepo.save({
     id: firstUserID,
     firstname: "Etienne",
+    pets: [{ id: crypto.randomUUID(), user_id: firstUserID }],
   });
 }
 
@@ -72,7 +72,15 @@ const pets = computed(() => petRepo.query().get());
           :value="u.lastname"
           @update:value="userRepo.save({ id: u.id, lastname: $event })"
         />
-        <div style="background-color: wheat; border-radius: inherit">
+        <div
+          style="
+            background-color: wheat;
+            border-radius: inherit;
+            padding: 8px;
+            display: grid;
+            gap: 4px;
+          "
+        >
           <span style="font-weight: 600"> Pets </span>
           <div v-for="pet of pets" :key="pet.id">
             <input
