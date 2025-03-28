@@ -32,38 +32,32 @@ function add() {
     <TextField
       v-for="pet of petRepo.query().with('user').get()"
       :key="pet.id"
-      :label="`Pet '${pet.id}' name owner by ${pet.user?.firstname || ''}`"
+      :label="`Pet '${pet.id}' name owner by ${pet.user?.fullName || ''}`"
       :value="pet.name"
       @update:value="petRepo.save({ id: pet.id, name: $event })"
     />
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr">
-    <div style="display: grid; gap: 16px">
-      <div v-for="u of all" :key="u.$primaryKey()">
-        <TextField
-          label="Firstname"
-          :value="u.firstname"
-          @update:value="userRepo.save({ id: u.id, firstname: $event })"
-        />
-        <TextField
-          label="Lastname"
-          :value="u.lastname"
-          @update:value="userRepo.save({ id: u.id, lastname: $event })"
-        />
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px;">
+    <div v-for="u of all" :key="u.$primaryKey()" style="border-radius: 8px; background: aliceblue; padding: 16px;">
+      <TextField
+        label="Firstname"
+        :value="u.firstname"
+        @update:value="userRepo.save({ id: u.id, firstname: $event })"
+      />
+      <TextField
+        label="Lastname"
+        :value="u.lastname"
+        @update:value="userRepo.save({ id: u.id, lastname: $event })"
+      />
+      <div style="font-weight: 600; font-size: 18px">
+        {{ u.id }} - {{ u.fullName }}
       </div>
+      <pre>{{ u }}</pre>
+    </div>
 
-      <button @click="add" style="height: 35px; background: blue; color: white">
-        Add user
-      </button>
-    </div>
-    <div style="display: grid; gap: 16px">
-      <div v-for="u of all" :key="u.$primaryKey()">
-        <div style="font-weight: 600; font-size: 18px">
-          {{ u.id }} - {{ u.fullName }}
-        </div>
-        <pre>{{ u }}</pre>
-      </div>
-    </div>
+    <button @click="add" style="height: 35px; background: blue; color: white">
+      Add user
+    </button>
   </div>
 </template>

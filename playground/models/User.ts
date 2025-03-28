@@ -9,7 +9,7 @@ export class User extends Model {
   declare lastname: string;
 
   get fullName() {
-    return `${this.firstname} ${this.lastname}`;
+    return `${this.firstname || ""} ${this.lastname || ""}`;
   }
 
   static override relations(): Record<string, Relation> {
