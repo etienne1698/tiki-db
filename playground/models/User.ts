@@ -21,4 +21,6 @@ export class User extends Model {
   }
 }
 
-export class UserRepository extends Repository<User> {}
+export class UserRepository extends Repository<User> {
+  override use = User;
+}
