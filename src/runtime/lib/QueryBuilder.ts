@@ -10,7 +10,7 @@ export default class QueryBuilder<M extends Model> {
   }
 
   with(...relations: string[]) {
-    relations.forEach((r) => this.#withRelated.add(r));
+    relations.forEach(this.#withRelated.add);
     return this;
   }
 
