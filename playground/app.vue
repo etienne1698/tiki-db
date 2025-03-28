@@ -1,22 +1,24 @@
 <template>
   <div style="display: grid; grid-template-columns: 1fr 1fr">
-    <div>
+    <div style="display: grid; gap: 16px">
       <div v-for="u of repo.all().value" :key="u.$primaryKey()">
-        <input
-          :value="u.name"
-          @input="
-            ($event) => {
-              // @ts-ignore
-              repo.save({ ...u, name: $event.target.value });
-            }
-          "
+        <TextField
+          label="Firstname"
+          :value="u.firstname"
+          @update:value="repo.save({ ...u, firstname: $event })"
+        />
+        <TextField
+          label="Lastname"
+          :value="u.lastname"
+          @update:value="repo.save({ ...u, lastname: $event })"
         />
       </div>
 
       <button @click="add">Add user</button>
     </div>
-    <div>
+    <div style="display: grid; gap: 16px">
       <div v-for="u of repo.all().value" :key="u.$primaryKey()">
+        <div style="font-weight: 600">{{ u.id }} - {{ u.fullName }}</div>
         {{ u }}
       </div>
     </div>
@@ -29,11 +31,11 @@ import { User } from "./models/User";
 const repo = useRepo(User);
 if (import.meta.server) {
   repo.save({
-    id: Math.random().toString(),
+    id: crypto.randomUUID(),
   });
 }
 
 function add() {
-  repo.save({ id: Math.random().toString() });
+  repo.save({ id: crypto.randomUUID() });
 }
 </script>
