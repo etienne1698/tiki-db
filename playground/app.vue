@@ -1,7 +1,24 @@
+<script setup lang="ts">
+import { User } from "./models/User";
+
+const repo = useRepo(User);
+if (import.meta.server) {
+  repo.save({
+    id: crypto.randomUUID(),
+  });
+}
+
+const all = computed(() => repo.all());
+
+function add() {
+  repo.save({ id: crypto.randomUUID() });
+}
+</script>
+
 <template>
   <div style="display: grid; grid-template-columns: 1fr 1fr">
     <div style="display: grid; gap: 16px">
-      <div v-for="u of repo.all().value" :key="u.$primaryKey()">
+      <div v-for="u of all" :key="u.$primaryKey()">
         <TextField
           label="Firstname"
           :value="u.firstname"
@@ -17,25 +34,10 @@
       <button @click="add">Add user</button>
     </div>
     <div style="display: grid; gap: 16px">
-      <div v-for="u of repo.all().value" :key="u.$primaryKey()">
+      <div v-for="u of all" :key="u.$primaryKey()">
         <div style="font-weight: 600">{{ u.id }} - {{ u.fullName }}</div>
         {{ u }}
       </div>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { User } from "./models/User";
-
-const repo = useRepo(User);
-if (import.meta.server) {
-  repo.save({
-    id: crypto.randomUUID(),
-  });
-}
-
-function add() {
-  repo.save({ id: crypto.randomUUID() });
-}
-</script>

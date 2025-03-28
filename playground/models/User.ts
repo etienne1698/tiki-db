@@ -1,6 +1,8 @@
 import { Pet } from "./Pet";
 
 export class User extends Model {
+  static override entity = "User";
+
   declare id: string;
   declare firstname: string;
   declare lastname: string;
@@ -9,7 +11,7 @@ export class User extends Model {
     return `${this.firstname} ${this.lastname}`;
   }
 
-  override relations() {
+  static override relations() {
     return {
       pets: {
         relatedModel: Pet,
@@ -18,3 +20,5 @@ export class User extends Model {
     };
   }
 }
+
+export class UserRepository extends Repository<User> {}

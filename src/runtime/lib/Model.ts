@@ -2,6 +2,7 @@ import type { Relation } from "./Relation";
 
 export default abstract class Model {
   static primaryKey: string | string[] = "id";
+  static entity: string = "";
 
   $primaryKey(): string {
     // @ts-ignore
@@ -14,7 +15,7 @@ export default abstract class Model {
     return primaryKey.map((k) => this[k]).join();
   }
 
-  relations(): { [key: string]: Relation } {
+  static relations(): { [key: string]: Relation } {
     return {};
   }
 

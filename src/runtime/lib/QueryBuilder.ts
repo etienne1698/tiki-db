@@ -1,12 +1,12 @@
-import { computed, type Ref } from "vue";
 import type Model from "./Model";
-import type { PrimaryKey } from "./types";
+import type Repository from "./Repository";
 
 export default class QueryBuilder<M extends Model> {
-  private declare state: Ref<Record<PrimaryKey, M>>;
+  private declare repository: Repository<M>;
+  private withRelated: string[] = [];
 
-  constructor(state: Ref<Record<PrimaryKey, M>>) {
-    this.state = state;
+  constructor(repository: Repository<M>) {
+    this.repository = repository;
   }
 
   with(...relations: string[]) {
@@ -15,8 +15,6 @@ export default class QueryBuilder<M extends Model> {
   }
 
   get() {
-    return computed(() => {
-      return Object.values(this.state.value || []);
-    });
+    return Object.values(this.repository.state.value || []);
   }
 }

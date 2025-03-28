@@ -1,13 +1,10 @@
 import type Model from "./Model";
 import Repository from "./Repository";
-import type { Constructor } from "./types";
-import { useState } from "#app";
+import type { ModelConstructor } from "./types";
 
-export default function useRepo<M extends Model>(m: Constructor<M>) {
+export default function useRepo<M extends Model>(m: ModelConstructor<M>) {
   const repository = new Repository<M>();
   repository.use = m;
-  const entity = m.prototype.constructor.name as string;
-  repository.state = useState(entity, () => ({}));
   repository.init();
   return repository;
 }

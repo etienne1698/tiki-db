@@ -1,19 +1,26 @@
 import type { Ref } from "vue";
 import Model from "./Model";
-import type { Constructor, PrimaryKey } from "./types";
+import type { ModelConstructor, PrimaryKey } from "./types";
 import QueryBuilder from "./QueryBuilder";
+import Database from "./Database";
 
 export default class Repository<M extends Model = Model> {
-  use!: Constructor<M>;
-  state!: Ref<Record<PrimaryKey, M>>;
+  declare use: ModelConstructor<M>;
+  #state!: Ref<Record<PrimaryKey, M>>;
+  #database!: Database;
+
+  constructor() {
+    this.#database = new Database();
+    this.#state = this.#database.getStore(this.use.entity);
+  }
 
   init() {
     if (
-      Object.values(this.state.value) &&
-      !(Object.values(this.state.value)[0] instanceof Model)
+      Object.values(this.#state.value) &&
+      !(Object.values(this.#state.value)[0] instanceof Model)
     ) {
-      for (const key of Object.keys(this.state.value)) {
-        this.state.value[key] = this.map(this.state.value[key]);
+      for (const key of Object.keys(this.#state.value)) {
+        this.#state.value[key] = this.map(this.#state.value[key]);
       }
     }
   }
@@ -23,17 +30,16 @@ export default class Repository<M extends Model = Model> {
   }
 
   save(data: Partial<M & Record<string, any>>) {
-    const res = this.map(data);
-    const identifier = res.$primaryKey();
-    this.state.value[identifier] = res;
-    return res;
+    const model = this.map(data);
+    this.#state.value[model.$primaryKey()] = model;
+    return model;
   }
 
   all() {
-    return new QueryBuilder(this.state).get();
+    return new QueryBuilder(this).get();
   }
 
   with(...relations: string[]) {
-    return new QueryBuilder(this.state).with(...relations);
+    return new QueryBuilder(this).with(...relations);
   }
 }
