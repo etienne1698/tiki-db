@@ -16,6 +16,7 @@ if (import.meta.server) {
   ]);
   userRepo.save({
     id: firstUserID,
+    firstname: "Etienne",
   });
 }
 
@@ -29,9 +30,9 @@ function add() {
 <template>
   <div style="background-color: antiquewhite">
     <TextField
-      v-for="pet of petRepo.query().get()"
+      v-for="pet of petRepo.query().with('user').get()"
       :key="pet.id"
-      :label="`Pet '${pet.id}' name`"
+      :label="`Pet '${pet.id}' name owner by ${pet.user?.firstname || ''}`"
       :value="pet.name"
       @update:value="petRepo.save({ ...pet, name: $event })"
     />
@@ -57,7 +58,7 @@ function add() {
     <div style="display: grid; gap: 16px">
       <div v-for="u of all" :key="u.$primaryKey()">
         <div style="font-weight: 600">{{ u.id }} - {{ u.fullName }}</div>
-        {{ u }}
+        <pre>{{ u }}</pre>
       </div>
     </div>
   </div>

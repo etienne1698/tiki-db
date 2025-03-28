@@ -12,9 +12,11 @@ export class User extends Model {
     return `${this.firstname} ${this.lastname}`;
   }
 
-  static override relations = {
-    pets: Relation.hasMany(Pet, "user_id"),
-  };
+  static override relations(): Record<string, Relation> {
+    return {
+      pets: Relation.hasMany(Pet, "user_id"),
+    };
+  }
 }
 
 export class UserRepository extends Repository<User> {

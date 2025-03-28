@@ -19,6 +19,8 @@ export default class QueryBuilder<M extends Model> {
     $ne: {},
   };
 
+  #fnFilters: Array<(m: M) => boolean> = [];
+
   constructor(repository: Repository<M>) {
     this.#repository = repository;
   }
@@ -27,6 +29,11 @@ export default class QueryBuilder<M extends Model> {
     relations.forEach((r) => {
       this.#withRelated.add(r);
     });
+    return this;
+  }
+
+  filter(f: (m: M) => boolean) {
+    this.#fnFilters.push(f);
     return this;
   }
 
@@ -53,17 +60,23 @@ export default class QueryBuilder<M extends Model> {
   }
 
   #loadRelated(data: M[]) {
+    const modelRelations = this.#repository.use.relations();
     return data.map((model) => {
+      const m = model.clone();
       for (const relation of this.#withRelated.values()) {
-        model[relation] = this.#repository.use.relations[relation]
-          .queryFor(model.$primaryKey())
-          .get();
+        m[relation] = modelRelations[relation]
+          .queryFor(model)
+          .get()
+          .map((m) => m.clone());
       }
-      return model;
+      return m;
     });
   }
 
   #applyFilters(data: M[]) {
+    for (const filter of this.#fnFilters) {
+      data = data.filter(filter);
+    }
     for (const [key, value] of Object.entries(this.#filters.$eq)) {
       data = data.filter((model) => model[key] == value);
     }
@@ -78,5 +91,9 @@ export default class QueryBuilder<M extends Model> {
     result = this.#applyFilters(result);
 
     return result;
+  }
+
+  one() {
+    return this.get()[0];
   }
 }
