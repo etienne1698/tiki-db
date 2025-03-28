@@ -6,18 +6,21 @@ import {
 } from "@nuxt/kit";
 
 export interface NuxtORMModuleOptions {
-  prefix: string;
+  defaultDatabase?: {
+    prefix: string;
+  };
 }
 
 export default defineNuxtModule<NuxtORMModuleOptions>({
   meta: {
-    name: "my-module",
-    configKey: "myModule",
+    name: "nuxt-orm",
+    configKey: "nuxtOrm",
   },
-  // Default configuration options of the Nuxt module
-  defaults: {},
-  setup(_options, _nuxt) {
+  setup(options, nuxt) {
     const resolver = createResolver(import.meta.url);
+
+    nuxt["options"]["runtimeConfig"]["public"]["dbPrefix"] =
+      options.defaultDatabase?.prefix || "";
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
     addPlugin(resolver.resolve("./runtime/plugin"));
