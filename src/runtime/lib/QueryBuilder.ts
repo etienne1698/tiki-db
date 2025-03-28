@@ -65,7 +65,10 @@ export default class QueryBuilder<M extends Model> {
     return data.map((model) => {
       const m = model.$clone();
       for (const relation of this.#withRelated.values()) {
-        m[relation] = modelRelations[relation].getFor(model, this.#repository.database);
+        m[relation] = modelRelations[relation].getFor(
+          model,
+          this.#repository.database
+        );
       }
       return m;
     });
@@ -78,6 +81,14 @@ export default class QueryBuilder<M extends Model> {
     for (const [key, value] of Object.entries(this.#filters.$eq)) {
       // @ts-ignore
       data = data.filter((model) => model[key] == value);
+    }
+    for (const [key, value] of Object.entries(this.#filters.$in)) {
+      // @ts-ignore
+      data = data.filter((model) => model[key].includes(value));
+    }
+    for (const [key, value] of Object.entries(this.#filters.$ne)) {
+      // @ts-ignore
+      data = data.filter((model) => model[key] != value);
     }
     return data;
   }
@@ -92,7 +103,7 @@ export default class QueryBuilder<M extends Model> {
     return result;
   }
 
-  one() {
+  getFirst() {
     return this.get()[0];
   }
 }

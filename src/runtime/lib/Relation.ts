@@ -42,7 +42,7 @@ export class HasOneRelation<M extends Model> extends Relation<M> {
   }
 
   override getFor<T extends Model>(model: T, database: Database): M {
-    return this.queryFor(model, database).one();
+    return this.queryFor(model, database).getFirst();
   }
 }
 
@@ -69,6 +69,6 @@ export class BelongsToRelation<M extends Model> extends Relation<M> {
   }
 
   override getFor<T extends Model>(model: T, database: Database): M {
-    return this.queryFor(model, database).one();
+    return this.queryFor(model, database).getFirst();
   }
 }
