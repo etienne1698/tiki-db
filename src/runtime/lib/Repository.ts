@@ -50,9 +50,12 @@ export default class Repository<M extends Model = Model> {
     }
   }
 
-  saveOne(data: Partial<M & Record<string, any>>) {
+  saveOne(
+    data: Partial<M & Record<string, any>>,
+    saveRelations: boolean = true
+  ) {
     const model = this.map(data);
-    this.saveRelations(model);
+    if (saveRelations) this.saveRelations(model);
     const state = this.state.value[model.$primaryKey()];
     if (state) {
       this.state.value[model.$primaryKey()] = state.$merge(model);
@@ -62,11 +65,14 @@ export default class Repository<M extends Model = Model> {
     return model;
   }
 
-  save(data: MaybeAsArray<Partial<M & Record<string, any>>>) {
+  save(
+    data: MaybeAsArray<Partial<M & Record<string, any>>>,
+    saveRelations: boolean = true
+  ) {
     if (Array.isArray(data)) {
-      return data.map(this.saveOne.bind(this));
+      return data.map((d) => this.saveOne.bind(this)(d, saveRelations));
     }
-    return this.saveOne(data);
+    return this.saveOne(data, saveRelations);
   }
 
   query() {
