@@ -1,3 +1,5 @@
+import type { Relation } from "./Relation";
+
 export default abstract class Model {
   static primaryKey: string | string[] = "id";
 
@@ -10,6 +12,10 @@ export default abstract class Model {
     }
     // @ts-ignore
     return primaryKey.map((k) => this[k]).join();
+  }
+
+  relations(): { [key: string]: Relation } {
+    return {};
   }
 
   toJSON() {

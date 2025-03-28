@@ -1,8 +1,7 @@
-import { computed, type Ref } from "vue";
+import type { Ref } from "vue";
 import Model from "./Model";
-import type { Constructor } from "./types";
-
-type PrimaryKey = string;
+import type { Constructor, PrimaryKey } from "./types";
+import QueryBuilder from "./QueryBuilder";
 
 export default class Repository<M extends Model = Model> {
   use!: Constructor<M>;
@@ -31,8 +30,10 @@ export default class Repository<M extends Model = Model> {
   }
 
   all() {
-    return computed(() =>
-      this.state.value ? Object.values(this.state.value) : []
-    );
+    return new QueryBuilder(this.state).get();
+  }
+
+  with(...relations: string[]) {
+    new QueryBuilder(this.state).with(...relations);
   }
 }
