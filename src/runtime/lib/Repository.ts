@@ -1,20 +1,23 @@
+import { computed, type Ref } from "vue";
 import type Model from "./Model";
 import type { Constructor } from "./types";
-import type Database from "./Database";
+
+type PrimaryKey = string;
 
 export default class Repository<M extends Model = Model> {
   use!: Constructor<M>;
-  database!: Database;
-
-  map(data: Partial<M & Record<string, any>>): M {
-    console.error(data);
-    const result = new this.use();
-    Object.assign(result, data);
-    return result;
-  }
+  state!: Ref<Record<PrimaryKey, Model>>;
 
   save(data: Partial<M & Record<string, any>>) {
-    const record = this.map(data);
-    record.$primaryKey();
+    const res = Object.assign(new this.use(), data);
+    const identifier = res.$primaryKey();
+    this.state.value[identifier] = res;
+    return res;
+  }
+
+  all() {
+    return computed(() =>
+      this.state.value ? Object.values(this.state.value) : []
+    );
   }
 }

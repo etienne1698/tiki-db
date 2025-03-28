@@ -1,13 +1,15 @@
 <template>
-  <div></div>
+  <div v-for="u of repo.all().value" :key="u.$primaryKey()">
+    {{ u }}
+  </div>
 </template>
 
 <script setup lang="ts">
-class User extends Model {
-  name!: string;
-}
+class User extends Model {}
 const repo = useRepo(User);
-repo.save({
-  qsdqs: "",
-});
+if (import.meta.server) {
+  repo.save({
+    id: crypto.randomUUID(),
+  });
+}
 </script>

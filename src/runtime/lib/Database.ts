@@ -12,7 +12,7 @@ export default class Database {
   }
 
   insert(m: Model) {
-    this.state.value["qd"] = {
+    this.state.value[""] = {
       [m.$primaryKey()]: m,
     };
   }
