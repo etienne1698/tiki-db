@@ -6,7 +6,7 @@ type PrimaryKey = string;
 
 export default class Repository<M extends Model = Model> {
   use!: Constructor<M>;
-  state!: Ref<Record<PrimaryKey, Model>>;
+  state!: Ref<Record<PrimaryKey, M>>;
 
   save(data: Partial<M & Record<string, any>>) {
     const res = Object.assign(new this.use(), data);

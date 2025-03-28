@@ -1,13 +1,13 @@
 import Model from "./lib/Model";
 import {
-  defineNuxtPlugin,
+  definePayloadPlugin,
   definePayloadReducer,
   definePayloadReviver,
 } from "#app";
 
 const PAYLOAD_TYPE = "Model";
 
-export default defineNuxtPlugin((_nuxtApp) => {
+export default definePayloadPlugin((_nuxtApp) => {
   definePayloadReducer(
     PAYLOAD_TYPE,
     (data) => data instanceof Model && JSON.stringify(data.toJSON())

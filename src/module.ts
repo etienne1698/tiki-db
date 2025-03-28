@@ -5,7 +5,6 @@ import {
   addImportsDir,
 } from "@nuxt/kit";
 
-// Module options TypeScript interface definition
 export interface NuxtORMModuleOptions {}
 
 export default defineNuxtModule<NuxtORMModuleOptions>({
