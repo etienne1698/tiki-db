@@ -37,7 +37,6 @@ export default class Repository<M extends Model = Model> {
   }
 
   save(data: MaybeAsArray<Partial<M & Record<string, any>>>) {
-    console.error("qsdqs");
     if (Array.isArray(data)) {
       return data.map(this.saveOne.bind(this));
     }
