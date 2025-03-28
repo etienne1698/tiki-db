@@ -1,13 +1,31 @@
 <template>
-  <div v-for="u of repo.all().value" :key="u.$primaryKey()">
-    {{ u }}
+  <div style="display: grid; grid-template-columns: 1fr 1fr">
+    <div>
+      <div v-for="u of repo.all().value" :key="u.$primaryKey()">
+        <input
+          :value="u.name"
+          @input="
+            ($event) => {
+              // @ts-ignore
+              repo.save({ ...u, name: $event.target.value });
+            }
+          "
+        />
+      </div>
+
+      <button @click="add">Add user</button>
+    </div>
+    <div>
+      <div v-for="u of repo.all().value" :key="u.$primaryKey()">
+        {{ u }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-class User extends Model {
-  declare id: string;
-}
+import { User } from "./models/User";
+
 const repo = useRepo(User);
 if (import.meta.server) {
   repo.save({
@@ -15,5 +33,7 @@ if (import.meta.server) {
   });
 }
 
-// console.error(repo.all().value);
+function add() {
+  repo.save({ id: Math.random().toString() });
+}
 </script>
