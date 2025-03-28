@@ -7,14 +7,15 @@ import type Database from "./Database";
 export default class Repository<M extends Model = Model> {
   declare use: ModelConstructor<M>;
   declare state: Ref<Record<PrimaryKey, M>>;
-  #database!: Database;
+  declare database: Database;
 
   constructor(database: Database) {
-    this.#database = database;
+    this.database = database;
   }
 
   init() {
-    this.state = this.#database.getStore(this.use.entity);
+    this.state = this.database.getStore(this.use.entity);
+
     if (
       Object.values(this.state.value) &&
       !(Object.values(this.state.value)[0] instanceof Model)
