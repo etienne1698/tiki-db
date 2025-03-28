@@ -1,3 +1,4 @@
+import { Relation } from "../../src/runtime/lib/Relation";
 import { Pet } from "./Pet";
 
 export class User extends Model {
@@ -11,14 +12,9 @@ export class User extends Model {
     return `${this.firstname} ${this.lastname}`;
   }
 
-  static override relations() {
-    return {
-      pets: {
-        relatedModel: Pet,
-        field: "user_id",
-      },
-    };
-  }
+  static override relations = {
+    pets: Relation.hasMany(Pet, "user_id"),
+  };
 }
 
 export class UserRepository extends Repository<User> {

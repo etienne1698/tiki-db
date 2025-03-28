@@ -53,12 +53,11 @@ export default class QueryBuilder<M extends Model> {
   }
 
   #loadRelated(data: M[]) {
-    const relations = this.#repository.use.relations();
-    console.error(relations);
-
     return data.map((model) => {
       for (const relation of this.#withRelated.values()) {
-        model[relation] = [];
+        model[relation] = this.#repository.use.relations[relation]
+          .query()
+          .get();
       }
       return model;
     });

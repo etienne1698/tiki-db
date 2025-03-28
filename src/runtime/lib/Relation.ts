@@ -1,18 +1,24 @@
 import type Model from "./Model";
-import type { Constructor } from "./types";
+import QueryBuilder from "./QueryBuilder";
+import type { ModelConstructor } from "./types";
+import useRepo from "./useRepo";
 
-export type hasManyRelation<M extends Model> = {
-  relatedModel: Constructor<M>;
-  field: string;
-};
+export abstract class Relation<M extends Model = Model> {
+  abstract query(): QueryBuilder<M>;
 
-export type hasManyThroughRelation<M extends Model, M2 extends Model> = {
-  relatedModel: Constructor<M>;
-  relatedModel2: Constructor<M2>;
-  field_related1: keyof M;
-  field_related2: keyof M2;
-};
+  static hasMany<M extends Model>(model: ModelConstructor<M>, field: string) {
+    const relation = new HasManyRelation();
+    relation.related = model;
+    relation.field = field;
+    return relation;
+  }
+}
 
-export type Relation<M extends Model = Model, M2 extends Model = Model> =
-  | hasManyRelation<M>
-  | hasManyThroughRelation<M, M2>;
+export class HasManyRelation<M extends Model> extends Relation<M> {
+  declare related: ModelConstructor<M>;
+  declare field: string;
+
+  query() {
+    return new QueryBuilder<M>(useRepo(this.related));
+  }
+}

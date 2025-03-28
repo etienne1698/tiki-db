@@ -1,6 +1,11 @@
 <script setup lang="ts">
+import { Pet } from "./models/Pet";
 import { User } from "./models/User";
 
+const petRepo = useRepo(Pet);
+if (import.meta.server) {
+  petRepo.save({ id: crypto.randomUUID() });
+}
 const repo = useRepo(User);
 if (import.meta.server) {
   repo.save({
@@ -16,6 +21,16 @@ function add() {
 </script>
 
 <template>
+  <div style="background-color: antiquewhite">
+    <TextField
+      v-for="pet of petRepo.all()"
+      :key="pet.id"
+      :label="`Pet '${pet.id}' name`"
+      :value="pet.name"
+      @update:value="petRepo.save({ ...pet, name: $event })"
+    />
+  </div>
+
   <div style="display: grid; grid-template-columns: 1fr 1fr">
     <div style="display: grid; gap: 16px">
       <div v-for="u of all" :key="u.$primaryKey()">

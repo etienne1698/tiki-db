@@ -15,10 +15,7 @@ export default abstract class Model {
     return primaryKey.map((k) => this[k]).join();
   }
 
-  static relations(): { [key: string]: Relation } {
-    return {};
-  }
-
+  static relations: { [key: string]: Relation } = {};
   toJSON() {
     return this;
   }
