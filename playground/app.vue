@@ -34,7 +34,7 @@ function add() {
       :key="pet.id"
       :label="`Pet '${pet.id}' name owner by ${pet.user?.firstname || ''}`"
       :value="pet.name"
-      @update:value="petRepo.save({ ...pet, name: $event })"
+      @update:value="petRepo.save({ id: pet.id, name: $event })"
     />
   </div>
 
@@ -44,12 +44,12 @@ function add() {
         <TextField
           label="Firstname"
           :value="u.firstname"
-          @update:value="userRepo.save({ ...u, firstname: $event })"
+          @update:value="userRepo.save({ id: u.id, firstname: $event })"
         />
         <TextField
           label="Lastname"
           :value="u.lastname"
-          @update:value="userRepo.save({ ...u, lastname: $event })"
+          @update:value="userRepo.save({ id: u.id, lastname: $event })"
         />
       </div>
 

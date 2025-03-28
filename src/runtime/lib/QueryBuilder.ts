@@ -62,12 +62,12 @@ export default class QueryBuilder<M extends Model> {
   #loadRelated(data: M[]) {
     const modelRelations = this.#repository.use.relations();
     return data.map((model) => {
-      const m = model.clone();
+      const m = model.$clone();
       for (const relation of this.#withRelated.values()) {
         m[relation] = modelRelations[relation]
           .queryFor(model)
           .get()
-          .map((m) => m.clone());
+          .map((m) => m.$clone());
       }
       return m;
     });

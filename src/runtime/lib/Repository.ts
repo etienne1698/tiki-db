@@ -32,7 +32,12 @@ export default class Repository<M extends Model = Model> {
 
   saveOne(data: Partial<M & Record<string, any>>) {
     const model = this.map(data);
-    this.state.value[model.$primaryKey()] = model;
+    const state = this.state.value[model.$primaryKey()];
+    if (state) {
+      this.state.value[model.$primaryKey()] = state.$merge(model);
+    } else {
+      this.state.value[model.$primaryKey()] = model;
+    }
     return model;
   }
 

@@ -17,11 +17,15 @@ export default abstract class Model {
 
   static relations: () => Record<string, Relation> = () => ({});
 
-  toJSON() {
+  $toJSON() {
     return this;
   }
 
-  clone() {
-    return Object.assign(Object.create(this), { ...this });
+  $clone() {
+    return Object.assign(Object.create(this), this);
+  }
+
+  $merge(m: Model) {
+    return Object.assign(this, m);
   }
 }
