@@ -1,6 +1,6 @@
 import type { Ref } from "vue";
 import Model from "./Model";
-import type { ModelConstructor, PrimaryKey } from "./types";
+import type { MaybeAsArray, ModelConstructor, PrimaryKey } from "./types";
 import QueryBuilder from "./QueryBuilder";
 import type Database from "./Database";
 
@@ -30,10 +30,18 @@ export default class Repository<M extends Model = Model> {
     return Object.assign(new this.use(), data);
   }
 
-  save(data: Partial<M & Record<string, any>>) {
+  saveOne(data: Partial<M & Record<string, any>>) {
     const model = this.map(data);
     this.state.value[model.$primaryKey()] = model;
     return model;
+  }
+
+  save(data: MaybeAsArray<Partial<M & Record<string, any>>>) {
+    console.error("qsdqs");
+    if (Array.isArray(data)) {
+      return data.map(this.saveOne.bind(this));
+    }
+    return this.saveOne(data);
   }
 
   all() {

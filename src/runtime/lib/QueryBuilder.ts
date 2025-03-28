@@ -56,11 +56,18 @@ export default class QueryBuilder<M extends Model> {
     return data.map((model) => {
       for (const relation of this.#withRelated.values()) {
         model[relation] = this.#repository.use.relations[relation]
-          .query()
+          .queryFor(model.$primaryKey())
           .get();
       }
       return model;
     });
+  }
+
+  #applyFilters(data: M[]) {
+    for (const [key, value] of Object.entries(this.#filters.$eq)) {
+      data = data.filter((model) => model[key] == value);
+    }
+    return data;
   }
 
   get() {
@@ -68,6 +75,7 @@ export default class QueryBuilder<M extends Model> {
     if (this.#withRelated.size > 0) {
       result = this.#loadRelated(result);
     }
+    result = this.#applyFilters(result);
 
     return result;
   }

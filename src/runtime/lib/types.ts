@@ -11,3 +11,5 @@ export type ModelConstructor<M extends Model> = Constructor<M> & {
 };
 
 export type PrimaryKey = string;
+
+export type MaybeAsArray<T> = T | Array<T>;

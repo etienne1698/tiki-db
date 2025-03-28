@@ -3,20 +3,26 @@ import { Pet } from "./models/Pet";
 import { User } from "./models/User";
 
 const petRepo = useRepo(Pet);
+
+const userRepo = useRepo(User);
+
 if (import.meta.server) {
-  petRepo.save({ id: crypto.randomUUID() });
-}
-const repo = useRepo(User);
-if (import.meta.server) {
-  repo.save({
-    id: crypto.randomUUID(),
+  const firstUserID = crypto.randomUUID();
+
+  petRepo.save([
+    { id: crypto.randomUUID() },
+    { id: crypto.randomUUID() },
+    { id: crypto.randomUUID(), user_id: firstUserID },
+  ]);
+  userRepo.save({
+    id: firstUserID,
   });
 }
 
-const all = computed(() => repo.with("pets").get());
+const all = computed(() => userRepo.with("pets").get());
 
 function add() {
-  repo.save({ id: crypto.randomUUID() });
+  userRepo.save({ id: crypto.randomUUID() });
 }
 </script>
 
@@ -37,12 +43,12 @@ function add() {
         <TextField
           label="Firstname"
           :value="u.firstname"
-          @update:value="repo.save({ ...u, firstname: $event })"
+          @update:value="userRepo.save({ ...u, firstname: $event })"
         />
         <TextField
           label="Lastname"
           :value="u.lastname"
-          @update:value="repo.save({ ...u, lastname: $event })"
+          @update:value="userRepo.save({ ...u, lastname: $event })"
         />
       </div>
 
