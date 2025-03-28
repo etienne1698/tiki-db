@@ -43,11 +43,7 @@ export default class Repository<M extends Model = Model> {
     return this.saveOne(data);
   }
 
-  all() {
-    return new QueryBuilder(this).get();
-  }
-
-  with(...relations: string[]) {
-    return new QueryBuilder(this).with(...relations);
+  query() {
+    return new QueryBuilder(this);
   }
 }

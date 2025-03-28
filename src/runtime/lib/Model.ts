@@ -16,6 +16,7 @@ export default abstract class Model {
   }
 
   static relations: { [key: string]: Relation } = {};
+
   toJSON() {
     return this;
   }

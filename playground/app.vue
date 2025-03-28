@@ -19,7 +19,7 @@ if (import.meta.server) {
   });
 }
 
-const all = computed(() => userRepo.with("pets").get());
+const all = computed(() => userRepo.query().with("pets").get());
 
 function add() {
   userRepo.save({ id: crypto.randomUUID() });
@@ -29,7 +29,7 @@ function add() {
 <template>
   <div style="background-color: antiquewhite">
     <TextField
-      v-for="pet of petRepo.all()"
+      v-for="pet of petRepo.query().get()"
       :key="pet.id"
       :label="`Pet '${pet.id}' name`"
       :value="pet.name"
