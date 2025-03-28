@@ -7,12 +7,13 @@ export class User extends Model {
   declare id: string;
   declare firstname: string;
   declare lastname: string;
+  declare city_id: string;
 
   get fullName() {
     return `${this.firstname || ""} ${this.lastname || ""}`;
   }
 
-  static override relations(): Record<string, Relation> {
+  static override relations(): Record<string, Relation<any>> {
     return {
       pets: Relation.hasMany(Pet, "user_id"),
     };

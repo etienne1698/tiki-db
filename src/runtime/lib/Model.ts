@@ -29,3 +29,9 @@ export default abstract class Model {
     return Object.assign(this, m);
   }
 }
+
+// export type RelationsOf<M extends Model> = keyof ReturnType<M["relations"]>;
+
+// TODO : delete this and do correct types...
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export type RelationsOf<M extends Model> = string;

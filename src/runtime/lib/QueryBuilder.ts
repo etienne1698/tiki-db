@@ -1,3 +1,4 @@
+import type { RelationsOf } from "./Model";
 import type Model from "./Model";
 import type Repository from "./Repository";
 
@@ -25,7 +26,7 @@ export default class QueryBuilder<M extends Model> {
     this.#repository = repository;
   }
 
-  with(...relations: string[]) {
+  with(...relations: RelationsOf<M>[]) {
     relations.forEach((r) => {
       this.#withRelated.add(r);
     });
@@ -64,7 +65,7 @@ export default class QueryBuilder<M extends Model> {
     return data.map((model) => {
       const m = model.$clone();
       for (const relation of this.#withRelated.values()) {
-        m[relation] = modelRelations[relation].getFor(model);
+        m[relation] = modelRelations[relation].getFor(model, this.#repository.database);
       }
       return m;
     });
