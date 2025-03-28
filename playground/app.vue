@@ -8,7 +8,7 @@ if (import.meta.server) {
   });
 }
 
-const all = computed(() => repo.all());
+const all = computed(() => repo.with("pets").get());
 
 function add() {
   repo.save({ id: crypto.randomUUID() });

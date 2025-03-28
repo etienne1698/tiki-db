@@ -24,7 +24,9 @@ export default class QueryBuilder<M extends Model> {
   }
 
   with(...relations: string[]) {
-    relations.forEach(this.#withRelated.add);
+    relations.forEach((r) => {
+      this.#withRelated.add(r);
+    });
     return this;
   }
 
@@ -50,7 +52,24 @@ export default class QueryBuilder<M extends Model> {
     return this.where(field, "$in", value);
   }
 
+  #loadRelated(data: M[]) {
+    const relations = this.#repository.use.relations();
+    console.error(relations);
+
+    return data.map((model) => {
+      for (const relation of this.#withRelated.values()) {
+        model[relation] = [];
+      }
+      return model;
+    });
+  }
+
   get() {
-    return Object.values(this.#repository.state.value || []);
+    let result = Object.values(this.#repository.state.value || []);
+    if (this.#withRelated.size > 0) {
+      result = this.#loadRelated(result);
+    }
+
+    return result;
   }
 }
