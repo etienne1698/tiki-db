@@ -11,6 +11,20 @@ Install NuxtORM via npm:
 npm install nuxt-orm
 ```
 
+Add this to your nuxt.config.ts
+
+```ts
+export default defineNuxtConfig({
+  modules: ["nuxt-orm"],
+  nuxtOrm: {
+    defaultDatabase: {
+      prefix: "",
+    },
+  },
+});
+
+```
+
 ## Usage
 
 ### Defining Models

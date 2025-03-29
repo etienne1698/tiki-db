@@ -19,6 +19,8 @@ export default defineNuxtModule<NuxtORMModuleOptions>({
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url);
 
+    nuxt.options.alias["#nuxt_orm"] = resolver.resolve("./runtime");
+
     nuxt["options"]["runtimeConfig"]["public"]["dbPrefix"] =
       options.defaultDatabase?.prefix || "";
 
