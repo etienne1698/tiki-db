@@ -35,12 +35,15 @@ export default class Repository<M extends Model = Model> {
       !(Object.values(this.state.value)[0] instanceof Model)
     ) {
       for (const key of Object.keys(this.state.value)) {
-        this.state.value[key] = this.map(this.state.value[key]);
+        this.state.value[key] = Object.assign(
+          new this.use(),
+          this.state.value[key]
+        );
       }
     }
   }
 
-  map(data: MapModelOptions<M>) {
+  map(data: MapModelOptions<M>, oldValue?: M) {
     return Object.assign(
       new this.use(),
       this.use.map ? this.use.map(data) : data

@@ -2,7 +2,6 @@
 
 NuxtORM is a lightweight and efficient ORM library for Nuxt 3 that simplifies data normalization and relationship management using Nuxt's `useState` composable. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
 
-
 ## Installation
 
 Install NuxtORM via npm:
@@ -22,7 +21,6 @@ export default defineNuxtConfig({
     },
   },
 });
-
 ```
 
 ## Usage
@@ -38,17 +36,34 @@ import { Model } from "nuxt-orm";
 
 export class Pet extends Model {
   static override entity = "pets";
+
+  static override relations(): Record<string, Relation<any>> {
+    return { user: Relation.belongsTo(User, "user_id") };
+  }
+
+  declare id: string;
+  declare name: string;
+  declare user_id: string;
+
+  declare user?: User;
 }
 ```
 
 #### models/User.ts
 
 ```ts
-import { Model } from "nuxt-orm";
-import { Pet } from "./Pet";
-
 export class User extends Model {
-  static override entity = "users";
+  static override entity = "User";
+
+  static override relations(): Record<string, Relation<any>> {
+    return {
+      pets: Relation.hasMany(Pet, "user_id"),
+    };
+  }
+
+  declare id: string;
+  declare firstname: string;
+  declare lastname: string;
 
   get fullName() {
     return `${this.firstname} ${this.lastname}`.trim();
@@ -88,3 +103,12 @@ function addPet() {
 const pets = computed(() => petRepo.query().with("user").get());
 </script>
 ```
+
+## ✅ TODO
+- Relation :
+  - hasManyBy
+  - hasManyThrough
+  - belongsToMany (with pivot)
+- composite key
+- update/delete
+- update/delete by query
