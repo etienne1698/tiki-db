@@ -105,6 +105,7 @@ const pets = computed(() => petRepo.query().with("user").get());
 ```
 
 ## ✅ TODO
+- Custom repository
 - Relation :
   - hasManyBy
   - hasManyThrough

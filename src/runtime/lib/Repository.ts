@@ -4,7 +4,7 @@ import type {
   MapModelOptions,
   MaybeAsArray,
   ModelConstructor,
-  PrimaryKey,
+  Primary,
 } from "./types";
 import QueryBuilder from "./QueryBuilder";
 import Database from "./Database";
@@ -16,7 +16,7 @@ export type RepositoryOptions<M extends Model = Model> = {
 
 export default class Repository<M extends Model = Model> {
   declare use: ModelConstructor<M>;
-  declare state: Ref<Record<PrimaryKey, M>>;
+  declare state: Ref<Record<Primary, M>>;
   declare database: Database;
 
   constructor(opts?: RepositoryOptions<M>) {
@@ -25,6 +25,21 @@ export default class Repository<M extends Model = Model> {
       this.use = opts.use;
     }
     this.init();
+  }
+
+  static withOptions<M extends Model = Model>(
+    repository: Repository<M>,
+    options: RepositoryOptions<M>
+  ) {
+    const r = Object.assign(repository, options);
+    r.init();
+    return r;
+  }
+
+  static createWithOptions<M extends Model = Model>(
+    options: RepositoryOptions<M>
+  ) {
+    return Repository.withOptions(new Repository<M>(), options);
   }
 
   init() {
@@ -68,15 +83,15 @@ export default class Repository<M extends Model = Model> {
 
   saveOne(data: MapModelOptions<M>, saveRelations: boolean = true) {
     if (saveRelations) this.saveRelations(data);
-    const model = this.map(data);
-    const primary = model.$primaryKey();
-    const state = this.state.value[primary];
 
+    const primary = Model.primary(this.use.primaryKey, data);
+    const state = this.state.value[primary];
     if (state) {
-      this.state.value[primary] = state.$merge(model);
-    } else {
-      this.state.value[primary] = model;
+      this.state.value[primary] = state.$merge(data);
+      return this.state.value[primary];
     }
+    const model = this.map(data);
+    this.state.value[primary] = model;
     return model;
   }
 

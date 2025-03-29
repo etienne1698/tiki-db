@@ -11,7 +11,8 @@ export type ModelConstructor<M extends Model> = Constructor<M> & {
   map?: typeof Model.map;
 };
 
-export type PrimaryKey = string;
+export type PrimaryKey = string | string[];
+export type Primary = string;
 
 export type MaybeAsArray<T> = T | Array<T>;
 

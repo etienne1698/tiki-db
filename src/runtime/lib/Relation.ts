@@ -36,7 +36,7 @@ export class HasOneRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
     return new QueryBuilder<M>(
       new Repository({ database, use: this.related })
-    ).where(this.field, "$eq", model.$primaryKey());
+    ).where(this.field, "$eq", model.$primary());
   }
 
   override getFor<T extends Model>(model: T, database: Database): M {
@@ -48,7 +48,7 @@ export class HasManyRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
     return new QueryBuilder<M>(
       new Repository({ database, use: this.related })
-    ).where(this.field, "$eq", model.$primaryKey());
+    ).where(this.field, "$eq", model.$primary());
   }
 
   override getFor<T extends Model>(model: T, database: Database): M[] {
@@ -62,7 +62,7 @@ export class BelongsToRelation<M extends Model> extends Relation<M> {
       new Repository({ database, use: this.related })
     ).filter((r) => {
       // @ts-ignore
-      return r.$primaryKey() == model[this.field];
+      return r.$primary() == model[this.field];
     });
   }
 

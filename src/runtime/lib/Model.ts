@@ -1,22 +1,23 @@
 import type Relation from "./Relation";
-import type { MapModelOptions, PrimaryKey } from "./types";
+import type { MapModelOptions, Primary, PrimaryKey } from "./types";
 
 export default abstract class Model {
-  static primaryKey: string | string[] = "id";
+  static primaryKey: PrimaryKey = "id";
   static entity: string = "";
   static relations: () => Record<string, Relation> = () => ({});
 
   static map?: <M extends Model>(data: MapModelOptions<M>) => unknown;
 
-  $primaryKey(): PrimaryKey {
+  $primary(): Primary {
     // @ts-ignore
-    const primaryKey: string | string[] = this.primaryKey || Model.primaryKey;
+    return Model.primary(this.primaryKey || Model.primaryKey, this);
+  }
+
+  static primary<M extends Model>(primaryKey: PrimaryKey, data: MapModelOptions<M>): Primary {
     if (typeof primaryKey === "string") {
-      // @ts-ignore
-      return this[primaryKey];
+      return data[primaryKey] as string;
     }
-    // @ts-ignore
-    return primaryKey.map((k) => this[k]).join();
+    return primaryKey.map((k) => data[k]).join();
   }
 
   $toJSON() {
@@ -31,7 +32,7 @@ export default abstract class Model {
     return Array.isArray(model) ? model.map((m) => m.$clone()) : model.$clone();
   }
 
-  $merge(m: Model) {
+  $merge<M extends Model>(m: MapModelOptions<M>) {
     return Object.assign(this, m);
   }
 }

@@ -33,7 +33,7 @@ const pets = computed(() => petRepo.query().with("user").get());
       <span style="font-weight: 600; font-size: 22px">Pets</span>
       <div
         v-for="p of pets"
-        :key="p.$primaryKey()"
+        :key="p.$primary()"
         style="border-radius: 8px; background: seashell; padding: 16px"
       >
         <TextField
@@ -66,7 +66,7 @@ const pets = computed(() => petRepo.query().with("user").get());
       <span style="font-weight: 600; font-size: 22px">Users</span>
       <div
         v-for="u of userRepo.query().with('pets').get()"
-        :key="u.$primaryKey()"
+        :key="u.$primary()"
         style="border-radius: 8px; background: aliceblue; padding: 16px"
       >
         <TextField
