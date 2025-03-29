@@ -82,6 +82,20 @@ export default class Repository<M extends Model = Model> {
     return this.saveOne(data, saveRelations);
   }
 
+  delete(primary: string) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete this.state.value[primary];
+  }
+
+  /*  update(
+    primary: string,
+    data: MapModelOptions<M>,
+    saveRelations: boolean = true
+  ) {
+    return this.saveOne(data, saveRelations);
+  }
+ */
+
   query() {
     return new QueryBuilder(this);
   }

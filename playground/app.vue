@@ -41,6 +41,12 @@ const pets = computed(() => petRepo.query().with("user").get());
           :value="p.name"
           @update:value="petRepo.save({ id: p.id, name: $event })"
         />
+        <button
+          style="background-color: red; color: white; float: right"
+          @click="petRepo.delete(p.id)"
+        >
+          Delete
+        </button>
         <div style="font-weight: 600; font-size: 18px">
           {{ p.id }} {{ p.name }}
           {{ p.user ? `of "${p.user.fullName}"` : "" }}
