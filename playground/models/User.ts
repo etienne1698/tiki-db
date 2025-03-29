@@ -1,5 +1,5 @@
-import Relation from "../../src/runtime/lib/Relation";
 import { Pet } from "./Pet";
+import { Relation } from "#imports";
 
 export class User extends Model {
   static override entity = "User";

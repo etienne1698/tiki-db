@@ -6,7 +6,7 @@ export default abstract class Model {
   static entity: string = "";
   static relations: () => Record<string, Relation> = () => ({});
 
-  static map?: <M extends Model>(data: MapModelOptions<M>) => ThisType<M>;
+  static map?: (data: MapModelOptions<any>) => unknown;
 
   $primaryKey(): PrimaryKey {
     // @ts-ignore

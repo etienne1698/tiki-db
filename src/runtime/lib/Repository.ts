@@ -42,8 +42,7 @@ export default class Repository<M extends Model = Model> {
   }
 
   map(data: MapModelOptions<M>) {
-    /* console.error(this.use.map);
-    if (this.use.map) return this.use.map(data); */
+    if (this.use.map) return this.use.map(data);
     return Object.assign(new this.use(), data);
   }
 
