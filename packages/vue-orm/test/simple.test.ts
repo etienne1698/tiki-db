@@ -1,16 +1,8 @@
 import { expect, test } from "vitest";
-
-import { VueDatabase, Model, Repository, Relation } from "../src/index";
+import { getTestBase } from "./base";
 
 test("simple save and retrieve", () => {
-  const db = new VueDatabase();
-
-  class User extends Model {
-    static override entity = "users";
-
-    declare id: string;
-  }
-  const usersRespo = Repository.createWithOptions({ use: User, database: db });
+  const { usersRespo } = getTestBase();
 
   usersRespo.save({ id: "123" });
 
@@ -18,27 +10,7 @@ test("simple save and retrieve", () => {
 });
 
 test("relation should not be saved in entity state", () => {
-  const db = new VueDatabase();
-
-  class User extends Model {
-    static override entity = "users";
-
-    static override relations(): Record<string, Relation<any>> {
-      return {
-        pets: Relation.hasMany(Pet, "user_id"),
-      };
-    }
-
-    declare id: string;
-  }
-
-  class Pet extends Model {
-    static override entity = "users";
-
-    declare id: string;
-    declare user_id: string;
-  }
-  const usersRespo = Repository.createWithOptions({ use: User, database: db });
+  const { usersRespo } = getTestBase();
 
   usersRespo.save({ id: "123", pets: [{ id: "1", user_id: "123" }] });
 
@@ -47,28 +19,7 @@ test("relation should not be saved in entity state", () => {
 });
 
 test("relation should be save to the relation entity state", () => {
-  const db = new VueDatabase();
-
-  class User extends Model {
-    static override entity = "users";
-
-    static override relations(): Record<string, Relation<any>> {
-      return {
-        pets: Relation.hasMany(Pet, "user_id"),
-      };
-    }
-
-    declare id: string;
-  }
-
-  class Pet extends Model {
-    static override entity = "users";
-
-    declare id: string;
-    declare user_id: string;
-  }
-  const usersRespo = Repository.createWithOptions({ use: User, database: db });
-  const petsRespo = Repository.createWithOptions({ use: Pet, database: db });
+  const { petsRespo, usersRespo } = getTestBase();
 
   usersRespo.save({ id: "123", pets: [{ id: "1", user_id: "123" }] });
 
