@@ -1,5 +1,5 @@
-import type Model from "./Model";
-import type Repository from "./Repository";
+import type { Model } from "./Model";
+import type { Repository } from "./Repository";
 import type { RelationsOf } from "./types";
 
 export type OperatorValueType = {
@@ -10,7 +10,7 @@ export type OperatorValueType = {
 
 export type Operator = keyof OperatorValueType;
 
-export default class QueryBuilder<M extends Model> {
+export class QueryBuilder<M extends Model> {
   #repository!: Repository<M>;
   #withRelated = new Set<string>();
 

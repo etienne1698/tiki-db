@@ -1,6 +1,6 @@
 {
   "name": "vue-orm.js",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Ma librairie TypeScript",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -15,7 +15,7 @@
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
-    "publish": "npm run build & npm publish"
+    "publish": "npm run build && npm publish"
   },
   "peerDependencies": {
     "vue": "^3.5.13"

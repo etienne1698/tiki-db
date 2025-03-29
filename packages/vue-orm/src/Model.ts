@@ -1,7 +1,7 @@
-import type Relation from "./Relation";
+import type { Relation } from "./Relation";
 import type { MapModelOptions, Primary, PrimaryKey } from "./types";
 
-export default abstract class Model {
+export abstract class Model {
   static primaryKey: PrimaryKey = "id";
   static entity: string = "";
   static relations: () => Record<string, Relation> = () => ({});
@@ -13,7 +13,10 @@ export default abstract class Model {
     return Model.primary(this.primaryKey || Model.primaryKey, this);
   }
 
-  static primary<M extends Model>(primaryKey: PrimaryKey, data: MapModelOptions<M>): Primary {
+  static primary<M extends Model>(
+    primaryKey: PrimaryKey,
+    data: MapModelOptions<M>
+  ): Primary {
     if (typeof primaryKey === "string") {
       return data[primaryKey] as string;
     }

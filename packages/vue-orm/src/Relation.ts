@@ -1,10 +1,10 @@
 import type { Database } from "./Database";
-import type Model from "./Model";
-import QueryBuilder from "./QueryBuilder";
-import Repository from "./Repository";
+import type { Model } from "./Model";
+import { QueryBuilder } from "./QueryBuilder";
+import { Repository } from "./Repository";
 import type { ModelConstructor } from "./types";
 
-export default abstract class Relation<M extends Model = Model> {
+export abstract class Relation<M extends Model = Model> {
   declare related: ModelConstructor<M>;
   declare field: string;
 

@@ -1,4 +1,4 @@
-import type Model from "./Model";
+import type { Model } from "./Model";
 
 export interface Constructor<T> {
   new (): T;

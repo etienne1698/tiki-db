@@ -1,12 +1,12 @@
 import type { Ref } from "vue";
-import Model from "./Model";
+import { Model } from "./Model";
 import type {
   MapModelOptions,
   MaybeAsArray,
   ModelConstructor,
   Primary,
 } from "./types";
-import QueryBuilder from "./QueryBuilder";
+import { QueryBuilder } from "./QueryBuilder";
 import type { Database } from "./Database";
 
 export type RepositoryOptions<M extends Model = Model> = {
@@ -14,7 +14,7 @@ export type RepositoryOptions<M extends Model = Model> = {
   database?: Database;
 };
 
-export default class Repository<M extends Model = Model> {
+export class Repository<M extends Model = Model> {
   declare use: ModelConstructor<M>;
   declare state: Ref<Record<Primary, M>>;
   declare database: Database;
