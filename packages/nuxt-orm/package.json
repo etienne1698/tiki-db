@@ -1,6 +1,6 @@
 {
   "name": "nuxt-orm",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Nuxt ORM module",
   "repository": "etienne1698/nuxt-orm",
   "license": "MIT",

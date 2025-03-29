@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.0.5
+
+[compare changes](https://github.com/etienne1698/nuxt-orm/compare/v1.0.4...v1.0.5)
+
+### 🏡 Chore
+
+- **release:** V1.0.4 ([1814690](https://github.com/etienne1698/nuxt-orm/commit/1814690))
+
+### ❤️ Contributors
+
+- Etienne1698 <etienne.robert1698@gmail.com>
+
 ## v1.0.4
 
 [compare changes](https://github.com/etienne1698/nuxt-orm/compare/v1.0.3...v1.0.4)
