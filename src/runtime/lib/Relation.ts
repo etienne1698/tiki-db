@@ -1,8 +1,8 @@
 import type Database from "./Database";
 import type Model from "./Model";
 import QueryBuilder from "./QueryBuilder";
+import Repository from "./Repository";
 import type { ModelConstructor } from "./types";
-import useRepo from "./useRepo";
 
 export default abstract class Relation<M extends Model = Model> {
   declare related: ModelConstructor<M>;
@@ -34,11 +34,9 @@ export default abstract class Relation<M extends Model = Model> {
 
 export class HasOneRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
-    return new QueryBuilder<M>(useRepo(this.related, database)).where(
-      this.field,
-      "$eq",
-      model.$primaryKey()
-    );
+    return new QueryBuilder<M>(
+      new Repository({ database, use: this.related })
+    ).where(this.field, "$eq", model.$primaryKey());
   }
 
   override getFor<T extends Model>(model: T, database: Database): M {
@@ -48,11 +46,9 @@ export class HasOneRelation<M extends Model> extends Relation<M> {
 
 export class HasManyRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
-    return new QueryBuilder<M>(useRepo(this.related, database)).where(
-      this.field,
-      "$eq",
-      model.$primaryKey()
-    );
+    return new QueryBuilder<M>(
+      new Repository({ database, use: this.related })
+    ).where(this.field, "$eq", model.$primaryKey());
   }
 
   override getFor<T extends Model>(model: T, database: Database): M[] {
@@ -62,7 +58,9 @@ export class HasManyRelation<M extends Model> extends Relation<M> {
 
 export class BelongsToRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
-    return new QueryBuilder<M>(useRepo(this.related, database)).filter((r) => {
+    return new QueryBuilder<M>(
+      new Repository({ database, use: this.related })
+    ).filter((r) => {
       // @ts-ignore
       return r.$primaryKey() == model[this.field];
     });

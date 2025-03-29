@@ -8,7 +8,6 @@ import type {
 } from "./types";
 import QueryBuilder from "./QueryBuilder";
 import Database from "./Database";
-import useRepo from "./useRepo";
 
 export type RepositoryOptions<M extends Model = Model> = {
   use: ModelConstructor<M>;
@@ -55,7 +54,10 @@ export default class Repository<M extends Model = Model> {
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete data[key];
-        const repo = useRepo(modelRelations[key].related, this.database);
+        const repo = new Repository({
+          use: modelRelations[key].related,
+          database: this.database,
+        });
         repo.save(value);
       }
     }
