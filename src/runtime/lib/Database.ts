@@ -1,10 +1,15 @@
+import type { Ref } from "vue";
 import { useState } from "#app";
 
-export default class Database {
-  prefix = "";
+export interface Database {
+  getStore(entity: string): Ref;
+}
+
+export class NuxtDatabase implements Database {
+  declare prefix: string;
 
   static createWithPrefix(prefix: string) {
-    const db = new Database();
+    const db = new NuxtDatabase();
     db.prefix = prefix;
     return db;
   }

@@ -7,7 +7,7 @@ import type {
   Primary,
 } from "./types";
 import QueryBuilder from "./QueryBuilder";
-import Database from "./Database";
+import type { Database } from "./Database";
 
 export type RepositoryOptions<M extends Model = Model> = {
   use: ModelConstructor<M>;

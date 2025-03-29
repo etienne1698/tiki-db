@@ -1,4 +1,4 @@
-import type Database from "./Database";
+import type { Database } from "./Database";
 import type Model from "./Model";
 import QueryBuilder from "./QueryBuilder";
 import Repository from "./Repository";

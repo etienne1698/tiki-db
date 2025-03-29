@@ -1,4 +1,4 @@
-import type Database from "./Database";
+import type { Database } from "./Database";
 import type Model from "./Model";
 import Repository from "./Repository";
 import type { ModelConstructor } from "./types";
