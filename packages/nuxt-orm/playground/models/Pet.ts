@@ -1,5 +1,5 @@
+import { Relation } from "vue-orm.js";
 import { User } from "./User";
-import Relation from "#nuxt_orm/lib/Relation";
 
 export class Pet extends Model {
   static override entity = "Pet";

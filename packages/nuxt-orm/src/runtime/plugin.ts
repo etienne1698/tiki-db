@@ -1,4 +1,4 @@
-import Model from "./lib/Model";
+import { Model } from "vue-orm.js";
 import {
   definePayloadPlugin,
   definePayloadReducer,

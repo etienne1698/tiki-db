@@ -1,4 +1,4 @@
-import { NuxtDatabase } from "./Database";
+import NuxtDatabase from "./NuxtDatabase";
 import { useRuntimeConfig } from "#app";
 
 export default function useDb() {
