@@ -1,6 +1,6 @@
+import type { MapModelOptions } from "vue-orm.js";
 import { Pet } from "./Pet";
 import { Model, Relation } from "#imports";
-import type { MapModelOptions } from "vue-orm.js";
 
 export class User extends Model {
   static override entity = "User";
