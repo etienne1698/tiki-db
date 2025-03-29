@@ -13,7 +13,10 @@ export default abstract class Model {
     return Model.primary(this.primaryKey || Model.primaryKey, this);
   }
 
-  static primary<M extends Model>(primaryKey: PrimaryKey, data: MapModelOptions<M>): Primary {
+  static primary<M extends Model>(
+    primaryKey: PrimaryKey,
+    data: MapModelOptions<M>
+  ): Primary {
     if (typeof primaryKey === "string") {
       return data[primaryKey] as string;
     }

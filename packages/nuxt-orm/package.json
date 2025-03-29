@@ -31,6 +31,9 @@
   "dependencies": {
     "@nuxt/kit": "^3.16.1"
   },
+  "peerDependencies": {
+    "vue-orm.js": "^0.3.0"
+  },
   "devDependencies": {
     "@nuxt/devtools": "^2.3.1",
     "@nuxt/eslint-config": "^1.2.0",
