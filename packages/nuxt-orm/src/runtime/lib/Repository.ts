@@ -50,7 +50,7 @@ export default class Repository<M extends Model = Model> {
     }
   }
 
-  map(data: MapModelOptions<M>, oldValue?: M) {
+  map(data: MapModelOptions<M>) {
     return Object.assign(
       new this.use(),
       this.use.map ? this.use.map(data) : data
