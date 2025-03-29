@@ -42,17 +42,19 @@ export default class Repository<M extends Model = Model> {
   }
 
   map(data: MapModelOptions<M>) {
-    if (this.use.map) return this.use.map(data);
-    return Object.assign(new this.use(), data);
+    return Object.assign(
+      new this.use(),
+      this.use.map ? this.use.map(data) : data
+    );
   }
 
-  saveRelations(model: M) {
+  saveRelations(data: Record<string, any>) {
     const modelRelations = this.use.relations();
-    for (const [key, value] of Object.entries(model)) {
+    for (const [key, value] of Object.entries(data)) {
       if (modelRelations[key]) {
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete model[key];
+        delete data[key];
         const repo = useRepo(modelRelations[key].related, this.database);
         repo.save(value);
       }
@@ -60,10 +62,11 @@ export default class Repository<M extends Model = Model> {
   }
 
   saveOne(data: MapModelOptions<M>, saveRelations: boolean = true) {
+    if (saveRelations) this.saveRelations(data);
     const model = this.map(data);
-    if (saveRelations) this.saveRelations(model);
     const primary = model.$primaryKey();
     const state = this.state.value[primary];
+
     if (state) {
       this.state.value[primary] = state.$merge(model);
     } else {
