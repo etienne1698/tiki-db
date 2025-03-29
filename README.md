@@ -23,14 +23,7 @@ Create your models in the `models/` directory.
 import { Model } from "nuxt-orm";
 
 export class Pet extends Model {
-  static entity = "pets";
-  static fields() {
-    return {
-      id: this.uid(),
-      name: this.string(""),
-      user_id: this.attr(null),
-    };
-  }
+  static override entity = "pets";
 }
 ```
 
@@ -42,7 +35,6 @@ import { Pet } from "./Pet";
 
 export class User extends Model {
   static override entity = "users";
-  
 
   get fullName() {
     return `${this.firstname} ${this.lastname}`.trim();
