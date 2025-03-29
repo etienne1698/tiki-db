@@ -7,7 +7,7 @@ NuxtORM is a lightweight and efficient ORM library for Nuxt 3 that simplifies da
 Install NuxtORM via npm:
 
 ```sh
-npm install nuxt-orm
+npm install nuxt-orm vue-orm.js
 ```
 
 Add this to your nuxt.config.ts
@@ -103,13 +103,3 @@ function addPet() {
 const pets = computed(() => petRepo.query().with("user").get());
 </script>
 ```
-
-## ✅ TODO
-- Custom repository
-- Relation :
-  - hasManyBy
-  - hasManyThrough
-  - belongsToMany (with pivot)
-- composite key
-- update/delete
-- update/delete by query
