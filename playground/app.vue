@@ -24,7 +24,7 @@ function addPet() {
   petRepo.save({ id: crypto.randomUUID() });
 }
 
-const pets = computed(() => petRepo.query().get());
+const pets = computed(() => petRepo.query().with("user").get());
 </script>
 
 <template>
@@ -43,6 +43,7 @@ const pets = computed(() => petRepo.query().get());
         />
         <div style="font-weight: 600; font-size: 18px">
           {{ p.id }} {{ p.name }}
+          {{ p.user ? `of "${p.user.fullName}"` : "" }}
         </div>
         <pre>{{ p }}</pre>
       </div>

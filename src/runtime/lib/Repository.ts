@@ -56,11 +56,12 @@ export default class Repository<M extends Model = Model> {
   ) {
     const model = this.map(data);
     if (saveRelations) this.saveRelations(model);
-    const state = this.state.value[model.$primaryKey()];
+    const primary = model.$primaryKey();
+    const state = this.state.value[primary];
     if (state) {
-      this.state.value[model.$primaryKey()] = state.$merge(model);
+      this.state.value[primary] = state.$merge(model);
     } else {
-      this.state.value[model.$primaryKey()] = model;
+      this.state.value[primary] = model;
     }
     return model;
   }

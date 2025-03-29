@@ -1,10 +1,11 @@
 import type Relation from "./Relation";
+import type { PrimaryKey } from "./types";
 
 export default abstract class Model {
   static primaryKey: string | string[] = "id";
   static entity: string = "";
 
-  $primaryKey(): string {
+  $primaryKey(): PrimaryKey {
     // @ts-ignore
     const primaryKey: string | string[] = this.primaryKey || Model.primaryKey;
     if (typeof primaryKey === "string") {
