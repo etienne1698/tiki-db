@@ -1,9 +1,6 @@
 import { expect, test } from "vitest";
 
-import { VueDatabase } from "../src/Database";
-import Repository from "../src/Repository";
-import Relation from "../src/Relation";
-import Model from "../src/Model";
+import { VueDatabase, Model, Repository, Relation } from "../src/index";
 
 test("simple save and retrieve", () => {
   const db = new VueDatabase();
