@@ -19,14 +19,6 @@ export default class Repository<M extends Model = Model> {
   declare state: Ref<Record<Primary, M>>;
   declare database: Database;
 
-  constructor(opts?: RepositoryOptions<M>) {
-    this.database = opts?.database || new Database();
-    if (opts?.use) {
-      this.use = opts.use;
-    }
-    this.init();
-  }
-
   static withOptions<M extends Model = Model>(
     repository: Repository<M>,
     options: RepositoryOptions<M>
@@ -72,7 +64,7 @@ export default class Repository<M extends Model = Model> {
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete data[key];
-        const repo = new Repository({
+        const repo = Repository.createWithOptions({
           use: modelRelations[key].related,
           database: this.database,
         });

@@ -35,7 +35,7 @@ export default abstract class Relation<M extends Model = Model> {
 export class HasOneRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
     return new QueryBuilder<M>(
-      new Repository({ database, use: this.related })
+      Repository.createWithOptions({ database, use: this.related })
     ).where(this.field, "$eq", model.$primary());
   }
 
@@ -47,7 +47,7 @@ export class HasOneRelation<M extends Model> extends Relation<M> {
 export class HasManyRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
     return new QueryBuilder<M>(
-      new Repository({ database, use: this.related })
+      Repository.createWithOptions({ database, use: this.related })
     ).where(this.field, "$eq", model.$primary());
   }
 
@@ -59,7 +59,7 @@ export class HasManyRelation<M extends Model> extends Relation<M> {
 export class BelongsToRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
     return new QueryBuilder<M>(
-      new Repository({ database, use: this.related })
+      Repository.createWithOptions({ database, use: this.related })
     ).filter((r) => {
       // @ts-ignore
       return r.$primary() == model[this.field];

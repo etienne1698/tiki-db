@@ -8,5 +8,8 @@ export default function useRepo<M extends Model>(
   use: ModelConstructor<M>,
   database?: Database
 ) {
-  return new Repository<M>({ database: database || useDb(), use });
+  return Repository.createWithOptions<M>({
+    database: database || useDb(),
+    use,
+  });
 }
