@@ -1,6 +1,11 @@
 import type { Ref } from "vue";
 import Model from "./Model";
-import type { MaybeAsArray, ModelConstructor, PrimaryKey } from "./types";
+import type {
+  MapModelOptions,
+  MaybeAsArray,
+  ModelConstructor,
+  PrimaryKey,
+} from "./types";
 import QueryBuilder from "./QueryBuilder";
 import Database from "./Database";
 import useRepo from "./useRepo";
@@ -36,7 +41,9 @@ export default class Repository<M extends Model = Model> {
     }
   }
 
-  map(data: Partial<M & Record<string, any>>) {
+  map(data: MapModelOptions<M>) {
+    /* console.error(this.use.map);
+    if (this.use.map) return this.use.map(data); */
     return Object.assign(new this.use(), data);
   }
 
@@ -50,10 +57,7 @@ export default class Repository<M extends Model = Model> {
     }
   }
 
-  saveOne(
-    data: Partial<M & Record<string, any>>,
-    saveRelations: boolean = true
-  ) {
+  saveOne(data: MapModelOptions<M>, saveRelations: boolean = true) {
     const model = this.map(data);
     if (saveRelations) this.saveRelations(model);
     const primary = model.$primaryKey();
@@ -66,10 +70,7 @@ export default class Repository<M extends Model = Model> {
     return model;
   }
 
-  save(
-    data: MaybeAsArray<Partial<M & Record<string, any>>>,
-    saveRelations: boolean = true
-  ) {
+  save(data: MaybeAsArray<MapModelOptions<M>>, saveRelations: boolean = true) {
     if (Array.isArray(data)) {
       return data.map((d) => this.saveOne.bind(this)(d, saveRelations));
     }

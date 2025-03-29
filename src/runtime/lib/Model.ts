@@ -1,9 +1,12 @@
 import type Relation from "./Relation";
-import type { PrimaryKey } from "./types";
+import type { MapModelOptions, PrimaryKey } from "./types";
 
 export default abstract class Model {
   static primaryKey: string | string[] = "id";
   static entity: string = "";
+  static relations: () => Record<string, Relation> = () => ({});
+
+  static map?: <M extends Model>(data: MapModelOptions<M>) => ThisType<M>;
 
   $primaryKey(): PrimaryKey {
     // @ts-ignore
@@ -16,8 +19,6 @@ export default abstract class Model {
     return primaryKey.map((k) => this[k]).join();
   }
 
-  static relations: () => Record<string, Relation> = () => ({});
-
   $toJSON() {
     return this;
   }
@@ -26,13 +27,11 @@ export default abstract class Model {
     return Object.assign(Object.create(this), this);
   }
 
+  static clone<M extends Model>(model: M | M[]) {
+    return Array.isArray(model) ? model.map((m) => m.$clone()) : model.$clone();
+  }
+
   $merge(m: Model) {
     return Object.assign(this, m);
   }
 }
-
-// export type RelationsOf<M extends Model> = keyof ReturnType<M["relations"]>;
-
-// TODO : delete this and do correct types...
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type RelationsOf<M extends Model> = string;

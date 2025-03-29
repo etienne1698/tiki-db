@@ -1,6 +1,6 @@
-import type { RelationsOf } from "./Model";
 import type Model from "./Model";
 import type Repository from "./Repository";
+import type { RelationsOf } from "./types";
 
 export type OperatorValueType = {
   $eq: any;
