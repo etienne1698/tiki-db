@@ -1,13 +1,13 @@
 import type Model from "./Model";
-import type Relation from "./Relation";
 
 export interface Constructor<T> {
   new (): T;
 }
 
 export type ModelConstructor<M extends Model> = Constructor<M> & {
-  entity: string;
-  relations: () => { [key: string]: Relation };
+  entity: typeof Model.entity;
+  relations: typeof Model.relations;
+  primaryKey: typeof Model.primaryKey;
 };
 
 export type PrimaryKey = string;
