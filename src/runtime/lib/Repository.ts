@@ -51,6 +51,9 @@ export default class Repository<M extends Model = Model> {
     const modelRelations = this.use.relations();
     for (const [key, value] of Object.entries(model)) {
       if (modelRelations[key]) {
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete model[key];
         const repo = useRepo(modelRelations[key].related, this.database);
         repo.save(value);
       }
