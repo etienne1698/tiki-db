@@ -21,7 +21,7 @@ export class Repository<M extends Model = Model> {
 
   static withOptions<M extends Model = Model>(
     repository: Repository<M>,
-    options: RepositoryOptions<M>
+    options: Partial<RepositoryOptions<M>>
   ) {
     const r = Object.assign(repository, options);
     r.init();
