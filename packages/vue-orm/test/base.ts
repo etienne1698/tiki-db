@@ -22,14 +22,14 @@ class Pet extends Model {
 export function getTestBase() {
   const db = new VueDatabase();
 
-  const usersRespo = Repository.createWithOptions({ use: User, database: db });
+  const usersRepo = Repository.createWithOptions({ use: User, database: db });
   const petsRespo = Repository.createWithOptions({ use: Pet, database: db });
 
   return {
     db,
     User,
     Pet,
-    usersRespo,
+    usersRepo,
     petsRespo,
   };
 }

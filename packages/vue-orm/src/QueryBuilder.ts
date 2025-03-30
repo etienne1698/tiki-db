@@ -59,50 +59,12 @@ export class QueryBuilder<M extends Model> {
     return this.where(field, "$in", value);
   }
 
-  #loadRelated(data: M[]) {
-    const modelRelations = this.#model.relations();
-    return data.map((model) => {
-      const m = model.$clone();
-      for (const relation of this.query.with.values()) {
-        m[relation] = modelRelations[relation].getFor(model, this.#database);
-      }
-      return m;
-    });
-  }
-
-  #applyFilters(data: M[]) {
-    for (const filter of this.#fnFilters) {
-      data = data.filter(filter);
-    }
-    for (const [key, value] of Object.entries(this.query.filters.$eq)) {
-      // @ts-ignore
-      data = data.filter((model) => model[key] == value);
-    }
-    for (const [key, value] of Object.entries(this.query.filters.$in)) {
-      // @ts-ignore
-      data = data.filter((model) => model[key].includes(value));
-    }
-    for (const [key, value] of Object.entries(this.query.filters.$ne)) {
-      // @ts-ignore
-      data = data.filter((model) => model[key] != value);
-    }
-    return data;
-  }
 
   get() {
-    const state = this.#database.getStore<M>(this.#model.entity);
-    let result = Object.values(state.value || []);
-    result = this.#applyFilters(result);
-    if (this.query.with.size > 0) {
-      result = this.#loadRelated(result);
-    }
-
-    console.error(this.#database.exec(this.query));
-
-    return result;
+   return this.#database.get(this.#model, this.query);
   }
 
   getFirst() {
-    return this.get()[0];
+    return this.get()?.[0];
   }
 }

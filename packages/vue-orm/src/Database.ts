@@ -1,40 +1,61 @@
 import { ref, type Ref } from "vue";
 import { QueryBuilder } from "./QueryBuilder";
 import { Model } from "./Model";
-import { ModelConstructor } from "./types";
+import {
+  MapModelOptions,
+  MaybeAsArray,
+  ModelConstructor,
+  Primary,
+} from "./types";
 import { Query, QueryType } from "./Query";
-import { QueryInterpreter } from "./QueryInterpreter";
 
 export abstract class Database {
-  abstract getStore<T>(entity: string): Ref<{ [key: string]: T }>;
-
-  middlewares: QueryInterpreter[] = [];
-
   query<M extends Model>(model: ModelConstructor<M>): QueryBuilder<M> {
     return new QueryBuilder<M>(this, model, QueryType.get);
   }
 
-  exec<T>(query: Query): T | undefined {
-    let index = 0;
-
-    const next = <T>(): T | undefined => {
-      if (index >= this.middlewares.length) return undefined;
-
-      const middleware = this.middlewares[index++];
-      return middleware({ next: next<T>, query });
-    };
-
-    return next<T>();
+  map<M extends Model>(
+    model: ModelConstructor<M>,
+    data: MapModelOptions<Model>
+  ) {
+    return Object.assign(new model(), data);
   }
-}
 
-export class VueDatabase extends Database {
-  entities: Record<string, Ref> = {};
+  abstract get<M extends Model>(model: ModelConstructor<M>, query: Query): M[];
 
-  getStore(entity: string): Ref {
-    if (!this.entities[entity]) {
-      this.entities[entity] = ref({});
-    }
-    return this.entities[entity];
-  }
+  abstract delete<M extends Model>(
+    model: ModelConstructor<M>,
+
+    primary: Primary,
+    query?: Query
+  ): Partial<M> | undefined;
+
+  abstract update<M extends Model>(
+    model: ModelConstructor<M>,
+    primary: Primary,
+    data: MapModelOptions<M>,
+    query?: Query
+  ): Partial<M> | undefined;
+
+  abstract insert<M extends Model>(
+    model: ModelConstructor<M>,
+    data: MaybeAsArray<MapModelOptions<M>>
+  ): Partial<M>[];
+
+  abstract save<M extends Model>(
+    model: ModelConstructor<M>,
+    data: MaybeAsArray<MapModelOptions<M>>,
+    saveRelations?: boolean
+  ): Partial<M> | Partial<M>[];
+
+  abstract saveOne<M extends Model>(
+    model: ModelConstructor<M>,
+    data: MapModelOptions<M>,
+    saveRelations?: boolean
+  ): Partial<M> | undefined;
+
+  abstract saveRelations<M extends Model>(
+    model: ModelConstructor<M>,
+    data: Record<string, any>
+  ): void;
 }
