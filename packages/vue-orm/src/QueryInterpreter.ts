@@ -1,7 +1,7 @@
 import { Query } from "./Query";
 
 export type QueryInterpreterContext = {
-  next: QueryInterpreter;
+  next: () => void;
   query: Query;
 };
 

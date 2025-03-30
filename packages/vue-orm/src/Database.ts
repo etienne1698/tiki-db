@@ -3,7 +3,7 @@ import { QueryBuilder } from "./QueryBuilder";
 import { Model } from "./Model";
 import { ModelConstructor } from "./types";
 import { Query, QueryType } from "./Query";
-import { QueryInterpreter, QueryInterpreterContext } from "./QueryInterpreter";
+import { QueryInterpreter } from "./QueryInterpreter";
 
 export abstract class Database {
   abstract getStore<T>(entity: string): Ref<{ [key: string]: T }>;
@@ -18,7 +18,7 @@ export abstract class Database {
     let index = 0;
 
     const next = <T>(): T => {
-      if (index > this.middlewares.length) throw new Error("No result QueryInterpreter's");
+      if (index > this.middlewares.length) throw new Error("No result from QueryInterpreter's");
 
       const middleware = this.middlewares[index++];
       return middleware({ next, query });

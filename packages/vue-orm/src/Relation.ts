@@ -1,7 +1,6 @@
 import type { Database } from "./Database";
 import type { Model } from "./Model";
 import { QueryBuilder } from "./QueryBuilder";
-import { Repository } from "./Repository";
 import type { ModelConstructor } from "./types";
 
 export abstract class Relation<M extends Model = Model> {
@@ -34,8 +33,8 @@ export abstract class Relation<M extends Model = Model> {
 
 export class HasOneRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
-    return Repository.createWithOptions({ database, use: this.related })
-      .query()
+    return database
+      .query(this.related)
       .where(this.field, "$eq", model.$primary());
   }
 
@@ -46,8 +45,8 @@ export class HasOneRelation<M extends Model> extends Relation<M> {
 
 export class HasManyRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
-    return Repository.createWithOptions<M>({ database, use: this.related })
-      .query()
+    return database
+      .query(this.related)
       .where(this.field, "$eq", model.$primary());
   }
 
@@ -58,12 +57,10 @@ export class HasManyRelation<M extends Model> extends Relation<M> {
 
 export class BelongsToRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
-    return Repository.createWithOptions<M>({ database, use: this.related })
-      .query()
-      .filter((r) => {
-        // @ts-ignore
-        return r.$primary() == model[this.field];
-      });
+    return database.query(this.related).filter((r) => {
+      // @ts-ignore
+      return r.$primary() == model[this.field];
+    });
   }
 
   override getFor<T extends Model>(model: T, database: Database): M {
