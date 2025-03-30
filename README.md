@@ -16,7 +16,6 @@ VueORM is also compatible with Nuxt through the `nuxt-orm` module, which leverag
 
 ## ✅ TODO
 
-- Custom repository
 - Relation :
   - hasManyBy
   - hasManyThrough
