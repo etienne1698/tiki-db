@@ -15,6 +15,6 @@ export enum QueryType {
 
 export type Query = {
   filters: Record<Operator, Record<string, any>>;
-  withRelated: Set<string>;
+  with: Set<string>;
   type: QueryType
 };

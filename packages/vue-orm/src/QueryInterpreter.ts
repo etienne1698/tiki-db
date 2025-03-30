@@ -1,8 +1,8 @@
 import { Query } from "./Query";
 
-export type QueryInterpreterContext = {
-  next: () => void;
+export type QueryInterpreterContext<T> = {
+  next: () => T;
   query: Query;
 };
 
-export type QueryInterpreter = <T>(c: QueryInterpreterContext) => T;
+export type QueryInterpreter = <T>(c: QueryInterpreterContext<T>) => T;

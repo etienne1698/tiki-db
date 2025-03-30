@@ -14,14 +14,14 @@ export abstract class Database {
     return new QueryBuilder<M>(this, model, QueryType.get);
   }
 
-  exec<T>(query: Query): T {
+  exec<T>(query: Query): T | undefined {
     let index = 0;
 
-    const next = <T>(): T => {
-      if (index > this.middlewares.length) throw new Error("No result from QueryInterpreter's");
+    const next = <T>(): T | undefined => {
+      if (index >= this.middlewares.length) return undefined;
 
       const middleware = this.middlewares[index++];
-      return middleware({ next, query });
+      return middleware({ next: next<T>, query });
     };
 
     return next<T>();

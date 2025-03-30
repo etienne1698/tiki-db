@@ -20,14 +20,14 @@ export class QueryBuilder<M extends Model> {
         $in: {},
         $ne: {},
       },
-      withRelated: new Set<string>(),
+      with: new Set<string>(),
       type,
     };
   }
 
   with(...relations: RelationsOf<M>[]) {
     relations.forEach((r) => {
-      this.query.withRelated.add(r);
+      this.query.with.add(r);
     });
     return this;
   }
@@ -63,7 +63,7 @@ export class QueryBuilder<M extends Model> {
     const modelRelations = this.#model.relations();
     return data.map((model) => {
       const m = model.$clone();
-      for (const relation of this.query.withRelated.values()) {
+      for (const relation of this.query.with.values()) {
         m[relation] = modelRelations[relation].getFor(model, this.#database);
       }
       return m;
@@ -93,9 +93,11 @@ export class QueryBuilder<M extends Model> {
     const state = this.#database.getStore<M>(this.#model.entity);
     let result = Object.values(state.value || []);
     result = this.#applyFilters(result);
-    if (this.query.withRelated.size > 0) {
+    if (this.query.with.size > 0) {
       result = this.#loadRelated(result);
     }
+
+    console.error(this.#database.exec(this.query));
 
     return result;
   }
