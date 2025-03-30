@@ -10,7 +10,7 @@ class CustomUserRepo extends Repository<User> {
   }
 }
 
-const usersRepo = useRepo<User, CustomUserRepo>(CustomUserRepo);
+const usersRepo = useRepo(CustomUserRepo);
 
 if (import.meta.server) {
   usersRepo.save({ id: crypto.randomUUID() });
