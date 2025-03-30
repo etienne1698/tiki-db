@@ -19,8 +19,8 @@ export class Repository<M extends Model = Model> {
   declare state: Ref<Record<Primary, M>>;
   declare database: Database;
 
-  static withOptions<M extends Model = Model>(
-    repository: Repository<M>,
+  static withOptions<M extends Model, R extends Repository<M>>(
+    repository: R,
     options: Partial<RepositoryOptions<M>>
   ) {
     const r = Object.assign(repository, options);
