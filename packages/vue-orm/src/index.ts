@@ -9,4 +9,5 @@ export {
   HasOneRelation,
   Relation,
 } from "./Relation";
-export { QueryBuilder, OperatorValueType, Operator } from "./QueryBuilder";
+export { QueryBuilder } from "./QueryBuilder";
+export { OperatorValueType, Operator, Query } from "./Query";

@@ -1,23 +1,18 @@
-import type { Model } from "./Model";
+import { Model } from "./Model";
+import { OperatorValueType, Query } from "./Query";
 import type { Repository } from "./Repository";
 import type { RelationsOf } from "./types";
 
-export type OperatorValueType = {
-  $eq: any;
-  $in: Array<any>;
-  $ne: any;
-};
-
-export type Operator = keyof OperatorValueType;
-
 export class QueryBuilder<M extends Model> {
   #repository!: Repository<M>;
-  #withRelated = new Set<string>();
 
-  #filters: Record<Operator, Record<string, any>> = {
-    $eq: {},
-    $in: {},
-    $ne: {},
+  query: Query = {
+    filters: {
+      $eq: {},
+      $in: {},
+      $ne: {},
+    },
+    withRelated: new Set<string>(),
   };
 
   #fnFilters: Array<(m: M) => boolean> = [];
@@ -28,7 +23,7 @@ export class QueryBuilder<M extends Model> {
 
   with(...relations: RelationsOf<M>[]) {
     relations.forEach((r) => {
-      this.#withRelated.add(r);
+      this.query.withRelated.add(r);
     });
     return this;
   }
@@ -44,7 +39,7 @@ export class QueryBuilder<M extends Model> {
     value: OperatorValueType[T]
   ) {
     // @ts-ignore
-    this.#filters[op][field] = value;
+    this.query.filters[op][field] = value;
     return this;
   }
 
@@ -64,7 +59,7 @@ export class QueryBuilder<M extends Model> {
     const modelRelations = this.#repository.use.relations();
     return data.map((model) => {
       const m = model.$clone();
-      for (const relation of this.#withRelated.values()) {
+      for (const relation of this.query.withRelated.values()) {
         m[relation] = modelRelations[relation].getFor(
           model,
           this.#repository.database
@@ -78,15 +73,15 @@ export class QueryBuilder<M extends Model> {
     for (const filter of this.#fnFilters) {
       data = data.filter(filter);
     }
-    for (const [key, value] of Object.entries(this.#filters.$eq)) {
+    for (const [key, value] of Object.entries(this.query.filters.$eq)) {
       // @ts-ignore
       data = data.filter((model) => model[key] == value);
     }
-    for (const [key, value] of Object.entries(this.#filters.$in)) {
+    for (const [key, value] of Object.entries(this.query.filters.$in)) {
       // @ts-ignore
       data = data.filter((model) => model[key].includes(value));
     }
-    for (const [key, value] of Object.entries(this.#filters.$ne)) {
+    for (const [key, value] of Object.entries(this.query.filters.$ne)) {
       // @ts-ignore
       data = data.filter((model) => model[key] != value);
     }
@@ -95,7 +90,7 @@ export class QueryBuilder<M extends Model> {
 
   get() {
     let result = Object.values(this.#repository.state.value || []);
-    if (this.#withRelated.size > 0) {
+    if (this.query.withRelated.size > 0) {
       result = this.#loadRelated(result);
     }
     result = this.#applyFilters(result);
