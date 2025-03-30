@@ -1,7 +1,6 @@
 import { Database } from "./Database";
 import { Model } from "./Model";
 import { OperatorValueType, Query, QueryType } from "./Query";
-import type { Repository } from "./Repository";
 import type { ModelConstructor, RelationsOf } from "./types";
 
 export class QueryBuilder<M extends Model> {

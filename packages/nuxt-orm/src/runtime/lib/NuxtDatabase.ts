@@ -1,7 +1,7 @@
-import type { Database } from "vue-orm.js";
+import { Database } from "vue-orm.js";
 import { useState } from "#app";
 
-export default class NuxtDatabase implements Database {
+export default class NuxtDatabase extends Database {
   declare prefix: string;
 
   static createWithPrefix(prefix: string) {

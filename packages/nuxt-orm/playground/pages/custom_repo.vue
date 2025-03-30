@@ -5,7 +5,7 @@ import { User } from "../models/User";
 class CustomUserRepo extends Repository<User> {
   override use = User;
 
-  getAll() {
+  getAllUsers() {
     return this.query().get();
   }
 }
@@ -19,7 +19,7 @@ if (import.meta.server) {
 
 <template>
   <div>
-    <div v-for="user of usersRepo.getAll()" :key="user.id">
+    <div v-for="user of usersRepo.getAllUsers()" :key="user.id">
       {{ user }}
     </div>
   </div>
