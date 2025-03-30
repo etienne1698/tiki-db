@@ -109,6 +109,6 @@ export class Repository<M extends Model = Model> {
  */
 
   query() {
-    return new QueryBuilder(this);
+    return this.database.query(this.use);
   }
 }

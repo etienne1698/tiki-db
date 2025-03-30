@@ -1,24 +1,29 @@
+import { Database } from "./Database";
 import { Model } from "./Model";
-import { OperatorValueType, Query } from "./Query";
+import { OperatorValueType, Query, QueryType } from "./Query";
 import type { Repository } from "./Repository";
-import type { RelationsOf } from "./types";
+import type { ModelConstructor, RelationsOf } from "./types";
 
 export class QueryBuilder<M extends Model> {
-  #repository!: Repository<M>;
+  #database!: Database;
+  #model!: ModelConstructor<M>;
 
-  query: Query = {
-    filters: {
-      $eq: {},
-      $in: {},
-      $ne: {},
-    },
-    withRelated: new Set<string>(),
-  };
+  declare query: Query;
 
   #fnFilters: Array<(m: M) => boolean> = [];
 
-  constructor(repository: Repository<M>) {
-    this.#repository = repository;
+  constructor(database: Database, model: ModelConstructor<M>, type: QueryType) {
+    this.#database = database;
+    this.#model = model;
+    this.query = {
+      filters: {
+        $eq: {},
+        $in: {},
+        $ne: {},
+      },
+      withRelated: new Set<string>(),
+      type,
+    };
   }
 
   with(...relations: RelationsOf<M>[]) {
@@ -56,14 +61,11 @@ export class QueryBuilder<M extends Model> {
   }
 
   #loadRelated(data: M[]) {
-    const modelRelations = this.#repository.use.relations();
+    const modelRelations = this.#model.relations();
     return data.map((model) => {
       const m = model.$clone();
       for (const relation of this.query.withRelated.values()) {
-        m[relation] = modelRelations[relation].getFor(
-          model,
-          this.#repository.database
-        );
+        m[relation] = modelRelations[relation].getFor(model, this.#database);
       }
       return m;
     });
@@ -89,11 +91,12 @@ export class QueryBuilder<M extends Model> {
   }
 
   get() {
-    let result = Object.values(this.#repository.state.value || []);
+    const state = this.#database.getStore<M>(this.#model.entity);
+    let result = Object.values(state.value || []);
+    result = this.#applyFilters(result);
     if (this.query.withRelated.size > 0) {
       result = this.#loadRelated(result);
     }
-    result = this.#applyFilters(result);
 
     return result;
   }
