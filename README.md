@@ -12,6 +12,7 @@ VueORM is also compatible with Nuxt through the `nuxt-orm` module, which leverag
 ## Examples
 
 - [vue-example](https://github.com/etienne1698/nuxt-orm/tree/main/examples/vue-example) - Simple example using vue
+- [nuxt-example](https://github.com/etienne1698/nuxt-orm/tree/main/examples/nuxt-example) - Simple example using nuxt
 
 ## ✅ TODO
 
