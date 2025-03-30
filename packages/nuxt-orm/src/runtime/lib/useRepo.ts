@@ -1,24 +1,24 @@
 import {
   Repository,
+  type Constructor,
   type Database,
   type Model,
   type ModelConstructor,
 } from "vue-orm.js";
 import useDb from "./useDb";
 
-const repositories: Record<string, Repository> = {};
-
 export default function useRepo<M extends Model>(
-  use: ModelConstructor<M>,
-  database?: Database
+  use: ModelConstructor<M> | Constructor<Repository>,
+  db?: Database
 ) {
-  const db = database || useDb();
-  if (!repositories[use.entity]) {
-    repositories[use.entity] = Repository.createWithOptions<M>({
-      use,
-      database: db,
+  const database = db || useDb();
+  if (use instanceof Repository) {
+    return Repository.withOptions(use, {
+      database,
     });
-    return repositories[use.entity];
   }
-  return Repository.withOptions(repositories[use.entity], { database: db });
+  return Repository.createWithOptions<M>({
+    database,
+    use: use as ModelConstructor<M>,
+  });
 }
