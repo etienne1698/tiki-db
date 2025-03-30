@@ -8,7 +8,6 @@ export type ModelConstructor<M extends Model> = Constructor<M> & {
   entity: typeof Model.entity;
   relations: typeof Model.relations;
   primaryKey: typeof Model.primaryKey;
-  map?: typeof Model.map;
 };
 
 export type PrimaryKey = string | string[];

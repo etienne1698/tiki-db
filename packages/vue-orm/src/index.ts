@@ -1,7 +1,7 @@
 export * from "./types";
 
 export { Database } from "./Database";
-export { VueDatabase } from "./VueDatabase";
+export { VueDatabase, VueRefDatabase } from "./VueDatabase";
 export { Repository, RepositoryOptions } from "./Repository";
 export { Model } from "./Model";
 export {

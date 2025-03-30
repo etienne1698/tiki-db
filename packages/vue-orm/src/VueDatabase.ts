@@ -9,15 +9,8 @@ import {
 } from "./types";
 import { Database } from "./Database";
 
-export class VueDatabase extends Database {
-  entities: Record<string, Ref<Record<Primary, Model>>> = {};
-
-  getStore<M extends Model>(entity: string): Ref<Record<Primary, M>> {
-    if (!this.entities[entity]) {
-      this.entities[entity] = ref({});
-    }
-    return this.entities[entity] as Ref<Record<Primary, M>>;
-  }
+export abstract class VueRefDatabase extends Database {
+  abstract getStore<M extends Model>(entity: string): Ref<Record<Primary, M>>;
 
   #loadRelated<M extends Model>(
     query: Query,
@@ -138,5 +131,18 @@ export class VueDatabase extends Database {
     const res = this.map(model, data);
     state.value[primary] = res;
     return res;
+  }
+}
+
+export class VueDatabase extends VueRefDatabase {
+  entities: Record<string, Ref<Record<Primary, Model>>> = {};
+
+  load() {}
+
+  getStore<M extends Model>(entity: string): Ref<Record<Primary, M>> {
+    if (!this.entities[entity]) {
+      this.entities[entity] = ref({});
+    }
+    return this.entities[entity] as Ref<Record<Primary, M>>;
   }
 }

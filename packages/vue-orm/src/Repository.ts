@@ -1,11 +1,5 @@
-import type { Ref } from "vue";
 import { Model } from "./Model";
-import type {
-  MapModelOptions,
-  MaybeAsArray,
-  ModelConstructor,
-  Primary,
-} from "./types";
+import type { MapModelOptions, MaybeAsArray, ModelConstructor } from "./types";
 import type { Database } from "./Database";
 
 export type RepositoryOptions<M extends Model = Model> = {
@@ -15,20 +9,22 @@ export type RepositoryOptions<M extends Model = Model> = {
 
 export class Repository<M extends Model = Model> {
   declare use: ModelConstructor<M>;
-  declare state: Ref<Record<Primary, M>>;
   declare database: Database;
 
-  static withOptions<M extends Model, R extends Repository<M>>(
-    repository: R,
-    options: Partial<RepositoryOptions<M>>
-  ) {
-    return Object.assign(repository, options);
+  withOptions<M extends Model>(options: Partial<RepositoryOptions<M>>) {
+    Object.assign(this, options);
+    this.init();
+    return this;
   }
 
   static createWithOptions<M extends Model = Model>(
     options: RepositoryOptions<M>
   ) {
-    return Repository.withOptions(new Repository<M>(), options);
+    return new Repository<M>().withOptions(options);
+  }
+
+  init() {
+    this.database.load(this.use);
   }
 
   map(data: MapModelOptions<M>) {

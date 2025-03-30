@@ -1,6 +1,6 @@
 import { Database } from "./Database";
 import { Model } from "./Model";
-import { OperatorValueType, Query, QueryType } from "./Query";
+import { OperatorValueType, Query } from "./Query";
 import type { ModelConstructor, RelationsOf } from "./types";
 
 export class QueryBuilder<M extends Model> {
@@ -11,7 +11,7 @@ export class QueryBuilder<M extends Model> {
 
   #fnFilters: Array<(m: M) => boolean> = [];
 
-  constructor(database: Database, model: ModelConstructor<M>, type: QueryType) {
+  constructor(database: Database, model: ModelConstructor<M>) {
     this.#database = database;
     this.#model = model;
     this.query = {
@@ -21,7 +21,6 @@ export class QueryBuilder<M extends Model> {
         $ne: {},
       },
       with: new Set<string>(),
-      type,
     };
   }
 
@@ -59,9 +58,8 @@ export class QueryBuilder<M extends Model> {
     return this.where(field, "$in", value);
   }
 
-
   get() {
-   return this.#database.get(this.#model, this.query);
+    return this.#database.get(this.#model, this.query);
   }
 
   getFirst() {

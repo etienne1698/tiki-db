@@ -1,4 +1,3 @@
-import { ref, type Ref } from "vue";
 import { QueryBuilder } from "./QueryBuilder";
 import { Model } from "./Model";
 import {
@@ -7,11 +6,11 @@ import {
   ModelConstructor,
   Primary,
 } from "./types";
-import { Query, QueryType } from "./Query";
+import { Query } from "./Query";
 
 export abstract class Database {
   query<M extends Model>(model: ModelConstructor<M>): QueryBuilder<M> {
-    return new QueryBuilder<M>(this, model, QueryType.get);
+    return new QueryBuilder<M>(this, model);
   }
 
   map<M extends Model>(
@@ -20,6 +19,8 @@ export abstract class Database {
   ) {
     return Object.assign(new model(), data);
   }
+
+  abstract load<M extends Model>(model: ModelConstructor<M>): void;
 
   abstract get<M extends Model>(model: ModelConstructor<M>, query: Query): M[];
 
