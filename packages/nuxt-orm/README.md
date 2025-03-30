@@ -32,8 +32,6 @@ Create your models in the `models/` directory.
 #### models/Pet.ts
 
 ```ts
-import { Model } from "nuxt-orm";
-
 export class Pet extends Model {
   static override entity = "pets";
 

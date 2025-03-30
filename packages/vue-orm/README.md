@@ -15,7 +15,7 @@ npm install vue-orm.js
 ### Exemple
 
 ```ts
-import { VueDatabase, Model, Repository, Relation } from "../src/index";
+import { VueDatabase, Model, Repository, Relation } from "vue-orm.js";
 
 class User extends Model {
   static override entity = "users";
