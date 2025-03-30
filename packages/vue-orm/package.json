@@ -1,7 +1,7 @@
 {
   "name": "vue-orm.js",
   "version": "1.0.7",
-  "description": "Ma librairie TypeScript",
+  "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
