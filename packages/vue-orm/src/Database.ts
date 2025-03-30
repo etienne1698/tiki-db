@@ -2,13 +2,29 @@ import { ref, type Ref } from "vue";
 import { QueryBuilder } from "./QueryBuilder";
 import { Model } from "./Model";
 import { ModelConstructor } from "./types";
-import { QueryType } from "./Query";
+import { Query, QueryType } from "./Query";
+import { QueryInterpreter, QueryInterpreterContext } from "./QueryInterpreter";
 
 export abstract class Database {
   abstract getStore<T>(entity: string): Ref<{ [key: string]: T }>;
 
+  middlewares: QueryInterpreter[] = [];
+
   query<M extends Model>(model: ModelConstructor<M>): QueryBuilder<M> {
     return new QueryBuilder<M>(this, model, QueryType.get);
+  }
+
+  exec<T>(query: Query): T {
+    let index = 0;
+
+    const next = <T>(): T => {
+      if (index > this.middlewares.length) throw new Error("No result QueryInterpreter's");
+
+      const middleware = this.middlewares[index++];
+      return middleware({ next, query });
+    };
+
+    return next<T>();
   }
 }
 

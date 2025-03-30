@@ -35,18 +35,6 @@ export class Repository<M extends Model = Model> {
 
   init() {
     this.state = this.database.getStore(this.use.entity);
-
-    if (
-      Object.values(this.state.value) &&
-      !(Object.values(this.state.value)[0] instanceof Model)
-    ) {
-      for (const key of Object.keys(this.state.value)) {
-        this.state.value[key] = Object.assign(
-          new this.use(),
-          this.state.value[key]
-        );
-      }
-    }
   }
 
   map(data: MapModelOptions<M>) {
