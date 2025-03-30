@@ -1,4 +1,3 @@
-import type { MapModelOptions } from "vue-orm.js";
 import { Pet } from "./Pet";
 import { Model, Relation } from "#imports";
 
