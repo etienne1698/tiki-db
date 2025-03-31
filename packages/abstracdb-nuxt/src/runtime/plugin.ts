@@ -1,4 +1,4 @@
-import { Model } from "vue-orm.js";
+import { Model } from "abstracdb";
 import {
   definePayloadPlugin,
   definePayloadReducer,

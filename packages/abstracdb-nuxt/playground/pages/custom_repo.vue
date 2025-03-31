@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Repository } from "vue-orm.js";
+import { Repository } from "abstracdb";
 import { User } from "../models/User";
 
 class CustomUserRepo extends Repository<User> {

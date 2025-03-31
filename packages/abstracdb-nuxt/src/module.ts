@@ -31,19 +31,19 @@ export default defineNuxtModule<NuxtORMModuleOptions>({
 
     addImports([
       {
-        from: "vue-orm.js",
+        from: "abstracdb",
         name: "Repository",
       },
       {
-        from: "vue-orm.js",
+        from: "abstracdb",
         name: "QueryBuilder",
       },
       {
-        from: "vue-orm.js",
+        from: "abstracdb",
         name: "Relation",
       },
       {
-        from: "vue-orm.js",
+        from: "abstracdb",
         name: "Model",
       },
     ]);

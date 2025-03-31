@@ -1,4 +1,5 @@
-import { Model, VueRefDatabase, type ModelConstructor } from "vue-orm.js";
+import { Model, type ModelConstructor } from "abstracdb";
+import { VueRefDatabase } from "abstracdb-vue";
 import { useState } from "#app";
 
 export default class NuxtDatabase extends VueRefDatabase {

@@ -4,7 +4,7 @@ import {
   type Database,
   type Model,
   type ModelConstructor,
-} from "vue-orm.js";
+} from "abstracdb";
 import useDb from "./useDb";
 
 function isModel<M extends Model>(data: any): data is ModelConstructor<M> {
