@@ -14,7 +14,7 @@ export interface AbstracDBNuxtModuleOptions {
 
 export default defineNuxtModule<AbstracDBNuxtModuleOptions>({
   meta: {
-    name: "nuxt-orm",
+    name: "abstracdb-nuxt",
     configKey: "abstracDBNuxt",
   },
   setup(options, nuxt) {

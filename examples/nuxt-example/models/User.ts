@@ -1,5 +1,5 @@
 import { Pet } from "./Pet";
-import { Model, Relation, Repository } from "#imports";
+import { Model, Relation, Repository } from "abstracdb";
 
 export class User extends Model {
   static override entity = "User";

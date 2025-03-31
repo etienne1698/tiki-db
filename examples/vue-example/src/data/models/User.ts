@@ -1,4 +1,4 @@
-import { Model, Relation, Repository } from "vue-orm.js";
+import { Model, Relation, Repository } from "abstracdb";
 import { Pet } from "./Pet";
 
 export class User extends Model {

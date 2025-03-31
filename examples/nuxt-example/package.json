@@ -10,10 +10,11 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "abstracdb": "^0.0.1",
+    "abstracdb-nuxt": "^0.0.2",
+    "abstracdb-vue": "^0.0.1",
     "nuxt": "^3.16.1",
-    "nuxt-orm": "^1.0.7",
     "vue": "^3.5.13",
-    "vue-orm.js": "^0.5.0",
     "vue-router": "^4.5.0"
   }
 }

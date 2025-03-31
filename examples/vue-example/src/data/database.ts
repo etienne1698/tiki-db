@@ -1,4 +1,4 @@
-import { VueDatabase } from "vue-orm.js";
+import { VueDatabase } from "abstracdb-vue";
 
 const database = new VueDatabase();
 export default database;
