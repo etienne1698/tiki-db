@@ -14,6 +14,7 @@ function getFieldColumn(field: string): ColDef {
     field,
     flex: 1,
     editable: true,
+    headerName: field,
     headerClass: "adb-ag-field-head",
     cellClass: "adb-ag-field-cell",
   };
@@ -33,13 +34,14 @@ function getRelationColumn(
     headerClass: "adb-ag-relation-head",
     cellClass: "adb-ag-relation-cell",
     cellEditor: "agSelectCellEditor",
+    headerName: field,
     cellEditorParams: (params) => {
       console.error(params);
       return {
         values: values.map((v) => v),
       };
     },
-    cellRenderer: (params) => params.value.$primary(),
+    cellRenderer: (params) => Array.isArray(params.value) ? `[${params.value.map(p => p.$primary()).join(', ')}]` : params.value.$primary(),
   };
 }
 

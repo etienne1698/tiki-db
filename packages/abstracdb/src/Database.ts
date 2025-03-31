@@ -22,7 +22,7 @@ export abstract class Database {
 
   abstract load<M extends Model>(model: ModelConstructor<M>): void;
 
-  abstract get<M extends Model>(model: ModelConstructor<M>, query: Query): M[];
+  abstract get<M extends Model>(model: ModelConstructor<M>, query?: Query): M[];
 
   abstract delete<M extends Model>(
     model: ModelConstructor<M>,
@@ -59,4 +59,6 @@ export abstract class Database {
     model: ModelConstructor<M>,
     data: Record<string, any>
   ): void;
+
+  abstract getByPrimary<M extends Model>( model: ModelConstructor<M>, primary: Primary): M | undefined;
 }

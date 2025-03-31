@@ -46,7 +46,7 @@ export abstract class VueRefDatabase extends Database {
     return data;
   }
 
-  getByPrimary<M extends Model>(
+  getByPrimaries<M extends Model>(
     model: ModelConstructor<M>,
     primaries: Primary[]
   ) {
@@ -54,10 +54,14 @@ export abstract class VueRefDatabase extends Database {
     return primaries.map((primary) => state.value[primary]);
   }
 
+  getByPrimary<M extends Model>(model: ModelConstructor<M>, primary: Primary) {
+    return this.getStore<M>(model.entity).value[primary];
+  }
+
   get<M extends Model>(model: ModelConstructor<M>, query: Query): M[] {
     let result =
       query.primaries.length > 0
-        ? this.getByPrimary(model, query.primaries)
+        ? this.getByPrimaries(model, query.primaries)
         : Object.values(this.getStore<M>(model.entity).value || []);
     result = this.#applyFilters(query, result);
     if (query.with.size > 0) {

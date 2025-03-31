@@ -1,5 +1,10 @@
 import { Model } from "./Model";
-import type { MapModelOptions, MaybeAsArray, ModelConstructor } from "./types";
+import type {
+  MapModelOptions,
+  MaybeAsArray,
+  ModelConstructor,
+  Primary,
+} from "./types";
 import type { Database } from "./Database";
 
 export type RepositoryOptions<M extends Model = Model> = {
@@ -49,5 +54,13 @@ export class Repository<M extends Model = Model> {
 
   query() {
     return this.database.query(this.use);
+  }
+
+  all() {
+    return this.database.get(this.use);
+  }
+
+  getByPrimary(primary: Primary) {
+    return this.database.getByPrimary(this.use, primary);
   }
 }

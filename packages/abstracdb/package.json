@@ -1,6 +1,6 @@
 {
   "name": "abstracdb",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "AbstracDB is a lightweight abstraction layer for data access in JavaScript applications. It provides a structured way to interact with data models and relationships while remaining database-agnostic.",
   "repository": "etienne1698/abstracdb",
   "main": "dist/index.js",
