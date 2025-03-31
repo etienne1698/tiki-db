@@ -57,10 +57,8 @@ export class HasManyRelation<M extends Model> extends Relation<M> {
 
 export class BelongsToRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
-    return database.query(this.related).filter((r) => {
-      // @ts-ignore
-      return r.$primary() == model[this.field];
-    });
+    // @ts-ignore
+    return database.query(this.related).byPrimary([model[this.field]]);
   }
 
   override getFor<T extends Model>(model: T, database: Database): M {

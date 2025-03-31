@@ -9,4 +9,5 @@ export type Operator = keyof OperatorValueType;
 export type Query = {
   filters: Record<Operator, Record<string, any>>;
   with: Set<string>;
+  primaries: Array<string>;
 };

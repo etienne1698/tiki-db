@@ -32,8 +32,8 @@
     "@nuxt/kit": "^3.16.1"
   },
   "peerDependencies": {
-    "abstracdb": "^0.0.1",
-    "abstracdb-vue": "^0.0.1"
+    "abstracdb": "^0.0.7",
+    "abstracdb-vue": "^0.0.7"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.3.1",

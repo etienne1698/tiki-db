@@ -1,15 +1,13 @@
 import { Database } from "./Database";
 import { Model } from "./Model";
 import { OperatorValueType, Query } from "./Query";
-import type { ModelConstructor, RelationsOf } from "./types";
+import type { ModelConstructor, Primary, RelationsOf } from "./types";
 
 export class QueryBuilder<M extends Model> {
   #database!: Database;
   #model!: ModelConstructor<M>;
 
   declare query: Query;
-
-  #fnFilters: Array<(m: M) => boolean> = [];
 
   constructor(database: Database, model: ModelConstructor<M>) {
     this.#database = database;
@@ -21,6 +19,7 @@ export class QueryBuilder<M extends Model> {
         $ne: {},
       },
       with: new Set<string>(),
+      primaries: [],
     };
   }
 
@@ -31,8 +30,10 @@ export class QueryBuilder<M extends Model> {
     return this;
   }
 
-  filter(f: (m: M) => boolean) {
-    this.#fnFilters.push(f);
+  byPrimary(primaries: Primary[]) {
+    primaries.forEach((primary) => {
+      this.query.primaries.push(primary);
+    });
     return this;
   }
 

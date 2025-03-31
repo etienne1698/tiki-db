@@ -46,9 +46,19 @@ export abstract class VueRefDatabase extends Database {
     return data;
   }
 
-  get<M extends Model>(model: ModelConstructor<M>, query: Query): M[] {
+  getByPrimary<M extends Model>(
+    model: ModelConstructor<M>,
+    primaries: Primary[]
+  ) {
     const state = this.getStore<M>(model.entity);
-    let result = Object.values(state.value || []);
+    return primaries.map((primary) => state.value[primary]);
+  }
+
+  get<M extends Model>(model: ModelConstructor<M>, query: Query): M[] {
+    let result =
+      query.primaries.length > 0
+        ? this.getByPrimary(model, query.primaries)
+        : Object.values(this.getStore<M>(model.entity).value || []);
     result = this.#applyFilters(query, result);
     if (query.with.size > 0) {
       result = this.#loadRelated(query, model, result);
