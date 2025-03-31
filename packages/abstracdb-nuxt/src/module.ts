@@ -6,16 +6,16 @@ import {
   addImports,
 } from "@nuxt/kit";
 
-export interface NuxtORMModuleOptions {
+export interface AbstracDBNuxtModuleOptions {
   defaultDatabase?: {
     prefix: string;
   };
 }
 
-export default defineNuxtModule<NuxtORMModuleOptions>({
+export default defineNuxtModule<AbstracDBNuxtModuleOptions>({
   meta: {
     name: "nuxt-orm",
-    configKey: "nuxtOrm",
+    configKey: "abstracDBNuxt",
   },
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url);

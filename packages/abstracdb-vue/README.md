@@ -1,13 +1,15 @@
-# VueORM
+# AbstracDBVue
 
-VueORM is a lightweight and efficient ORM library for Vue 3 that simplifies data normalization and relationship management using Vue `Ref`. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
+AbstracDBVue is a lightweight and efficient ORM library for Vue 3 that simplifies data normalization and relationship management using Vue's `ref`. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
+
+AbstracDBVue is a database implementation for AbstracDB using Vue's `ref`
 
 ## Installation
 
-Install VueORM via npm:
+Install AbstracDBVue via npm:
 
 ```sh
-npm install vue-orm.js
+npm install abstracdb abstracdb-vue
 ```
 
 ## Usage
@@ -15,7 +17,8 @@ npm install vue-orm.js
 ### Exemple
 
 ```ts
-import { VueDatabase, Model, Repository, Relation } from "vue-orm.js";
+import { VueDatabase } from "abstracdb-vue";
+import { Model, Repository, Relation } from "abstracdb";
 
 class User extends Model {
   static override entity = "users";

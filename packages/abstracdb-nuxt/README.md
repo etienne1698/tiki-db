@@ -1,21 +1,23 @@
-# NuxtORM
+# AbstracDBNuxt
 
-NuxtORM is a lightweight and efficient ORM library for Nuxt 3 that simplifies data normalization and relationship management using Nuxt's `useState` composable. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
+AbstracDBNuxt is a lightweight and efficient ORM library for Nuxt 3 that simplifies data normalization and relationship management using Nuxt's `useState` composable. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
+
+AbstracDBNuxt is a database implementation for AbstracDB using Nuxt's `useState`
 
 ## Installation
 
-Install NuxtORM via npm:
+Install AbstracDBNuxt via npm:
 
 ```sh
-npm install nuxt-orm vue-orm.js
+npm install abstracdb abstracdb-vue abstracdb-nuxt
 ```
 
 Add this to your nuxt.config.ts
 
 ```ts
 export default defineNuxtConfig({
-  modules: ["nuxt-orm"],
-  nuxtOrm: {
+  modules: ["abstracdb-nuxt"],
+  abstracDBNuxt: {
     defaultDatabase: {
       prefix: "",
     },

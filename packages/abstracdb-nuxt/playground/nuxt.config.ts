@@ -2,7 +2,7 @@ export default defineNuxtConfig({
   modules: ["../src/module"],
   devtools: { enabled: true },
   compatibilityDate: "2025-03-21",
-  nuxtOrm: {
+  abstracDBNuxt: {
     defaultDatabase: {
       prefix: "db_",
     },

@@ -1,13 +1,13 @@
-# VueORM / NuxtORM
+# AbstracDB
 
-VueORM (`vue-orm.js`) is a lightweight and efficient ORM library for Vue 3 that simplifies data normalization and relationship management using Vue’s `Ref`. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
+AbstracDB is a lightweight abstraction layer for data access in JavaScript applications. It provides a structured way to interact with data models and relationships while remaining database-agnostic. AbstracDB itself is not intended to be used directly but rather through a specific database implementation, such as VueDatabase or IndexedDBDatabase.
 
-VueORM is also compatible with Nuxt through the `nuxt-orm` module, which leverages the `useState` composable 
+more informations at [AbstracDB README](https://)
 
-## Packages
+## Database implementations
 
-- [abstracdb-vue](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb-vue) - state/relationships managment for vue
-- [abstracdb-nuxt](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb-nuxt) - abstracdb-vue for nuxt
+- [abstracdb-vue](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb-vue) - abstracdb using vue `ref`
+- [abstracdb-nuxt](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb-nuxt) - abstracdb using nuxt `useState`
 
 ## Examples
 
