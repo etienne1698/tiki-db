@@ -24,3 +24,9 @@ more informations at [AbstracDB README](https://)
 - Relations composite key
 - update/delete (with composite key)
 - update/delete by query
+
+
+- AbstracDB GitHub repository:
+  - github actions to keep readme up to date
+  - playground project
+  - documentation
