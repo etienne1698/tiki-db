@@ -1,8 +1,8 @@
 # AbstracDBNuxt
 
-AbstracDBNuxt is a lightweight and efficient ORM library for Nuxt 3 that simplifies data normalization and relationship management using Nuxt's `useState` composable. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
+AbstracDBNuxt is a lightweight and efficient ORM library for Nuxt 3 that simplifies data normalization and relationship management using nuxt `useState` composable. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
 
-AbstracDBNuxt is a database implementation for AbstracDB using Nuxt's `useState`
+AbstracDBNuxt is a database implementation for AbstracDB using nuxt `useState`
 
 ## Installation
 

@@ -1,8 +1,8 @@
 # AbstracDBVue
 
-AbstracDBVue is a lightweight and efficient ORM library for Vue 3 that simplifies data normalization and relationship management using Vue's `ref`. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
+AbstracDBVue is a lightweight and efficient ORM library for Vue 3 that simplifies data normalization and relationship management using vue `ref`. It provides a structured way to handle entities and associations while keeping state management seamless and reactive.
 
-AbstracDBVue is a database implementation for AbstracDB using Vue's `ref`
+AbstracDBVue is a database implementation for AbstracDB using vue `ref`
 
 ## Installation
 
