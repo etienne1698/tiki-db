@@ -1,6 +1,6 @@
 {
   "name": "abstracdb-vue",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "AbstracDB Vue",
   "repository": "etienne1698/abstracdb",
   "main": "dist/index.js",
