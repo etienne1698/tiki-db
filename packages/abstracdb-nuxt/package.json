@@ -2,7 +2,7 @@
   "name": "abstracdb-nuxt",
   "version": "0.0.1",
   "description": "AbstracDB Nuxt",
-  "repository": "etienne1698/nuxt-orm",
+  "repository": "etienne1698/abstracdb",
   "license": "MIT",
   "type": "module",
   "exports": {

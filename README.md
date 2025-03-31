@@ -6,13 +6,13 @@ VueORM is also compatible with Nuxt through the `nuxt-orm` module, which leverag
 
 ## Packages
 
-- [vue-orm.js](https://github.com/etienne1698/nuxt-orm/tree/main/packages/vue-orm) - state/relationships managment for vue
-- [nuxt-orm](https://github.com/etienne1698/nuxt-orm/tree/main/packages/nuxt-orm) - vue-orm.js for nuxt
+- [abstracdb-vue](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb-vue) - state/relationships managment for vue
+- [abstracdb-nuxt](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb-nuxt) - abstracdb-vue for nuxt
 
 ## Examples
 
-- [vue-example](https://github.com/etienne1698/nuxt-orm/tree/main/examples/vue-example) - Simple example using vue
-- [nuxt-example](https://github.com/etienne1698/nuxt-orm/tree/main/examples/nuxt-example) - Simple example using nuxt
+- [vue-example](https://github.com/etienne1698/abstracdb/tree/main/examples/vue-example) - Simple example using vue
+- [nuxt-example](https://github.com/etienne1698/abstracdb/tree/main/examples/nuxt-example) - Simple example using nuxt
 
 ## ✅ TODO
 
