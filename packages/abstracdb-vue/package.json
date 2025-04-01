@@ -1,6 +1,6 @@
 {
   "name": "abstracdb-vue",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "AbstracDBVue is a database implementation for AbstracDB using vue `ref`",
   "repository": "etienne1698/abstracdb",
   "main": "dist/index.js",

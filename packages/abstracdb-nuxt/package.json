@@ -1,6 +1,6 @@
 {
   "name": "abstracdb-nuxt",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "AbstracDBNuxt is a database implementation for AbstracDB using nuxt `useState`",
   "repository": "etienne1698/abstracdb",
   "license": "MIT",
@@ -32,8 +32,8 @@
     "@nuxt/kit": "^3.16.1"
   },
   "peerDependencies": {
-    "abstracdb": "^0.0.7",
-    "abstracdb-vue": "^0.0.7"
+    "abstracdb": "^0.0.8",
+    "abstracdb-vue": "^0.0.10"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.3.1",
