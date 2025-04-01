@@ -13,7 +13,7 @@ for (let i = 0; i < 6; i++) {
   } as Partial<City>);
 }
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 10; i++) {
   const user_id = faker.string.uuid();
   const city = pickRandom(cities);
   const city_id = city.id as string;

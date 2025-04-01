@@ -9,19 +9,20 @@ import repositories from "./data/repositories";
 const belongsToColDef: Partial<ColDef> = {
   headerClass: "text-emerald-600",
   cellClass: "text-emerald-600",
+  cellRenderer: (params: any) => JSON.stringify(params.value, null, 2),
 };
 
 const hasManyColDef: Partial<ColDef> = {
   headerClass: "text-pink-600",
   cellClass: "text-pink-600",
+  cellRenderer: (params: any) => JSON.stringify(params.value, null, 2),
 };
 
 const hasManyThroughColDef: Partial<ColDef> = {
   headerClass: "text-purple-600",
   cellClass: "text-purple-600",
+  cellRenderer: (params: any) => JSON.stringify(params.value, null, 2),
 };
-
-
 </script>
 
 <template>
@@ -40,7 +41,7 @@ const hasManyThroughColDef: Partial<ColDef> = {
         <span>{{ relation }}</span>
       </div>
     </div>
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid gap-4">
       <div>
         <div class="text-xl mb-1">User</div>
         <ag-grid-vue
@@ -69,18 +70,15 @@ const hasManyThroughColDef: Partial<ColDef> = {
             {
               ...hasManyColDef,
               field: 'pets',
-              cellRenderer: (params) =>
-                params.value.map((pet) => pet.name).join(', '),
               flex: 1,
             },
             {
               ...belongsToColDef,
               field: 'city',
-              cellRenderer: (params) => params.value.name,
               flex: 1,
             },
           ]"
-          style="height: 500px"
+          style="height: 300px"
         />
       </div>
       <div>
@@ -103,11 +101,10 @@ const hasManyThroughColDef: Partial<ColDef> = {
             {
               ...belongsToColDef,
               field: 'user',
-              cellRenderer: (params) => JSON.stringify(params.value, null, 2),
               flex: 1,
             },
           ]"
-          style="height: 500px"
+          style="height: 300px"
         />
       </div>
       <div>
@@ -130,13 +127,11 @@ const hasManyThroughColDef: Partial<ColDef> = {
             {
               ...hasManyColDef,
               field: 'users',
-              cellRenderer: (params) => JSON.stringify(params.value, null, 2),
               flex: 1,
             },
             {
               ...hasManyThroughColDef,
               field: 'pets',
-              cellRenderer: (params) => JSON.stringify(params.value, null, 2),
               flex: 1,
             },
           ]"
