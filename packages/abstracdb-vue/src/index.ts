@@ -106,7 +106,6 @@ export abstract class VueRefDatabase extends Database {
     for (const [key, value] of Object.entries(data)) {
       if (modelRelations[key]) {
         this.save(modelRelations[key].related, value);
-        console.error(key, value, modelRelations[key].related)
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete data[key];

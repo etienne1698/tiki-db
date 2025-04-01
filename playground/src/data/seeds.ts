@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 
-import UserRepository from "../repositories/UserRepository";
-import type { City } from "../models/City";
+import type { City } from "./models/City";
+import repositories from "./repositories";
 
 const cities: Partial<City>[] = [];
 for (let i = 0; i < 6; i++) {
@@ -37,5 +37,5 @@ for (let i = 0; i < 100; i++) {
         type: faker.animal.type(),
       },
     ];
-  UserRepository.save(user);
+  repositories.users.save(user);
 }

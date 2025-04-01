@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import "./data/seeds/index";
+import "./data/seeds";
 
 import { AgGridVue } from "ag-grid-vue3";
 import type { ColDef } from "ag-grid-community";
 
-import PetRepository from "./data/repositories/PetRepository";
-import UserRepository from "./data/repositories/UserRepository";
+import repositories from "./data/repositories";
 
 const relationColDef: Partial<ColDef> = {
   headerClass: "bg-blue-50",
@@ -18,7 +17,7 @@ const relationColDef: Partial<ColDef> = {
     <div>
       Users
       <ag-grid-vue
-        :rowData="UserRepository.query().with('pets', 'city').get()"
+        :rowData="repositories.users.query().with('pets', 'city').get()"
         :columnDefs="[
           {
             field: 'id',
@@ -60,7 +59,7 @@ const relationColDef: Partial<ColDef> = {
     <div>
       Pets
       <ag-grid-vue
-        :rowData="PetRepository.query().with('user').get()"
+        :rowData="repositories.pets.query().with('user').get()"
         :columnDefs="[
           {
             field: 'id',
