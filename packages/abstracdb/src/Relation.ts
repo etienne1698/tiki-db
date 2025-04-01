@@ -29,6 +29,15 @@ export abstract class Relation<M extends Model = Model> {
   static hasOne<M extends Model>(model: ModelConstructor<M>, field: string) {
     return new HasOneRelation(model, field);
   }
+
+  static hasManyThrough<M extends Model, MThrough extends Model>(
+    related: ModelConstructor<M>,
+    relatedThroug: ModelConstructor<MThrough>,
+    field: string,
+    fieldThroug: string
+  ) {
+    return new HasManyThroughRelation(related, relatedThroug, field, fieldThroug);
+  }
 }
 
 export class HasOneRelation<M extends Model> extends Relation<M> {
@@ -59,6 +68,38 @@ export class BelongsToRelation<M extends Model> extends Relation<M> {
   queryFor<T extends Model>(model: T, database: Database) {
     // @ts-ignore
     return database.query(this.related).byPrimary([model[this.field]]);
+  }
+
+  override getFor<T extends Model>(model: T, database: Database): M {
+    return this.queryFor(model, database).getFirst();
+  }
+}
+
+export class HasManyThroughRelation<M extends Model, MThrough extends Model> extends Relation<M> {
+  declare fieldThroug: string;
+  declare relatedThroug: ModelConstructor<MThrough>;
+
+  constructor(
+    related: ModelConstructor<M>,
+    relatedThroug: ModelConstructor<MThrough>,
+    field: string,
+    fieldThroug: string
+  ) {
+    super(related, field);
+    this.fieldThroug = fieldThroug;
+    this.relatedThroug = relatedThroug;
+  }
+
+  queryFor<T extends Model>(model: T, database: Database) {
+    const relatedThroug = database.query(this.relatedThroug).where(
+      this.fieldThroug,
+      "$eq",
+      model.$primary()
+    ).get();
+    // @ts-ignore
+    return database
+      .query(this.related)
+      .where(this.field, "$in", relatedThroug.map(m => m.$primary()));
   }
 
   override getFor<T extends Model>(model: T, database: Database): M {

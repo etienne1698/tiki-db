@@ -116,7 +116,7 @@ const hasManyColDef: Partial<ColDef> = {
               flex: 1,
             },
             {
-              field: 'type',
+              field: 'country',
               flex: 1,
             },
             {

@@ -1,4 +1,4 @@
-import { Relation, Model } from "abstracdb";
+import { Model, Relation } from "../../reexport";
 import { User } from "./User";
 
 export class Pet extends Model {

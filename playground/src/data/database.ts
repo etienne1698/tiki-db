@@ -1,3 +1,3 @@
-import { VueDatabase } from "abstracdb-vue";
+import { VueDatabase } from "../reexport";
 
 export default new VueDatabase();

@@ -1,6 +1,6 @@
 import { City } from "./City";
 import { Pet } from "./Pet";
-import { Model, Relation } from "abstracdb";
+import { Model, Relation } from "../../reexport";
 
 export class User extends Model {
   static override entity = "User";

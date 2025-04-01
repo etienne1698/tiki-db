@@ -1,7 +1,7 @@
 export * from "./types";
 
 export { Database } from "./Database";
-export { Repository, RepositoryOptions } from "./Repository";
+export { Repository, type RepositoryOptions } from "./Repository";
 export { Model } from "./Model";
 export {
   BelongsToRelation,
@@ -10,4 +10,4 @@ export {
   Relation,
 } from "./Relation";
 export { QueryBuilder } from "./QueryBuilder";
-export { OperatorValueType, Operator, Query } from "./Query";
+export { type OperatorValueType, type Operator, type Query } from "./Query";

@@ -1,4 +1,4 @@
-import { Repository } from "abstracdb";
+import { Repository } from "../reexport";
 import database from "./database";
 import { Pet } from "./models/Pet";
 import { User } from "./models/User";
