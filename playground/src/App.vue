@@ -7,13 +7,13 @@ import type { ColDef } from "ag-grid-community";
 import repositories from "./data/repositories";
 
 const belongsToColDef: Partial<ColDef> = {
-  headerClass: "bg-blue-50",
-  cellClass: "bg-blue-50",
+  headerClass: "text-emerald-600",
+  cellClass: "text-emerald-600",
 };
 
 const hasManyColDef: Partial<ColDef> = {
-  headerClass: "bg-red-50",
-  cellClass: "bg-red-50",
+  headerClass: "text-pink-600",
+  cellClass: "text-pink-600",
 };
 </script>
 
@@ -23,8 +23,8 @@ const hasManyColDef: Partial<ColDef> = {
       <div
         class="flex items-center gap-2"
         v-for="[color, relation] of [
-          ['bg-blue-200', 'belongsTo'],
-          ['bg-red-200', 'hasMany'],
+          ['bg-emerald-600', 'belongsTo'],
+          ['bg-pink-600', 'hasMany'],
         ]"
         :key="color"
       >
