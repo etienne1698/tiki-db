@@ -34,7 +34,7 @@ const hasManyColDef: Partial<ColDef> = {
     </div>
     <div class="grid grid-cols-2 gap-4">
       <div>
-        Users
+        <div class="text-xl mb-1">User</div>
         <ag-grid-vue
           :rowData="repositories.users.query().with('pets', 'city').get()"
           :columnDefs="[
@@ -76,7 +76,7 @@ const hasManyColDef: Partial<ColDef> = {
         />
       </div>
       <div>
-        Pets
+        <div class="text-xl mb-1">Pet</div>
         <ag-grid-vue
           :rowData="repositories.pets.query().with('user').get()"
           :columnDefs="[
@@ -103,7 +103,7 @@ const hasManyColDef: Partial<ColDef> = {
         />
       </div>
       <div>
-        City
+        <div class="text-xl mb-1">City</div>
         <ag-grid-vue
           :rowData="repositories.cities.query().with('users').get()"
           :columnDefs="[
@@ -122,7 +122,8 @@ const hasManyColDef: Partial<ColDef> = {
             {
               ...hasManyColDef,
               field: 'users',
-              cellRenderer: (params) => params.value.map(u => u.fullName).join(', '),
+              cellRenderer: (params) =>
+                params.value.map((u) => u.fullName).join(', '),
               flex: 1,
             },
           ]"
