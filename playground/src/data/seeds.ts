@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 
 import type { City } from "./models/City";
 import repositories from "./repositories";
+import { pickRandom } from "../utils";
 
 const cities: Partial<City>[] = [];
 for (let i = 0; i < 6; i++) {
@@ -12,20 +13,18 @@ for (let i = 0; i < 6; i++) {
   } as Partial<City>);
 }
 
-function pickCity() {
-  const index = Math.floor(Math.random() * 6);
-  return cities[index];
-}
-
 for (let i = 0; i < 100; i++) {
   const user_id = faker.string.uuid();
+  const city = pickRandom(cities);
+  const city_id = city.id as string;
   const user: any = {
     id: user_id,
     firstname: faker.person.firstName(),
     lastname: faker.person.lastName(),
     email: faker.internet.email(),
     phone: faker.phone.number(),
-    city: pickCity(),
+    city_id,
+    city,
   };
   const userHasPet = Boolean(+Math.random().toFixed(0));
   if (userHasPet)
