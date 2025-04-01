@@ -10,6 +10,7 @@ export class Pet extends Model {
 
   declare id: string;
   declare name: string;
+  declare type: string;
   declare user_id: string;
 
   declare user?: User;
