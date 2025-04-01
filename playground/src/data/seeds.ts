@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 
 import type { City } from "./models/City";
 import repositories from "./repositories";
-import { pickRandom } from "../utils";
+import { flipACoin, pickRandom } from "../utils";
 
 const cities: Partial<City>[] = [];
 for (let i = 0; i < 6; i++) {
@@ -26,7 +26,7 @@ for (let i = 0; i < 100; i++) {
     city_id,
     city,
   };
-  const userHasPet = Boolean(+Math.random().toFixed(0));
+  const userHasPet = flipACoin();
   if (userHasPet)
     user.pets = [
       {
