@@ -102,7 +102,7 @@ export class HasManyThroughRelation<M extends Model, MThrough extends Model> ext
       .where(this.field, "$in", relatedThroug.map(m => m.$primary()));
   }
 
-  override getFor<T extends Model>(model: T, database: Database): M {
-    return this.queryFor(model, database).getFirst();
+  override getFor<T extends Model>(model: T, database: Database): M[] {
+    return this.queryFor(model, database).get();
   }
 }

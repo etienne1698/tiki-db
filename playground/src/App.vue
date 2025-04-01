@@ -15,6 +15,13 @@ const hasManyColDef: Partial<ColDef> = {
   headerClass: "text-pink-600",
   cellClass: "text-pink-600",
 };
+
+const hasManyThroughColDef: Partial<ColDef> = {
+  headerClass: "text-purple-600",
+  cellClass: "text-purple-600",
+};
+
+
 </script>
 
 <template>
@@ -25,6 +32,7 @@ const hasManyColDef: Partial<ColDef> = {
         v-for="[color, relation] of [
           ['bg-emerald-600', 'belongsTo'],
           ['bg-pink-600', 'hasMany'],
+          ['bg-purple-600', 'hasManyThrough'],
         ]"
         :key="color"
       >
@@ -95,7 +103,7 @@ const hasManyColDef: Partial<ColDef> = {
             {
               ...belongsToColDef,
               field: 'user',
-              cellRenderer: (params) => params.value.fullName,
+              cellRenderer: (params) => JSON.stringify(params.value, null, 2),
               flex: 1,
             },
           ]"
@@ -105,7 +113,7 @@ const hasManyColDef: Partial<ColDef> = {
       <div>
         <div class="text-xl mb-1">City</div>
         <ag-grid-vue
-          :rowData="repositories.cities.query().with('users').get()"
+          :rowData="repositories.cities.query().with('users', 'pets').get()"
           :columnDefs="[
             {
               field: 'id',
@@ -122,8 +130,13 @@ const hasManyColDef: Partial<ColDef> = {
             {
               ...hasManyColDef,
               field: 'users',
-              cellRenderer: (params) =>
-                params.value.map((u) => u.fullName).join(', '),
+              cellRenderer: (params) => JSON.stringify(params.value, null, 2),
+              flex: 1,
+            },
+            {
+              ...hasManyThroughColDef,
+              field: 'pets',
+              cellRenderer: (params) => JSON.stringify(params.value, null, 2),
               flex: 1,
             },
           ]"
