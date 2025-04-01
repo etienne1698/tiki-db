@@ -1,5 +1,5 @@
 import type { Relation } from "./Relation";
-import type { MapModelOptions, Primary, PrimaryKey } from "./types";
+import type { MapModelOptions, ModelConstructor, Primary, PrimaryKey } from "./types";
 
 export abstract class Model {
   static primaryKey: PrimaryKey = "id";
@@ -21,16 +21,8 @@ export abstract class Model {
     return primaryKey.map((k) => data[k]).join();
   }
 
-  $toJSON() {
-    return this;
-  }
-
   $clone() {
     return Object.assign(Object.create(this), this);
-  }
-
-  static clone<M extends Model>(model: M | M[]) {
-    return Array.isArray(model) ? model.map((m) => m.$clone()) : model.$clone();
   }
 
   $merge<M extends Model>(m: MapModelOptions<M>) {
