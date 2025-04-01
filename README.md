@@ -1,7 +1,7 @@
 # AbstracDB
 
 AbstracDB is a lightweight abstraction layer for data access in JavaScript applications. It provides a structured way to interact with data models and relationships while remaining database-agnostic. 
-AbstracDB itself is not intended to be used directly but rather through a specific database implementation, such as VueDatabase or IndexedDBDatabase.
+AbstracDB itself is not intended to be used directly but rather through a specific database implementation, such as VueDatabase.
 
 more informations at [AbstracDB README](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb)
 
