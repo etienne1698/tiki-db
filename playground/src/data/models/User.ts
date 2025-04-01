@@ -1,6 +1,7 @@
 import { City } from "./City";
 import { Pet } from "./Pet";
 import { Model, Relation } from "../../reexport";
+import { Role, RoleUser } from "./Role";
 
 export class User extends Model {
   static override entity = "User";
@@ -9,6 +10,7 @@ export class User extends Model {
     return {
       pets: Relation.hasMany(Pet, "user_id"),
       city: Relation.belongsTo(City, "city_id"),
+      roles: Relation.belongsToMany(Role, RoleUser, "user_id", "role_id"),
     };
   }
 

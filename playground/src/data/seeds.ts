@@ -38,3 +38,9 @@ for (let i = 0; i < 10; i++) {
     ];
   repositories.users.save(user);
 }
+
+repositories.roles.save([
+  { id: faker.string.uuid(), name: "admin" },
+  { id: faker.string.uuid(), name: "user" },
+  { id: faker.string.uuid(), name: "guest" },
+]);

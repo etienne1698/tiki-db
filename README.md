@@ -19,7 +19,6 @@ more informations at [AbstracDB README](https://github.com/etienne1698/abstracdb
 
 - Relation :
   - hasManyBy
-  - hasManyThrough
   - belongsToMany (with pivot)
 - Relations composite key
 - update/delete (with composite key)

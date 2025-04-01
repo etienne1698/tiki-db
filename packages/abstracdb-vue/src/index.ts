@@ -118,6 +118,7 @@ export abstract class VueRefDatabase extends Database {
     data: MaybeAsArray<MapModelOptions<M>>,
     saveRelations?: boolean
   ): M[] {
+    
     if (Array.isArray(data)) {
       return data
         .map((d) => this.saveOne.bind(this)(model, d, saveRelations))

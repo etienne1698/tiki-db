@@ -1,6 +1,5 @@
 import type { Database } from "./Database";
 import type { Model } from "./Model";
-import { QueryBuilder } from "./QueryBuilder";
 import type { ModelConstructor } from "./types";
 
 export abstract class Relation<M extends Model = Model> {
@@ -12,10 +11,6 @@ export abstract class Relation<M extends Model = Model> {
     this.field = field;
   }
 
-  abstract queryFor<T extends Model>(
-    model: T,
-    database: Database
-  ): QueryBuilder<M>;
   abstract getFor<T extends Model>(model: T, database: Database): M | M[];
 
   static hasMany<M extends Model>(model: ModelConstructor<M>, field: string) {
@@ -36,46 +31,63 @@ export abstract class Relation<M extends Model = Model> {
     field: string,
     fieldThroug: string
   ) {
-    return new HasManyThroughRelation(related, relatedThroug, field, fieldThroug);
+    return new HasManyThroughRelation(
+      related,
+      relatedThroug,
+      field,
+      fieldThroug
+    );
+  }
+
+  static belongsToMany<M extends Model, MPivot extends Model>(
+    related: ModelConstructor<M>,
+    relatedPivot: ModelConstructor<MPivot>,
+    modelField: string,
+    relatedField: string
+  ) {
+    return new BelongsToManyRelation(
+      related,
+      relatedPivot,
+      modelField,
+      relatedField
+    );
   }
 }
 
 export class HasOneRelation<M extends Model> extends Relation<M> {
-  queryFor<T extends Model>(model: T, database: Database) {
+  override getFor<T extends Model>(model: T, database: Database): M {
     return database
       .query(this.related)
-      .where(this.field, "$eq", model.$primary());
-  }
-
-  override getFor<T extends Model>(model: T, database: Database): M {
-    return this.queryFor(model, database).getFirst();
+      .where(this.field, "$eq", model.$primary())
+      .getFirst();
   }
 }
 
 export class HasManyRelation<M extends Model> extends Relation<M> {
-  queryFor<T extends Model>(model: T, database: Database) {
+  override getFor<T extends Model>(model: T, database: Database): M[] {
     return database
       .query(this.related)
-      .where(this.field, "$eq", model.$primary());
-  }
-
-  override getFor<T extends Model>(model: T, database: Database): M[] {
-    return this.queryFor(model, database).get();
+      .where(this.field, "$eq", model.$primary())
+      .get();
   }
 }
 
 export class BelongsToRelation<M extends Model> extends Relation<M> {
-  queryFor<T extends Model>(model: T, database: Database) {
-    // @ts-ignore
-    return database.query(this.related).byPrimary([model[this.field]]);
-  }
-
   override getFor<T extends Model>(model: T, database: Database): M {
-    return this.queryFor(model, database).getFirst();
+    return (
+      database
+        .query(this.related)
+        // @ts-ignore
+        .byPrimary([model[this.field]])
+        .getFirst()
+    );
   }
 }
 
-export class HasManyThroughRelation<M extends Model, MThrough extends Model> extends Relation<M> {
+export class HasManyThroughRelation<
+  M extends Model,
+  MThrough extends Model
+> extends Relation<M> {
   declare fieldThroug: string;
   declare relatedThroug: ModelConstructor<MThrough>;
 
@@ -89,20 +101,53 @@ export class HasManyThroughRelation<M extends Model, MThrough extends Model> ext
     this.fieldThroug = fieldThroug;
     this.relatedThroug = relatedThroug;
   }
-
-  queryFor<T extends Model>(model: T, database: Database) {
-    const relatedThroug = database.query(this.relatedThroug).where(
-      this.fieldThroug,
-      "$eq",
-      model.$primary()
-    ).get();
+  override getFor<T extends Model>(model: T, database: Database): M[] {
+    const relatedThroug = database
+      .query(this.relatedThroug)
+      .where(this.fieldThroug, "$eq", model.$primary())
+      .get();
     // @ts-ignore
     return database
       .query(this.related)
-      .where(this.field, "$in", relatedThroug.map(m => m.$primary()));
+      .where(
+        this.field,
+        "$in",
+        relatedThroug.map((m) => m.$primary())
+      )
+      .get();
+  }
+}
+
+export class BelongsToManyRelation<
+  M extends Model,
+  MPivot extends Model
+> extends Relation<M> {
+  declare relatedField: string;
+  declare relatedPivot: ModelConstructor<MPivot>;
+
+  constructor(
+    related: ModelConstructor<M>,
+    relatedPivot: ModelConstructor<MPivot>,
+    modelField: string,
+    relatedField: string
+  ) {
+    super(related, modelField);
+    this.relatedField = relatedField;
+    this.relatedPivot = relatedPivot;
   }
 
   override getFor<T extends Model>(model: T, database: Database): M[] {
-    return this.queryFor(model, database).get();
+    const relatedPivot = database
+      .query(this.relatedPivot)
+      .where(this.field, "$eq", model.$primary())
+      .get();
+    if (relatedPivot.length === 0) return [];
+    return (
+      database
+        .query(this.related)
+        // @ts-ignore
+        .byPrimary(relatedPivot.map((m) => m[this.relatedField]))
+        .get()
+    );
   }
 }

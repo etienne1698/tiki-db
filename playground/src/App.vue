@@ -12,6 +12,12 @@ const belongsToColDef: Partial<ColDef> = {
   cellRenderer: (params: any) => JSON.stringify(params.value, null, 2),
 };
 
+const belongsToManyColDef: Partial<ColDef> = {
+  headerClass: "text-yellow-600",
+  cellClass: "text-yellow-600",
+  cellRenderer: (params: any) => JSON.stringify(params.value, null, 2),
+};
+
 const hasManyColDef: Partial<ColDef> = {
   headerClass: "text-pink-600",
   cellClass: "text-pink-600",
@@ -34,6 +40,7 @@ const hasManyThroughColDef: Partial<ColDef> = {
           ['bg-emerald-600', 'belongsTo'],
           ['bg-pink-600', 'hasMany'],
           ['bg-purple-600', 'hasManyThrough'],
+          ['bg-yellow-600', 'belongsToMany'],
         ]"
         :key="color"
       >
@@ -41,7 +48,7 @@ const hasManyThroughColDef: Partial<ColDef> = {
         <span>{{ relation }}</span>
       </div>
     </div>
-    <div class="grid gap-4">
+    <div class="grid grid-cols-2 gap-4">
       <div>
         <div class="text-xl mb-1">User</div>
         <ag-grid-vue
@@ -101,6 +108,28 @@ const hasManyThroughColDef: Partial<ColDef> = {
             {
               ...belongsToColDef,
               field: 'user',
+              flex: 1,
+            },
+          ]"
+          style="height: 300px"
+        />
+      </div>
+      <div>
+        <div class="text-xl mb-1">Role</div>
+        <ag-grid-vue
+          :rowData="repositories.roles.query().with('users').get()"
+          :columnDefs="[
+            {
+              field: 'id',
+              flex: 1,
+            },
+            {
+              field: 'name',
+              flex: 1,
+            },
+            {
+              ...belongsToManyColDef,
+              field: 'users',
               flex: 1,
             },
           ]"
