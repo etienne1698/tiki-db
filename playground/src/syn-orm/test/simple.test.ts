@@ -31,7 +31,7 @@ test("test", () => {
     }
   );
 
-  db.collections.pet.query().where('user_id', '$eq', '')
+  db.collections.pet.query().where('user_id', '$ne', '')
 
   return expect(db.collections.user.relations.pets.field).toBe("user_id");
 });

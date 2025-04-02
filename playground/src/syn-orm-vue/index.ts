@@ -5,49 +5,10 @@ import {
   type InferModelNormalizedType,
   type Primary,
   type DatabaseStore,
+  Relation,
 } from "../syn-orm";
 import type { AnyButMaybeT, MaybeAsArray } from "../syn-orm/types";
 /* 
-export abstract class VueRefDatabase extends Database {
-  abstract getStore<M extends Model>(name: string): Ref<Record<Primary, M>>;
-
-
-
-
-
-
-
-  insert<M extends Model>(
-    model: ModelConstructor<M>,
-    data: MapModelOptions<M>
-  ): M[] {
-    throw new Error("Method not implemented.");
-  }
-
-  update<M extends Model>(
-    model: ModelConstructor<M>,
-    primary: Primary,
-    data: MapModelOptions<M>,
-    query?: Query
-  ): M | undefined {
-    throw new Error("Method not implemented.");
-  }
-
-  save<M extends Model>(
-    model: ModelConstructor<M>,
-    data: MaybeAsArray<MapModelOptions<M>>,
-    saveRelations?: boolean
-  ): M[] {
-    if (Array.isArray(data)) {
-      return data
-        .map((d) => this.saveOne.bind(this)(model, d, saveRelations))
-        .filter((m) => m != null);
-    }
-    const saveRes = this.saveOne(model, data, saveRelations);
-    return saveRes ? [saveRes] : [];
-  }
-
-}
 
 export class VueDatabase extends VueRefDatabase {
   entities: Record<string, Ref<Record<Primary, Model>>> = {};
@@ -70,14 +31,15 @@ export abstract class VueDatabase implements DatabaseStore {
   abstract load<M extends Model>(model: M): void;
 
   #loadRelated<M extends Model>(
-    query: Query,
+    query: Query<M>,
     model: M,
     data: InferModelNormalizedType<M>[]
   ) {
     const modelRelations = model.relations();
-    return data.map<InferModelNormalizedType<M>>((model) => {
-      const m = model.$clone();
+    return data.map((data) => {
+      const m = { ...data } as InferModelNormalizedType<M>;
       for (const relation of query.with.values()) {
+        // @ts-ignore
         m[relation] = modelRelations[relation].getFor(model, this);
       }
       return m;
@@ -85,7 +47,7 @@ export abstract class VueDatabase implements DatabaseStore {
   }
 
   #applyFilters<M extends Model>(
-    query: Query,
+    query: Query<M>,
     data: InferModelNormalizedType<M>[]
   ): InferModelNormalizedType<M>[] {
     for (const [key, value] of Object.entries(query.filters.$eq)) {
@@ -105,15 +67,15 @@ export abstract class VueDatabase implements DatabaseStore {
 
   get<M extends Model>(
     model: Model,
-    query?: Query
+    query?: Query<M>
   ): InferModelNormalizedType<M>[] {
     if (!query) return Object.values(this.getStore<M>(model.name).value || []);
     let result = query.primaries.length
-      ? this.getByPrimaries(model, query.primaries)
-      : Object.values(this.getStore<M>(model.name).value || []);
+      ? this.getByPrimaries(model, query.primaries) as InferModelNormalizedType<M>[]
+      : Object.values(this.getStore<M>(model.name).value || []) as InferModelNormalizedType<M>[];
     result = this.#applyFilters(query, result);
     if (query.with.size > 0) {
-      result = this.#loadRelated(query, model, result);
+      result = this.#loadRelated(query, model, result) as InferModelNormalizedType<M>[];
     }
     return result as InferModelNormalizedType<M>[];
   }
@@ -121,7 +83,7 @@ export abstract class VueDatabase implements DatabaseStore {
   delete<M extends Model>(
     model: M,
     primary: Primary,
-    _query?: Query
+    _query?: Query<M>
   ): Partial<InferModelNormalizedType<M>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete this.getStore(model.name).value[primary];
@@ -132,7 +94,7 @@ export abstract class VueDatabase implements DatabaseStore {
     _model: M,
     _primary: Primary,
     _data: AnyButMaybeT<InferModelNormalizedType<M>>,
-    _query?: Query
+    _query?: Query<M>
   ): Partial<InferModelNormalizedType<M>> | undefined {
     throw new Error("Method not implemented.");
   }
@@ -151,7 +113,13 @@ export abstract class VueDatabase implements DatabaseStore {
   ):
     | Partial<InferModelNormalizedType<M>>
     | Partial<InferModelNormalizedType<M>>[] {
-    throw new Error("Method not implemented.");
+    if (Array.isArray(data)) {
+      return data
+        .map((d) => this.saveOne.bind(this)(model, d, saveRelations))
+        .filter((m) => m != null);
+    }
+    const saveRes = this.saveOne(model, data, saveRelations);
+    return saveRes ? [saveRes] : [];
   }
 
   saveOne<M extends Model>(
@@ -159,26 +127,31 @@ export abstract class VueDatabase implements DatabaseStore {
     data: AnyButMaybeT<InferModelNormalizedType<M>>,
     saveRelations?: boolean
   ): Partial<InferModelNormalizedType<M>> | undefined {
-    if (saveRelations) this.saveRelations(model, data);
+    if (saveRelations) this.saveRelations(model.relations(), data);
 
     const state = this.getStore<M>(model.name);
 
     const primary = model.primary(data);
     const oldValue = state.value[primary];
     if (oldValue) {
-      state.value[primary] = oldValue.$merge(data);
+      state.value[primary] = Object.assign(
+        oldValue,
+        model.schema.normalize(data)
+      );
       return state.value[primary];
     }
     const res = model.schema.normalize(data);
-    state.value[primary] = res;
-    return res;
+    state.value[primary] = res as InferModelNormalizedType<M>;
+    return res as InferModelNormalizedType<M>;
   }
 
-  saveRelations<M extends Model>(model: M, data: Record<string, any>): void {
-    const modelRelations = model.relations();
+  saveRelations<R extends Record<string, Relation>>(
+    relations: R,
+    data: Record<string, any>
+  ): void {
     for (const [key, value] of Object.entries(data)) {
-      if (modelRelations[key]) {
-        this.save(modelRelations[key].related, value, true);
+      if (relations[key]) {
+        this.save(relations[key].related, value, true);
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete data[key];

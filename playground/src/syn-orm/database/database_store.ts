@@ -1,5 +1,6 @@
 import type { Model } from "../model/model";
 import type { Query } from "../query/query";
+import type { Relation } from "../relation/relation";
 import type {
   AnyButMaybeT,
   InferModelNormalizedType,
@@ -47,7 +48,7 @@ export interface DatabaseStore {
     saveRelations?: boolean
   ): Partial<InferModelNormalizedType<M>> | undefined;
 
-  saveRelations<M extends Model>(model: M, data: Record<string, any>): void;
+  saveRelations<R extends Record<string, Relation>>(relations: R, data: Record<string, any>): void;
 
   getByPrimary<M extends Model>(
     model: M,
