@@ -2,7 +2,7 @@ import type { InferModelNormalizedType, Model, Primary } from "../model";
 import type { Query } from "../query/query";
 import type { AnyButMaybeT, MaybeAsArray } from "../types";
 
-export type DatabaseStore = {
+export interface DatabaseStore {
   get<M extends Model>(model: Model, query?: Query): InferModelNormalizedType<M>[];
 
   load<M extends Model>(model: M): void;
@@ -45,4 +45,9 @@ export type DatabaseStore = {
     model: M,
     primary: Primary
   ): InferModelNormalizedType<M> | undefined;
+
+  getByPrimaries<M extends Model>(
+    model: M,
+    primaries: Primary[]
+  ): InferModelNormalizedType<M>[];
 };

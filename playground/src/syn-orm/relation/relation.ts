@@ -1,4 +1,4 @@
-import type { Database } from "../database";
+import type { DatabaseStore } from "../database/database_store";
 import type { InferNormalizedSchema, Schema } from "../schema/schema";
 
 export abstract class Relation<S extends Schema = Schema> {
@@ -6,6 +6,6 @@ export abstract class Relation<S extends Schema = Schema> {
 
   abstract getFor(
     data: any,
-    database: Database<any>
+    store: DatabaseStore
   ): InferNormalizedSchema<S> | InferNormalizedSchema<S>[];
 }

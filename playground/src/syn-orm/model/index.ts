@@ -11,14 +11,18 @@ export class Model<
   S extends Schema = Schema,
   R extends Record<string, Relation> = Record<string, Relation>
 > {
-  constructor(public schema: S, public relations: () => R) {}
+  constructor(
+    public name: string,
+    public schema: S,
+    public relations: () => R
+  ) {}
 }
 
 export function model<
   S extends Record<string, Field>,
   R extends Record<string, Relation> = Record<string, Relation>
->(schema: S, relations: () => R = () => ({} as R)) {
-  return new Model(new Schema(schema), relations);
+>(name: string, schema: S, relations: () => R = () => ({} as R)) {
+  return new Model(name, new Schema(schema), relations);
 }
 
 export type InferModelNormalizedType<M extends Model> = InferNormalizedSchema<
