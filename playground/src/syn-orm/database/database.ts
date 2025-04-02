@@ -21,7 +21,7 @@ export class Database<
   }
 
   query<M extends Model>(model: M) {
-    return new QueryBuilder(this, model);
+    return new QueryBuilder(this.store, model);
   }
 }
 

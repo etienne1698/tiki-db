@@ -1,15 +1,15 @@
-import type { Database } from "../database/database";
+import type { Datastore } from "../database/datastore";
 import type { Model, RelationsOf } from "../model/model";
 import type { InferModelFieldName, Primary } from "../types";
 import { Operator, type OperatorValueType, type Query } from "./query";
 
-export class QueryBuilder<M extends Model, D extends Database> {
+export class QueryBuilder<M extends Model> {
   declare query: Query<M>;
 
-  constructor(public database: D, public model: M) {
-    this.database = database;
+  constructor(public datastore: Datastore, public model: M, query?: Query<M>) {
+    this.datastore = datastore;
     this.model = model;
-    this.query = {
+    this.query = query || {
       filters: {
         [Operator.EQ]: {},
         [Operator.IN]: {},
@@ -57,7 +57,7 @@ export class QueryBuilder<M extends Model, D extends Database> {
   }
 
   get() {
-    return this.database.store.get(this.model, this.query);
+    return this.datastore.get(this.model, this.query);
   }
 
   getFirst() {

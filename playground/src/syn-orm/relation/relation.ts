@@ -4,13 +4,14 @@ import type { Schema } from "../schema/schema";
 import type { InferModelNormalizedType } from "../types";
 
 export abstract class Relation<
-  S extends Schema = Schema,
-  M extends Model = Model<S, any>
+  SRelated extends Schema = Schema,
+  MRelated extends Model = Model<SRelated, any>
 > {
-  constructor(public related: M, public field: unknown) {}
+  constructor(public related: MRelated, public field: unknown) {}
 
-  abstract getFor(
+  abstract getFor<From extends Model>(
+    model: From,
     data: any,
-    store: Datastore
-  ): InferModelNormalizedType<M> | InferModelNormalizedType<M>[];
+    store: Datastore,
+  ): InferModelNormalizedType<MRelated> | InferModelNormalizedType<MRelated>[];
 }

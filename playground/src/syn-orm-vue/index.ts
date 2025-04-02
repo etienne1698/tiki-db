@@ -27,7 +27,7 @@ export abstract class RefDatastore implements Datastore {
       const m = { ...data } as InferModelNormalizedType<M>;
       for (const relation of query.with.values()) {
         // @ts-ignore
-        m[relation] = modelRelations[relation].getFor(model, this);
+        m[relation] = modelRelations[relation].getFor(model, data, this);
       }
       return m;
     });
