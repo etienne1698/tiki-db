@@ -1,5 +1,7 @@
 import type { Database } from "../database";
 import type { Model, Primary } from "../model";
+import type { InferNormalizedSchema } from "../schema/schema";
+import type { AnyButMaybeT, MaybeAsArray } from "../types";
 
 export class Collection<M extends Model, D extends Database = Database> {
   declare relations: ReturnType<M["relations"]>;
@@ -12,11 +14,11 @@ export class Collection<M extends Model, D extends Database = Database> {
     return this.database.store.saveRelations(this.model, data);
   }
 
-  saveOne(data: M, saveRelations: boolean = true) {
+  saveOne(data: AnyButMaybeT<InferNormalizedSchema<M['schema']>>, saveRelations: boolean = true) {
     return this.database.store.saveOne(this.model, data, saveRelations);
   }
-
-  save(data: M | M[], saveRelations: boolean = true) {
+ 
+  save(data: MaybeAsArray<AnyButMaybeT<InferNormalizedSchema<M['schema']>>>, saveRelations: boolean = true) {
     return this.database.store.save(this.model, data, saveRelations);
   }
 

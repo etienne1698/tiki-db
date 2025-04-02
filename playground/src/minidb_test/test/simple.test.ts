@@ -22,15 +22,11 @@ test("test", () => {
       user,
       pet,
     },
-    {
-      get: () => [],
-      load() {
-        return true;
-      },
-    }
+    // @ts-ignore
+    {    }
   );
 
-  db.query(user).with("pets").get();
+  db.collections.user.save({sd: 1})
 
   return expect(db.collections.user.relations.pets.field).toBe(
     "user_id"
