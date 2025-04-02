@@ -1,4 +1,4 @@
-import type { Database } from "../database";
+import type { Database } from ".";
 import type { InferModelNormalizedType, Model, Primary } from "../model";
 import type { AnyButMaybeT, MaybeAsArray } from "../types";
 
