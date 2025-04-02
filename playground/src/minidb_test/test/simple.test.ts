@@ -24,6 +24,9 @@ test("test", () => {
     },
     {
       get: () => [],
+      load() {
+        return true;
+      },
     }
   );
 
