@@ -1,4 +1,5 @@
 import type { Database } from "../database";
+import type { QueryResult } from "../database/database";
 import type { Model, Primary, RelationsOf } from "../model";
 
 export type OperatorValueType = {
@@ -70,9 +71,5 @@ export class QueryBuilder<M extends Model, D extends Database> {
 
   get() {
     return this.database.get(this.model, this.query);
-  }
-
-  getFirst() {
-    return this.get()?.[0];
   }
 }

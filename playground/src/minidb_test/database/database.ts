@@ -1,23 +1,22 @@
 import type { Model } from "../model";
 import { QueryBuilder, type Query } from "../query";
 
-export abstract class Database<
+export type DatabaseStore = {
+  get<M extends Model>(model: Model, query?: Query): M[];
+};
+
+export class Database<
   Models extends Record<string, Model> = Record<string, Model>
 > {
-  constructor(public models: Models) {}
+  constructor(public models: Models, public store: DatabaseStore) {}
 
   query<M extends Model>(model: M) {
     return new QueryBuilder(this, model);
   }
-
-  abstract get<M extends Model>(model: Model, query?: Query): M[];
 }
 
-// TODO:
-export abstract class AsyncDatabase<
-  Models extends Record<string, Model>
-> extends Database<Models> {}
-
-export abstract class SyncDatabase<
-  Models extends Record<string, Model>
-> extends Database<Models> {}
+export function createDatabase<
+  Models extends Record<string, Model> = Record<string, Model>
+>(models: Models, store: DatabaseStore) {
+  return new Database(models, store);
+}
