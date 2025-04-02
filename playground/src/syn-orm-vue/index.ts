@@ -175,6 +175,7 @@ export class VueDatabase extends VueRefDatabase {
   collections: Record<string, Ref<Record<Primary, any>>> = {};
 
   load<M extends Model>(model: M) {
+    if (this.collections[model.name]) return;
     this.collections[model.name] = ref({});
   }
 

@@ -59,4 +59,8 @@ export class QueryBuilder<M extends Model, D extends Database> {
   get() {
     return this.database.store.get(this.model, this.query);
   }
+
+  getFirst() {
+    return this.get()?.[0];
+  }
 }
