@@ -2,6 +2,11 @@ import type { Relation } from "../relation";
 import type { Field } from "../schema";
 import { Schema } from "../schema/schema";
 
+export type PrimaryKey = string | string[];
+export type Primary = string;
+
+export type RelationsOf<M extends Model> = keyof ReturnType<M["relations"]>;
+
 export class Model<
   S extends Schema = Schema,
   R extends Record<string, Relation> = Record<string, Relation>

@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
 
-import { Database, hasMany, model, string } from "../index";
+import { Database, hasMany, Model, model, string } from "../index";
+import type { Query } from "../query";
 
 test("test", () => {
   const pet = model({
@@ -17,10 +18,19 @@ test("test", () => {
     })
   );
 
-  const db = new Database({
+  class DBImpl<
+  Models extends Record<string, Model> = Record<string, Model>
+> extends Database<Models> {
+    get<M extends Model>(_model: Model, _query?: Query): M[] {
+      return [];
+    }
+  }
+  const db = new DBImpl({
     user,
     pet,
   });
+
+  db.query(user).with('pets')
 
   return expect(db.models.user.relations().pets.field).toBe("user_id");
 });
