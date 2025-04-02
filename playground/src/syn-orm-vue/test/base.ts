@@ -2,12 +2,12 @@ import { createVueDatabase } from "../";
 import { hasMany, model, string } from "../../syn-orm/";
 
 export function getTestBase() {
-  const pet = model("pet", {
+  const pets = model("pet", {
     id: string("id", ""),
     user_id: string("user_id", ""),
     name: string("name", ""),
   });
-  const user = model(
+  const users = model(
     "users",
     {
       id: string("id", ""),
@@ -19,20 +19,18 @@ export function getTestBase() {
     {
       relations() {
         return {
-          pets: hasMany(pet, "user_id"),
+          pets: hasMany(pets, "user_id"),
         };
       },
     }
   );
 
   const db = createVueDatabase({
-    user,
-    pet,
+    users,
+    pets,
   });
 
   return {
     db,
-    user,
-    pet,
   };
 }
