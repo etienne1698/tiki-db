@@ -1,5 +1,6 @@
-import type { Database } from "../database";
-import type { Model, Primary, RelationsOf } from "../model";
+import type { Database } from "../database/database";
+import type {  Model, RelationsOf } from "../model/model";
+import type { InferModelFieldName, Primary } from "../types";
 import type { OperatorValueType, Query } from "./query";
 
 export class QueryBuilder<M extends Model, D extends Database> {
@@ -34,24 +35,23 @@ export class QueryBuilder<M extends Model, D extends Database> {
   }
 
   where<T extends keyof OperatorValueType>(
-    field: string,
+    field: InferModelFieldName<M>,
     op: T,
     value: OperatorValueType[T]
   ) {
-    // @ts-ignore
     this.query.filters[op][field] = value;
     return this;
   }
 
-  whereEq(field: string, value: any) {
+  whereEq(field: InferModelFieldName<M>, value: any) {
     return this.where(field, "$eq", value);
   }
 
-  whereNe(field: string, value: any) {
+  whereNe(field: InferModelFieldName<M>, value: any) {
     return this.where(field, "$ne", value);
   }
 
-  whereIn(field: string, value: Array<any>) {
+  whereIn(field: InferModelFieldName<M>, value: Array<any>) {
     return this.where(field, "$in", value);
   }
 

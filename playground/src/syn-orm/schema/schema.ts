@@ -10,7 +10,9 @@ export class Schema<
   }
 
   normalize(data: any) {
-    const normalizedData: Partial<Record<keyof S, any>> = {};
+    const normalizedData: { [K in keyof S]: S[K]["defaultValue"] } = {} as {
+      [K in keyof S]: S[K]["defaultValue"];
+    };
     for (const key in this.schema) {
       const field = this.schema[key];
       normalizedData[key] = field.normalize(data[key]);
@@ -18,5 +20,3 @@ export class Schema<
     return normalizedData;
   }
 }
-
-export type InferNormalizedSchema<S extends Schema> = ReturnType<S["normalize"]>;

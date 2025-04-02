@@ -1,6 +1,11 @@
-import type { Database } from ".";
-import type { InferModelNormalizedType, Model, Primary } from "../model";
-import type { AnyButMaybeT, MaybeAsArray } from "../types";
+import type { Model } from "../model/model";
+import type {
+  AnyButMaybeT,
+  InferModelNormalizedType,
+  MaybeAsArray,
+  Primary,
+} from "../types";
+import type { Database } from "./database";
 
 export class Collection<M extends Model, D extends Database = Database> {
   declare relations: ReturnType<M["relations"]>;
@@ -48,5 +53,5 @@ export function collection<M extends Model, D extends Database = Database>(
   database: D,
   model: M
 ) {
-  return new Collection(database, model);
+  return new Collection<M>(database, model);
 }

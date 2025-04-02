@@ -1,11 +1,11 @@
 import { ref, type Ref } from "vue";
-import type { DatabaseStore } from "../syn-orm/database/database_store";
-import type {
+import {
+  type Query,
   Model,
-  InferModelNormalizedType,
-  Primary,
-} from "../syn-orm/model";
-import type { Query } from "../syn-orm/query/query";
+  type InferModelNormalizedType,
+  type Primary,
+  type DatabaseStore,
+} from "../syn-orm";
 import type { AnyButMaybeT, MaybeAsArray } from "../syn-orm/types";
 /* 
 export abstract class VueRefDatabase extends Database {
@@ -175,7 +175,7 @@ export abstract class VueDatabase implements DatabaseStore {
   }
 
   saveRelations<M extends Model>(model: M, data: Record<string, any>): void {
-     const modelRelations = model.relations();
+    const modelRelations = model.relations();
     for (const [key, value] of Object.entries(data)) {
       if (modelRelations[key]) {
         this.save(modelRelations[key].related, value, true);

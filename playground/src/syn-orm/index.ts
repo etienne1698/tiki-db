@@ -12,7 +12,24 @@
  *
  */
 
-export { Database, createDatabase } from "./database";
-export { Field, string, StringField } from "./schema";
-export { Relation, HasManyRelation, hasMany } from "./relation";
-export { model, Model } from "./model";
+export * from "./types";
+
+export { Database, createDatabase } from "./database/database";
+export { type DatabaseStore } from "./database/database_store";
+export { collection, Collection } from "./database/collection";
+
+export { model, Model } from "./model/model";
+
+export { Relation } from "./relation/relation";
+export { HasManyRelation, hasMany } from "./relation/has_many";
+
+export {
+  type Query,
+  type OperatorValueType,
+  type Operator,
+} from "./query/query";
+export { QueryBuilder } from "./query/query_builder";
+
+export { Schema } from "./schema/schema";
+export { Field } from "./schema/field";
+export { string, StringField } from "./schema/string";

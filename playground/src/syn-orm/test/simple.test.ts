@@ -1,7 +1,6 @@
 import { expect, test } from "vitest";
 
 import { hasMany, model, string, createDatabase } from "../index";
-import { collection } from "../database/collection";
 
 test("test", () => {
   const pet = model("pets", {
@@ -30,10 +29,7 @@ test("test", () => {
     {}
   );
 
-  db.collections.user.save({ id: true });
-  collection(db, user)
-    .all()
-    .map((e) => e.id);
+  db.collections.pet.query().where("id", "$eq", "");
 
   return expect(db.collections.user.relations.pets.field).toBe("user_id");
 });

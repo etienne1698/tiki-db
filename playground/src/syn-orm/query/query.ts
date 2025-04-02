@@ -4,7 +4,8 @@ export type OperatorValueType = {
   $ne: any;
 };
 
-export type Operator = keyof OperatorValueType;
+export enum Operator = {}
+
 
 export type Query = {
   filters: Record<Operator, Record<string, any>>;

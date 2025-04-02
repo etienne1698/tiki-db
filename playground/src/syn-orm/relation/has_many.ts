@@ -1,7 +1,7 @@
 import type { DatabaseStore } from "../database/database_store";
-import type { Model } from "../model";
-import type { Schema } from "../schema";
-import type { InferNormalizedSchema } from "../schema/schema";
+import type { Model } from "../model/model";
+import type { Schema } from "../schema/schema";
+import type { InferNormalizedSchema } from "../types";
 import { Relation } from "./relation";
 
 export class HasManyRelation<S extends Schema = Schema> extends Relation<S> {

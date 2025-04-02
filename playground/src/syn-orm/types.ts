@@ -1,3 +1,6 @@
+import type { Model } from "./model/model";
+import type { Schema } from "./schema/schema";
+
 export type MaybeAsArray<T> = T | T[];
 
 export type DeepPartial<T> = T extends object
@@ -7,3 +10,15 @@ export type DeepPartial<T> = T extends object
   : T;
 
 export type AnyButMaybeT<T> = DeepPartial<T> & Record<string, any>;
+
+export type PrimaryKey = string | string[];
+export type Primary = string;
+
+export type InferModelNormalizedType<M extends Model> = InferNormalizedSchema<
+  M["schema"]
+>;
+export type InferModelFieldName<M extends Model> = keyof M["schema"]["schema"];
+
+export type InferNormalizedSchema<S extends Schema> = ReturnType<
+  S["normalize"]
+>;

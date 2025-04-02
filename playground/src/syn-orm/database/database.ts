@@ -1,4 +1,4 @@
-import type { Model } from "../model";
+import type { Model } from "../model/model";
 import { QueryBuilder } from "../query/query_builder";
 import { Collection } from "./collection";
 import type { DatabaseStore } from "./database_store";

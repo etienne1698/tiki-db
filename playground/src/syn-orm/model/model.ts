@@ -1,10 +1,12 @@
-import type { Relation } from "../relation";
-import type { Field } from "../schema";
-import { Schema, type InferNormalizedSchema } from "../schema/schema";
-import type { AnyButMaybeT } from "../types";
-
-export type PrimaryKey = string | string[];
-export type Primary = string;
+import type { Relation } from "../relation/relation";
+import type { Field } from "../schema/field";
+import { Schema } from "../schema/schema";
+import type {
+  AnyButMaybeT,
+  InferModelNormalizedType,
+  Primary,
+  PrimaryKey,
+} from "../types";
 
 export type RelationsOf<M extends Model> = keyof ReturnType<M["relations"]>;
 
@@ -45,7 +47,3 @@ export function model<
     opts?.relations || (() => ({} as R))
   );
 }
-
-export type InferModelNormalizedType<M extends Model> = InferNormalizedSchema<
-  M["schema"]
->;
