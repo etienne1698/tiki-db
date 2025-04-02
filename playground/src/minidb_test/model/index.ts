@@ -1,6 +1,6 @@
 import type { Relation } from "../relation";
 import type { Field } from "../schema";
-import { Schema } from "../schema/schema";
+import { Schema, type InferNormalizedSchema } from "../schema/schema";
 
 export type PrimaryKey = string | string[];
 export type Primary = string;
@@ -20,3 +20,7 @@ export function model<
 >(schema: S, relations: () => R = () => ({} as R)) {
   return new Model(new Schema(schema), relations);
 }
+
+export type InferModelNormalizedType<M extends Model> = InferNormalizedSchema<
+  M["schema"]
+>;

@@ -1,44 +1,7 @@
-import type { Model, Primary } from "../model";
-import { type Query } from "../query/query";
+import type { Model } from "../model";
 import { QueryBuilder } from "../query/query_builder";
-import type { MaybeAsArray } from "../types";
 import { Collection } from "./collection";
-
-export type DatabaseStore = {
-  get<M extends Model>(model: Model, query?: Query): M[];
-  load<M extends Model>(model: M): void;
-  delete<M extends Model>(
-    model: M,
-
-    primary: Primary,
-    query?: Query
-  ): Partial<M> | undefined;
-
-  update<M extends Model>(
-    model: M,
-    primary: Primary,
-    data: any,
-    query?: Query
-  ): Partial<M> | undefined;
-
-  insert<M extends Model>(model: M, data: MaybeAsArray<any>): Partial<M>[];
-
-  save<M extends Model>(
-    model: M,
-    data: MaybeAsArray<any>,
-    saveRelations?: boolean
-  ): Partial<M> | Partial<M>[];
-
-  saveOne<M extends Model>(
-    model: M,
-    data: any,
-    saveRelations?: boolean
-  ): Partial<M> | undefined;
-
-  saveRelations<M extends Model>(model: M, data: Record<string, any>): void;
-
-  getByPrimary<M extends Model>(model: M, primary: Primary): M | undefined;
-};
+import type { DatabaseStore } from "./database_store";
 
 export class Database<
   Models extends Record<string, Model> = Record<string, Model>

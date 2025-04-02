@@ -1,6 +1,5 @@
 import type { Database } from "../database";
-import type { Model, Primary } from "../model";
-import type { InferNormalizedSchema } from "../schema/schema";
+import type { InferModelNormalizedType, Model, Primary } from "../model";
 import type { AnyButMaybeT, MaybeAsArray } from "../types";
 
 export class Collection<M extends Model, D extends Database = Database> {
@@ -14,11 +13,17 @@ export class Collection<M extends Model, D extends Database = Database> {
     return this.database.store.saveRelations(this.model, data);
   }
 
-  saveOne(data: AnyButMaybeT<InferNormalizedSchema<M['schema']>>, saveRelations: boolean = true) {
+  saveOne(
+    data: AnyButMaybeT<InferModelNormalizedType<M>>,
+    saveRelations: boolean = true
+  ) {
     return this.database.store.saveOne(this.model, data, saveRelations);
   }
- 
-  save(data: MaybeAsArray<AnyButMaybeT<InferNormalizedSchema<M['schema']>>>, saveRelations: boolean = true) {
+
+  save(
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<M>>>,
+    saveRelations: boolean = true
+  ) {
     return this.database.store.save(this.model, data, saveRelations);
   }
 
@@ -37,4 +42,11 @@ export class Collection<M extends Model, D extends Database = Database> {
   getByPrimary(primary: Primary) {
     return this.database.store.getByPrimary(this.model, primary);
   }
+}
+
+export function collection<M extends Model, D extends Database = Database>(
+  database: D,
+  model: M
+) {
+  return new Collection(database, model);
 }
