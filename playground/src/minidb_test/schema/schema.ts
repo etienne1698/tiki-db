@@ -1,6 +1,6 @@
 import type { Field } from "./field";
 
-class Schema<S extends Record<string, Field>> {
+export class Schema<S extends Record<string, Field>> {
   declare schema: S;
 
   constructor(schema: S) {
