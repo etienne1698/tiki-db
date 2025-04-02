@@ -4,7 +4,7 @@ import { hasMany, model, string, createDatabase } from "../index";
 
 test("test", () => {
   const pet = model("pets", {
-    id: string("id", ""),
+    id: string("id", "").notNull(),
     user_id: string("user_id", ""),
   });
 
@@ -31,7 +31,7 @@ test("test", () => {
     }
   );
 
-  console.error(db.collections)
+  db.collections.pet.query().where('user_id', '$eq', '')
 
   return expect(db.collections.user.relations.pets.field).toBe("user_id");
 });

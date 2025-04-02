@@ -1,15 +1,9 @@
 export abstract class Field<T = unknown, Default extends T | null = T | null> {
-  isPrimary: boolean = false;
   isNullable: boolean = true;
 
   constructor(public name: string, public defaultValue: Default) {}
 
-  abstract check(data: any): data is T;
-
-  primary() {
-    this.isPrimary = true;
-    return this;
-  }
+  protected abstract check(data: any): data is T;
 
   notNull() {
     this.isNullable = false;

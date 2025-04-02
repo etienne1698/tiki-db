@@ -2,19 +2,22 @@ import type { Model } from "../model/model";
 import type { InferModelFieldName } from "../types";
 
 export enum Operator {
-  EQ = 1,
-  IN = 2,
-  NE = 3,
+  EQ = "$eq",
+  IN = "$in",
+  NE = "$ne",
 }
 
 export type OperatorValueType = {
-  [Operator.EQ]: any;
-  [Operator.IN]: Array<any>;
-  [Operator.NE]: any;
+  $eq: any;
+  $in: Array<any>;
+  $ne: any;
 };
 
 export type Query<M extends Model> = {
-  filters: Record<keyof OperatorValueType, Partial<Record<InferModelFieldName<M>, any>>>;
+  filters: Record<
+    keyof OperatorValueType,
+    Partial<Record<InferModelFieldName<M>, any>>
+  >;
   with: Set<string>;
   primaries: Array<string>;
 };

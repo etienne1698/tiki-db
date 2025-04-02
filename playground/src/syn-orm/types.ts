@@ -1,4 +1,5 @@
 import type { Model } from "./model/model";
+import type { Field } from "./schema/field";
 import type { Schema } from "./schema/schema";
 
 export type MaybeAsArray<T> = T | T[];
@@ -22,3 +23,5 @@ export type InferModelFieldName<M extends Model> = keyof M["schema"]["schema"];
 export type InferNormalizedSchema<S extends Schema> = ReturnType<
   S["normalize"]
 >;
+
+export type InferNormalizedField<F extends Field> = ReturnType<F["normalize"]>;
