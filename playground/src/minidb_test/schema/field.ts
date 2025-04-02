@@ -1,13 +1,8 @@
 export abstract class Field<T = unknown, Default extends T | null = T | null> {
-  declare name: string;
-  declare default: Default;
   isPrimary: boolean = false;
   isNullable: boolean = true;
 
-  constructor(name: string, defaultValue: Default) {
-    this.default = defaultValue;
-    this.name = name;
-  }
+  constructor(public name: string, public defaultValue: Default) {}
 
   abstract check(data: any): data is T;
 
@@ -23,6 +18,6 @@ export abstract class Field<T = unknown, Default extends T | null = T | null> {
 
   normalize(data: any): Default {
     if ((this.isNullable && data == null) || this.check(data)) return data;
-    return this.default;
+    return this.defaultValue;
   }
 }

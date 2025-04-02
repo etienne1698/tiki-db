@@ -11,10 +11,7 @@ export class Model<
   S extends Schema = Schema,
   R extends Record<string, Relation> = Record<string, Relation>
 > {
-  constructor(public schema: S, public relations: () => R) {
-    this.schema = schema;
-    this.relations = relations;
-  }
+  constructor(public schema: S, public relations: () => R) {}
 }
 
 export function model<
