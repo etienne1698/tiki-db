@@ -8,7 +8,7 @@ import type {
   Primary,
 } from "../types";
 
-export interface DatabaseStore {
+export interface Datastore {
   get<M extends Model>(
     model: M,
     query?: Query<M>

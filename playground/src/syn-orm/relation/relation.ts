@@ -1,4 +1,4 @@
-import type { DatabaseStore } from "../database/database_store";
+import type { Datastore } from "../database/datastore";
 import type { Model } from "../model/model";
 import type { Schema } from "../schema/schema";
 import type { InferModelNormalizedType } from "../types";
@@ -11,6 +11,6 @@ export abstract class Relation<
 
   abstract getFor(
     data: any,
-    store: DatabaseStore
+    store: Datastore
   ): InferModelNormalizedType<M> | InferModelNormalizedType<M>[];
 }

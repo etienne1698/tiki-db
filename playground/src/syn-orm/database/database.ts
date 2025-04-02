@@ -1,7 +1,7 @@
 import type { Model } from "../model/model";
 import { QueryBuilder } from "../query/query_builder";
 import { Collection } from "./collection";
-import type { DatabaseStore } from "./database_store";
+import type { Datastore } from "./datastore";
 
 export class Database<
   Models extends Record<string, Model> = Record<string, Model>
@@ -10,7 +10,7 @@ export class Database<
     [K in keyof Models]: Collection<Models[K]>;
   };
 
-  constructor(models: Models, public store: DatabaseStore) {
+  constructor(models: Models, public store: Datastore) {
     this.collections = {} as {
       [K in keyof Models]: Collection<Models[K]>;
     };
@@ -27,6 +27,6 @@ export class Database<
 
 export function createDatabase<
   Models extends Record<string, Model> = Record<string, Model>
->(models: Models, store: DatabaseStore) {
+>(models: Models, store: Datastore) {
   return new Database(models, store);
 }
