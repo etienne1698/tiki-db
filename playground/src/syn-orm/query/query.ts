@@ -8,13 +8,13 @@ export enum Operator {
 }
 
 export type OperatorValueType = {
-  1: any;
-  2: Array<any>;
-  3: any;
+  [Operator.EQ]: any;
+  [Operator.IN]: Array<any>;
+  [Operator.NE]: any;
 };
 
 export type Query<M extends Model> = {
-  filters: Record<Operator, Partial<Record<InferModelFieldName<M>, any>>>;
+  filters: Record<keyof OperatorValueType, Partial<Record<InferModelFieldName<M>, any>>>;
   with: Set<string>;
   primaries: Array<string>;
 };

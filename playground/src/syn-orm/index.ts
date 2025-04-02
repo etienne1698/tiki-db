@@ -1,10 +1,9 @@
 /**
  * README 👋
  *
- * `MiniDB` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
+ * `SynDB` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
  * It provides a structured way to interact with data models and relationships while remaining store-agnostic.
  *
- * It use `normale` for data normalization, ensuring that your data is always in the expected format.
  *
  * Inspirations:
  * - https://github.com/pubkey/rxdb
@@ -32,4 +31,6 @@ export { QueryBuilder } from "./query/query_builder";
 
 export { Schema } from "./schema/schema";
 export { Field } from "./schema/field";
+
 export { string, StringField } from "./schema/string";
+export { array, ArrayField } from "./schema/array";

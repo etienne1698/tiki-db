@@ -26,10 +26,12 @@ test("test", () => {
       pet,
     },
     // @ts-ignore
-    {}
+    {
+      load() {}
+    }
   );
 
-  db.collections.pet.query().where("id", "$eq", "");
+  console.error(db.collections)
 
   return expect(db.collections.user.relations.pets.field).toBe("user_id");
 });

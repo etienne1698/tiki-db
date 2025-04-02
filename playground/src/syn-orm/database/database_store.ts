@@ -9,8 +9,8 @@ import type {
 
 export interface DatabaseStore {
   get<M extends Model>(
-    model: Model,
-    query?: Query
+    model: M,
+    query?: Query<M>
   ): InferModelNormalizedType<M>[];
 
   load<M extends Model>(model: M): void;
@@ -18,14 +18,14 @@ export interface DatabaseStore {
   delete<M extends Model>(
     model: M,
     primary: Primary,
-    query?: Query
+    query?: Query<M>
   ): Partial<InferModelNormalizedType<M>> | undefined;
 
   update<M extends Model>(
     model: M,
     primary: Primary,
     data: AnyButMaybeT<InferModelNormalizedType<M>>,
-    query?: Query
+    query?: Query<M>
   ): Partial<InferModelNormalizedType<M>> | undefined;
 
   insert<M extends Model>(

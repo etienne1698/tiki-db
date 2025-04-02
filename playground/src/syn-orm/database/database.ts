@@ -17,7 +17,7 @@ export class Database<
     for (const [key, model] of Object.entries(models)) {
       this.store.load(model);
       // @ts-ignore
-      this.collections[key] = new Collection(model);
+      this.collections[key] = new Collection(this, model);
     }
   }
 

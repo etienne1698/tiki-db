@@ -36,10 +36,11 @@ export class QueryBuilder<M extends Model, D extends Database> {
 
   where<T extends keyof OperatorValueType>(
     field: InferModelFieldName<M>,
-    op: Operator,
+    op: T,
     value: OperatorValueType[T]
   ) {
-    this.query.filters[op][field] = value;
+    this.query.filters[op][field] =
+      value as OperatorValueType[keyof OperatorValueType];
     return this;
   }
 
