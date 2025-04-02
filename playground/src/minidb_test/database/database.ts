@@ -1,5 +1,6 @@
 import type { Model } from "../model";
-import { QueryBuilder, type Query } from "../query";
+import { type Query } from "../query/query";
+import { QueryBuilder } from "../query/query_builder";
 import { Collection } from "./collection";
 
 export type DatabaseStore = {
@@ -12,7 +13,7 @@ export class Database<
 > {
   declare collections: {
     [K in keyof Models]: Collection<Models[K]>;
-  }
+  };
 
   constructor(models: Models, public store: DatabaseStore) {
     this.collections = {} as {

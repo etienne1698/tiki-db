@@ -1,19 +1,6 @@
 import type { Database } from "../database";
 import type { Model, Primary, RelationsOf } from "../model";
-
-export type OperatorValueType = {
-  $eq: any;
-  $in: Array<any>;
-  $ne: any;
-};
-
-export type Operator = keyof OperatorValueType;
-
-export type Query = {
-  filters: Record<Operator, Record<string, any>>;
-  with: Set<string>;
-  primaries: Array<string>;
-};
+import type { OperatorValueType, Query } from "./query";
 
 export class QueryBuilder<M extends Model, D extends Database> {
   declare query: Query;
