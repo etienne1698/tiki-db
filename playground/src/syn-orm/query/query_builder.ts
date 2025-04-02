@@ -1,19 +1,19 @@
 import type { Database } from "../database/database";
-import type {  Model, RelationsOf } from "../model/model";
+import type { Model, RelationsOf } from "../model/model";
 import type { InferModelFieldName, Primary } from "../types";
-import type { OperatorValueType, Query } from "./query";
+import { Operator, type OperatorValueType, type Query } from "./query";
 
 export class QueryBuilder<M extends Model, D extends Database> {
-  declare query: Query;
+  declare query: Query<M>;
 
   constructor(public database: D, public model: M) {
     this.database = database;
     this.model = model;
     this.query = {
       filters: {
-        $eq: {},
-        $in: {},
-        $ne: {},
+        [Operator.EQ]: {},
+        [Operator.IN]: {},
+        [Operator.NE]: {},
       },
       with: new Set<string>(),
       primaries: [],
@@ -36,7 +36,7 @@ export class QueryBuilder<M extends Model, D extends Database> {
 
   where<T extends keyof OperatorValueType>(
     field: InferModelFieldName<M>,
-    op: T,
+    op: Operator,
     value: OperatorValueType[T]
   ) {
     this.query.filters[op][field] = value;
@@ -44,15 +44,15 @@ export class QueryBuilder<M extends Model, D extends Database> {
   }
 
   whereEq(field: InferModelFieldName<M>, value: any) {
-    return this.where(field, "$eq", value);
+    return this.where(field, Operator.EQ, value);
   }
 
   whereNe(field: InferModelFieldName<M>, value: any) {
-    return this.where(field, "$ne", value);
+    return this.where(field, Operator.NE, value);
   }
 
   whereIn(field: InferModelFieldName<M>, value: Array<any>) {
-    return this.where(field, "$in", value);
+    return this.where(field, Operator.IN, value);
   }
 
   get() {
