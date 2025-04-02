@@ -6,31 +6,29 @@
 
 // Model
 
-export enum MapModelAction {
-  CREATE = 1,
-  UPDATE = 2,
-}
-
 export type ModelSchema<
   T,
   Relations extends Record<string, Relation<unknown>> = {}
 > = {
   relations: () => Relations;
-  map(data: any, action: MapModelAction): T;
+  map(data: any): T;
   primaryKey: string | string[];
   entity: string;
 };
 
-export type InferMappedModel<T extends ModelSchema<unknown>> = ReturnType<T["map"]>;
+export type InferMappedModel<T extends ModelSchema<unknown>> = ReturnType<
+  T["map"]
+>;
 
-const defaultMap = <T>(data: any, _action: MapModelAction) => data as T;
+const defaultMap = <T>(data: any) => data as T;
 
 function model<T, Relations extends Record<string, Relation<unknown>> = {}>({
   primaryKey,
   entity,
   relations,
   map,
-}: Partial<ModelSchema<T, Relations>> & Pick<ModelSchema<T, Relations>, "entity">) {
+}: Partial<ModelSchema<T, Relations>> &
+  Pick<ModelSchema<T, Relations>, "entity">) {
   return {
     relations: (relations || (() => ({} as Relations))) as () => Relations,
     map: map || defaultMap,
@@ -53,7 +51,10 @@ export abstract class Relation<T, M extends ModelSchema<T> = ModelSchema<T>> {
   ): InferMappedModel<M> | InferMappedModel<M>[];
 }
 
-export class HasManyRelation<T, M extends ModelSchema<T>> extends Relation<T, M> {
+export class HasManyRelation<T, M extends ModelSchema<T>> extends Relation<
+  T,
+  M
+> {
   override getFor(_data: any, _database: Database<any>): InferMappedModel<M>[] {
     return [];
   }
