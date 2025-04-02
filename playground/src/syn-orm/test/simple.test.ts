@@ -14,9 +14,11 @@ test("test", () => {
     {
       id: string("id", ""),
     },
-    () => ({
-      pets: hasMany(pet, "user_id"),
-    })
+    {
+      relations: () => ({
+        pets: hasMany(pet, "user_id"),
+      }),
+    }
   );
 
   const db = createDatabase(

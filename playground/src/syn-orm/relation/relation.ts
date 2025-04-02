@@ -1,11 +1,15 @@
 import type { DatabaseStore } from "../database/database_store";
-import type { InferNormalizedSchema, Schema } from "../schema/schema";
+import type { InferModelNormalizedType, Model } from "../model";
+import type { Schema } from "../schema";
 
-export abstract class Relation<S extends Schema = Schema> {
-  constructor(public related: S, public field: string) {}
+export abstract class Relation<
+  S extends Schema = Schema,
+  M extends Model = Model<S, any>
+> {
+  constructor(public related: M, public field: string) {}
 
   abstract getFor(
     data: any,
     store: DatabaseStore
-  ): InferNormalizedSchema<S> | InferNormalizedSchema<S>[];
+  ): InferModelNormalizedType<M> | InferModelNormalizedType<M>[];
 }

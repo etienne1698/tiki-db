@@ -33,21 +33,6 @@ export abstract class VueRefDatabase extends Database {
     throw new Error("Method not implemented.");
   }
 
-  saveRelations<M extends Model>(
-    model: ModelConstructor<M>,
-    data: Record<string, any>
-  ): void {
-    const modelRelations = model.relations();
-    for (const [key, value] of Object.entries(data)) {
-      if (modelRelations[key]) {
-        this.save(modelRelations[key].related, value, true);
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete data[key];
-      }
-    }
-  }
-
   save<M extends Model>(
     model: ModelConstructor<M>,
     data: MaybeAsArray<MapModelOptions<M>>,
@@ -62,25 +47,6 @@ export abstract class VueRefDatabase extends Database {
     return saveRes ? [saveRes] : [];
   }
 
-  saveOne<M extends Model>(
-    model: ModelConstructor<M>,
-    data: MapModelOptions<M>,
-    saveRelations?: boolean
-  ): M | undefined {
-    if (saveRelations) this.saveRelations(model, data);
-
-    const state = this.getStore<M>(model.name);
-
-    const primary = Model.primary(model.primaryKey, data);
-    const oldValue = state.value[primary];
-    if (oldValue) {
-      state.value[primary] = oldValue.$merge(data);
-      return state.value[primary];
-    }
-    const res = this.map(model, data);
-    state.value[primary] = res;
-    return res;
-  }
 }
 
 export class VueDatabase extends VueRefDatabase {
@@ -193,11 +159,31 @@ export abstract class VueDatabase implements DatabaseStore {
     data: AnyButMaybeT<InferModelNormalizedType<M>>,
     saveRelations?: boolean
   ): Partial<InferModelNormalizedType<M>> | undefined {
-    throw new Error("Method not implemented.");
+    if (saveRelations) this.saveRelations(model, data);
+
+    const state = this.getStore<M>(model.name);
+
+    const primary = model.primary(data);
+    const oldValue = state.value[primary];
+    if (oldValue) {
+      state.value[primary] = oldValue.$merge(data);
+      return state.value[primary];
+    }
+    const res = model.schema.normalize(data);
+    state.value[primary] = res;
+    return res;
   }
 
   saveRelations<M extends Model>(model: M, data: Record<string, any>): void {
-    throw new Error("Method not implemented.");
+     const modelRelations = model.relations();
+    for (const [key, value] of Object.entries(data)) {
+      if (modelRelations[key]) {
+        this.save(modelRelations[key].related, value, true);
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete data[key];
+      }
+    }
   }
 
   getByPrimary<M extends Model>(

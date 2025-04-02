@@ -14,5 +14,5 @@ export class HasManyRelation<S extends Schema = Schema> extends Relation<S> {
 }
 
 export function hasMany<M extends Model = Model>(model: M, field: string) {
-  return new HasManyRelation(model.schema, field);
+  return new HasManyRelation(model, field);
 }
