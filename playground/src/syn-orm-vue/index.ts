@@ -6,6 +6,7 @@ import {
   type Primary,
   type DatabaseStore,
   Relation,
+  createDatabase,
 } from "../syn-orm";
 import type { AnyButMaybeT, MaybeAsArray } from "../syn-orm/types";
 
@@ -171,18 +172,23 @@ export abstract class VueRefDatabase implements DatabaseStore {
 }
 
 export class VueDatabase extends VueRefDatabase {
-  entities: Record<string, Ref<Record<Primary, any>>> = {};
+  collections: Record<string, Ref<Record<Primary, any>>> = {};
 
-  load() {}
+  load<M extends Model>(model: M) {
+    this.collections[model.name] = ref({});
+  }
 
   getStore<M extends Model>(
     name: string
   ): Ref<Record<Primary, InferModelNormalizedType<M>>> {
-    if (!this.entities[name]) {
-      this.entities[name] = ref({});
-    }
-    return this.entities[name] as Ref<
+    return this.collections[name] as Ref<
       Record<Primary, InferModelNormalizedType<M>>
     >;
   }
+}
+
+export function createVueDatabase<
+  Models extends Record<string, Model> = Record<string, Model>
+>(models: Models) {
+  return createDatabase(models, new VueDatabase());
 }

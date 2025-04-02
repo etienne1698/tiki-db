@@ -7,7 +7,7 @@ export abstract class Relation<
   S extends Schema = Schema,
   M extends Model = Model<S, any>
 > {
-  constructor(public related: M, public field: string) {}
+  constructor(public related: M, public field: unknown) {}
 
   abstract getFor(
     data: any,

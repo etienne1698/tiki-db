@@ -8,14 +8,12 @@ import type {
 import type { Database } from "./database";
 
 export class Collection<M extends Model, D extends Database = Database> {
-  declare relations: ReturnType<M["relations"]>;
-
   constructor(public database: D, public model: M) {
-    this.relations = this.model.relations() as ReturnType<M["relations"]>;
+    this.database.store.load(model);
   }
 
   saveRelations(data: Record<string, any>) {
-    return this.database.store.saveRelations(this.model, data);
+    return this.database.store.saveRelations(this.model.relations(), data);
   }
 
   saveOne(
