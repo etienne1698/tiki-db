@@ -8,22 +8,8 @@ import {
   Relation,
 } from "../syn-orm";
 import type { AnyButMaybeT, MaybeAsArray } from "../syn-orm/types";
-/* 
 
-export class VueDatabase extends VueRefDatabase {
-  entities: Record<string, Ref<Record<Primary, Model>>> = {};
-
-  load() {}
-
-  getStore<M extends Model>(name: string): Ref<Record<Primary, M>> {
-    if (!this.entities[name]) {
-      this.entities[name] = ref({});
-    }
-    return this.entities[name] as Ref<Record<Primary, M>>;
-  }
-} */
-
-export abstract class VueDatabase implements DatabaseStore {
+export abstract class VueRefDatabase implements DatabaseStore {
   abstract getStore<M extends Model = Model>(
     name: string
   ): Ref<Record<Primary, InferModelNormalizedType<M>>>;
@@ -71,11 +57,20 @@ export abstract class VueDatabase implements DatabaseStore {
   ): InferModelNormalizedType<M>[] {
     if (!query) return Object.values(this.getStore<M>(model.name).value || []);
     let result = query.primaries.length
-      ? this.getByPrimaries(model, query.primaries) as InferModelNormalizedType<M>[]
-      : Object.values(this.getStore<M>(model.name).value || []) as InferModelNormalizedType<M>[];
+      ? (this.getByPrimaries(
+          model,
+          query.primaries
+        ) as InferModelNormalizedType<M>[])
+      : (Object.values(
+          this.getStore<M>(model.name).value || []
+        ) as InferModelNormalizedType<M>[]);
     result = this.#applyFilters(query, result);
     if (query.with.size > 0) {
-      result = this.#loadRelated(query, model, result) as InferModelNormalizedType<M>[];
+      result = this.#loadRelated(
+        query,
+        model,
+        result
+      ) as InferModelNormalizedType<M>[];
     }
     return result as InferModelNormalizedType<M>[];
   }
@@ -172,5 +167,22 @@ export abstract class VueDatabase implements DatabaseStore {
   ): InferModelNormalizedType<M>[] {
     const state = this.getStore<M>(model.name);
     return primaries.map((primary) => state.value[primary]);
+  }
+}
+
+export class VueDatabase extends VueRefDatabase {
+  entities: Record<string, Ref<Record<Primary, any>>> = {};
+
+  load() {}
+
+  getStore<M extends Model>(
+    name: string
+  ): Ref<Record<Primary, InferModelNormalizedType<M>>> {
+    if (!this.entities[name]) {
+      this.entities[name] = ref({});
+    }
+    return this.entities[name] as Ref<
+      Record<Primary, InferModelNormalizedType<M>>
+    >;
   }
 }
