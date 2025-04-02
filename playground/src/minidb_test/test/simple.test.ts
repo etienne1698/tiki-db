@@ -32,5 +32,7 @@ test("test", () => {
 
   db.query(user).with("pets").get();
 
-  return expect(db.models.user.relations().pets.field).toBe("user_id");
+  return expect(db.collections.user.relations.pets.field).toBe(
+    "user_id"
+  );
 });

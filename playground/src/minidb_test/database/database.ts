@@ -1,5 +1,6 @@
 import type { Model } from "../model";
 import { QueryBuilder, type Query } from "../query";
+import { Collection } from "./collection";
 
 export type DatabaseStore = {
   get<M extends Model>(model: Model, query?: Query): M[];
@@ -9,9 +10,18 @@ export type DatabaseStore = {
 export class Database<
   Models extends Record<string, Model> = Record<string, Model>
 > {
-  constructor(public models: Models, public store: DatabaseStore) {
-    for (const model of Object.values(this.models)) {
+  declare collections: {
+    [K in keyof Models]: Collection<Models[K]>;
+  }
+
+  constructor(models: Models, public store: DatabaseStore) {
+    this.collections = {} as {
+      [K in keyof Models]: Collection<Models[K]>;
+    };
+    for (const [key, model] of Object.entries(models)) {
       this.store.load(model);
+      // @ts-ignore
+      this.collections[key] = new Collection(model);
     }
   }
 
