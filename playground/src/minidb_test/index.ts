@@ -13,5 +13,6 @@
  */
 
 export { Database, createDatabase } from "./database";
-export { Field, schema, string } from "./schema";
-export { Relation, relations, HasManyRelation, hasMany } from "./relation";
+export { Field, string, StringField } from "./schema";
+export { Relation, HasManyRelation, hasMany } from "./relation";
+export { model, Model } from "./model";

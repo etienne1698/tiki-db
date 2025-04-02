@@ -6,5 +6,5 @@
  */
 
 export { Field } from "./field";
-export { schema } from "./schema";
-export { string } from "./string";
+export { Schema } from "./schema";
+export { StringField, string } from "./string";

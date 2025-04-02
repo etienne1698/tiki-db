@@ -1,6 +1,6 @@
 import { Field } from "./field";
 
-class StringField extends Field<string> {
+export class StringField extends Field<string> {
   constructor(name: string, defaultValue: string | null) {
     super(name, defaultValue);
   }

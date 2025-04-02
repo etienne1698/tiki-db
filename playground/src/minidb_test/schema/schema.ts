@@ -1,6 +1,8 @@
 import type { Field } from "./field";
 
-export class Schema<S extends Record<string, Field>> {
+export class Schema<
+  S extends Record<string, Field> = Record<string, Field<unknown>>
+> {
   declare schema: S;
 
   constructor(schema: S) {
@@ -17,6 +19,4 @@ export class Schema<S extends Record<string, Field>> {
   }
 }
 
-export function schema<S extends Record<string, Field>>(s: S) {
-  return new Schema(s);
-}
+export type InferNormalizedSchema<S extends Schema> = ReturnType<S["normalize"]>;
