@@ -15,7 +15,7 @@ const usersRelations = relations(users, ({ hasMany }) => ({
 }));
 
 const petsRelations = relations(pets, ({ belongsTo }) => ({
-  user: belongsTo(users, "user_id"),
+  user: belongsTo(users, "id"),
 }));
 
 const db = database({
@@ -26,6 +26,6 @@ const db = database({
 });
 
 test("test", () => {
-  console.error(db.schema.pets.relations)
+  console.error(db.schema.pets.relations.user);
   expect(db.schema.pets.dbName).toBe("pets");
 });
