@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { collection, database, relations, string } from ".";
+import { collection, relations, setupDatabase, string } from ".";
 
 const users = collection("users", {
   id: string("id", ""),
@@ -18,12 +18,16 @@ const petsRelations = relations(pets, ({ belongsTo }) => ({
   user: belongsTo(users, "user_id"),
 }));
 
-const db = database({
-  users,
-  pets,
-  usersRelations,
-  petsRelations,
-});
+const db = setupDatabase(
+  // @ts-ignore
+  {},
+  {
+    users,
+    pets,
+    usersRelations,
+    petsRelations,
+  }
+);
 
 test("test", () => {
   console.error(db.schema.users.relations.pets);

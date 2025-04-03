@@ -5,6 +5,7 @@ import type {
   ExtractDatabaseSchema,
 } from "../types";
 import { is } from "../utils";
+import type { Datastore } from "./datastore";
 
 export type DatabaseSchema = Record<string, CollectionRelationalSchema>;
 
@@ -31,13 +32,18 @@ export class Database<
   TFullSchema extends Record<string, unknown>,
   TSchema extends DatabaseSchema
 > {
-  constructor(public fullSchema: TFullSchema, public schema: TSchema) {}
+  constructor(
+    public fullSchema: TFullSchema,
+    public schema: TSchema,
+    public datastore: Datastore
+  ) {}
 }
 
-export function database<TFullSchema extends Record<string, unknown>>(
+export function setupDatabase<TFullSchema extends Record<string, unknown>>(
+  datastore: Datastore,
   schema: TFullSchema
 ) {
   const dbSchema =
     extractDatabaseSchema<ExtractDatabaseSchema<TFullSchema>>(schema);
-  return new Database(schema, dbSchema);
+  return new Database(schema, dbSchema, datastore);
 }
