@@ -1,5 +1,5 @@
 import { createVueDatabase } from "..";
-import { belongsTo, hasMany, model, relations, string } from "../../salad-orm";
+import { belongsTo, hasMany, model, relations, string } from "../../_salad-orm";
 
 export function getTestBase() {
 

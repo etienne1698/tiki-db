@@ -1,4 +1,3 @@
-/*
 import { expect, test } from "vitest";
 
 import { getTestBase } from "./base";
@@ -32,7 +31,9 @@ test("has_many query should worke", () => {
 
   db.collections.users.save({ id: "123", pets: [{ id: "1", user_id: "123" }] });
 
-  expect(db.collections.users.query().with('pets').getFirst().pets[0].id).toBe("1");
+  expect(db.collections.users.query().with("pets").getFirst().pets[0].id).toBe(
+    "1"
+  );
 });
 
 test("should be delete", () => {
@@ -43,4 +44,3 @@ test("should be delete", () => {
 
   expect(db.collections.users.query().getFirst()).toBe(undefined);
 });
- */
