@@ -29,6 +29,7 @@ export {
   type Operator,
 } from "./query/query";
 export { QueryBuilder } from "./query/query_builder";
+export { QueryRunner } from "./query/query_runner";
 
 export { Schema } from "./document/schema";
 export { Field } from "./document/field";

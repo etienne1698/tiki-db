@@ -1,6 +1,6 @@
 import { Collection } from "../collection/collection";
 import type { Datastore } from "./datastore";
-import QueryRunner from "../query/query_runner";
+import { QueryRunner } from "../query/query_runner";
 
 export class Database<
   Collections extends Record<string, Collection> = Record<string, Collection>

@@ -7,7 +7,7 @@ import type {
   Primary,
 } from "../types";
 
-export default class QueryRunner<D extends Database, C extends Collection> {
+export class QueryRunner<D extends Database, C extends Collection> {
   constructor(private database: D, private collection: C) {}
 
   saveRelations(data: Record<string, any>) {
