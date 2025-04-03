@@ -15,10 +15,9 @@ export class Relation<RefCName extends string = string> {
 
 export class Relations<
   CollectionName extends string,
-  C extends Collection = Collection<CollectionName>,
   Config extends Record<string, Relation> = Record<string, Relation>
 > {
-  constructor(public collection: C, public config: Config) {}
+  constructor(public collectionName: CollectionName, public config: Config) {}
 }
 
 export class HasMany<
@@ -40,13 +39,13 @@ export type RelationSetupFn<
 
 export function relations<
   CName extends string,
-  C extends Collection = Collection<CName>,
+  C extends Collection<CName> = Collection<CName>,
   Config extends Record<string, Relation> = Record<string, Relation>
 >(
-  collection: C,
+  collection: Collection<CName>,
   setup: RelationSetupFn<C, Config>
 ) {
-  return new Relations(collection, setup({ hasMany, belongsTo }));
+  return new Relations<CName, Config>(collection.dbName, setup({ hasMany, belongsTo }));
 }
 
 export function hasMany<RefC extends Collection>(
