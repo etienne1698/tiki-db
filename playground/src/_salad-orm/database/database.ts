@@ -1,32 +1,32 @@
-import type { Model } from "../model/model";
-import { QueryBuilder } from "../query/query_builder";
 import { Collection } from "../collection/collection";
 import type { Datastore } from "./datastore";
+import QueryRunner from "../query/query_runner";
 
 export class Database<
   Collections extends Record<string, Collection> = Record<string, Collection>
 > {
   declare query: {
-    [K in keyof Models]: Collection<Models[K]>;
+    [K in keyof Collections]: QueryRunner<typeof this, Collections[K]>;
   };
 
-  constructor(public collections, public store: Datastore) {
-    this.collections = {} as {
-      [K in keyof Models]: Collection<Models[K]>;
+  constructor(public collections: Collections, public store: Datastore) {
+    this.query = {} as {
+      [K in keyof Collections]: QueryRunner<typeof this, Collections[K]>;
     };
-    for (const [key, model] of Object.entries(models)) {
+
+    for (const [key, collection] of Object.entries(collections)) {
       // @ts-ignore
-      this.collections[key] = new Collection(this, model);
+      this.query[key] = new QueryRunner(this, collection);
     }
   }
 
-/*   query<M extends Model>(model: M) {
+  /*   query<M extends Model>(model: M) {
     return new QueryBuilder(this.store, model);
   } */
 }
 
 export function createDatabase<
-  Models extends Record<string, Model> = Record<string, Model>
->(models: Models, store: Datastore) {
-  return new Database(models, store);
+  Collections extends Record<string, Collection> = Record<string, Collection>
+>(collections: Collections, store: Datastore) {
+  return new Database(collections, store);
 }

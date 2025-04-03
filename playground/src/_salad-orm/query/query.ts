@@ -1,4 +1,4 @@
-import type { Model } from "../model/model";
+import type { Collection } from "../collection/collection";
 import type { InferModelFieldName } from "../types";
 
 export enum Operator {
@@ -13,10 +13,10 @@ export type OperatorValueType = {
   $ne: any;
 };
 
-export type Query<M extends Model> = {
+export type Query<C extends Collection> = {
   filters: Record<
     keyof OperatorValueType,
-    Partial<Record<InferModelFieldName<M>, any>>
+    Partial<Record<InferModelFieldName<C["model"]>, any>>
   >;
   with: Set<string>;
   primaries: Array<string>;

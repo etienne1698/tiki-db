@@ -1,4 +1,4 @@
-import type { Model } from "../model/model";
+import type { Collection } from "../collection/collection";
 import type { Query } from "../query/query";
 import type { Relation } from "../relation/relation";
 import type {
@@ -9,54 +9,57 @@ import type {
 } from "../types";
 
 export interface Datastore {
-  get<M extends Model>(
-    model: M,
-    query?: Query<M>
-  ): InferModelNormalizedType<M>[];
+  get<C extends Collection>(
+    collection: C,
+    query?: Query<C>
+  ): InferModelNormalizedType<C["model"]>[];
 
-  load<M extends Model>(model: M): void;
+  load<C extends Collection>(collection: C): void;
 
-  delete<M extends Model>(
-    model: M,
+  delete<C extends Collection>(
+    collection: C,
     primary: Primary,
-    query?: Query<M>
-  ): Partial<InferModelNormalizedType<M>> | undefined;
+    query?: Query<C>
+  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  update<M extends Model>(
-    model: M,
+  update<C extends Collection>(
+    collection: C,
     primary: Primary,
-    data: AnyButMaybeT<InferModelNormalizedType<M>>,
-    query?: Query<M>
-  ): Partial<InferModelNormalizedType<M>> | undefined;
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
+    query?: Query<C>
+  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  insert<M extends Model>(
-    model: M,
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<M>>>
-  ): Partial<InferModelNormalizedType<M>>[];
+  insert<C extends Collection>(
+    collection: C,
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
+  ): Partial<InferModelNormalizedType<C["model"]>>[];
 
-  save<M extends Model>(
-    model: M,
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<M>>>,
+  save<C extends Collection>(
+    collection: C,
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations?: boolean
   ):
-    | Partial<InferModelNormalizedType<M>>
-    | Partial<InferModelNormalizedType<M>>[];
+    | Partial<InferModelNormalizedType<C["model"]>>
+    | Partial<InferModelNormalizedType<C["model"]>>[];
 
-  saveOne<M extends Model>(
-    model: M,
-    data: AnyButMaybeT<InferModelNormalizedType<M>>,
+  saveOne<C extends Collection>(
+    collection: C,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
-  ): Partial<InferModelNormalizedType<M>> | undefined;
+  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  saveRelations<R extends Record<string, Relation>>(relations: R, data: Record<string, any>): void;
+  saveRelations<R extends Record<string, Relation>>(
+    relations: R,
+    data: Record<string, any>
+  ): void;
 
-  getByPrimary<M extends Model>(
-    model: M,
+  getByPrimary<C extends Collection>(
+    collection: C,
     primary: Primary
-  ): InferModelNormalizedType<M> | undefined;
+  ): InferModelNormalizedType<C["model"]> | undefined;
 
-  getByPrimaries<M extends Model>(
-    model: M,
+  getByPrimaries<C extends Collection>(
+    collection: C,
     primaries: Primary[]
-  ): InferModelNormalizedType<M>[];
+  ): InferModelNormalizedType<C["model"]>[];
 }

@@ -1,24 +1,18 @@
 import type { Datastore } from "../database/datastore";
 import type { Model } from "../model/model";
-import { QueryBuilder } from "../query/query_builder";
-import type { Schema } from "../schema/schema";
-import type { InferModelFieldName, InferNormalizedSchema } from "../types";
+import type { InferModelFieldName, InferModelNormalizedType } from "../types";
 import { Relation } from "./relation";
 
 export class HasManyRelation<
+  M extends Model,
   MRelated extends Model
-> extends Relation<MRelated> {
-  override getFor<From extends Model>(
-    model: From,
-    data: any,
-    store: Datastore
-  ): InferNormalizedSchema<MRelated['schema']>[] {
-    return new QueryBuilder(store, this.related)
-      .whereEq(
-        this.field as keyof MRelated["schema"]["schema"],
-        model.primary(data)
-      )
-      .get();
+> extends Relation<M, MRelated> {
+  override getFor(
+    _model: M,
+    _data: any,
+    _store: Datastore
+  ): InferModelNormalizedType<MRelated>[] {
+    return [];
   }
 }
 
