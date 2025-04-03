@@ -1,5 +1,5 @@
 import type { Datastore } from "../database/datastore";
-import type { Model } from "../model/model";
+import type { Model } from "../document/document";
 import type { InferModelFieldName, Primary, RelationsOf } from "../types";
 import { Operator, type OperatorValueType, type Query } from "./query";
 

@@ -1,5 +1,5 @@
-import type { Field } from "../schema/field";
-import { Schema } from "../schema/schema";
+import type { Field } from "./field";
+import { Schema } from "./schema";
 import type {
   AnyButMaybeT,
   InferModelNormalizedType,

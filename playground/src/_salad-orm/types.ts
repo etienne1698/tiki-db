@@ -1,6 +1,6 @@
-import type { Model } from "./model/model";
-import type { Field } from "./schema/field";
-import type { Schema } from "./schema/schema";
+import type { Model } from "./document/document";
+import type { Field } from "./document/field";
+import type { Schema } from "./document/schema";
 
 export type MaybeAsArray<T> = T | T[];
 

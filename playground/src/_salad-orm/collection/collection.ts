@@ -1,4 +1,4 @@
-import type { Model } from "../model/model";
+import type { Model } from "../document/document";
 import type { Relations } from "../relation/relation";
 
 export class Collection<
