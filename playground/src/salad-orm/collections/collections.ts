@@ -12,5 +12,5 @@ export function collection<
   CollectionName extends string,
   S extends Record<string, Field> = Record<string, Field>
 >(collectionName: CollectionName, schema: S) {
-  return new Collection<CollectionName>(collectionName, new Schema<S>(schema));
+  return new Collection(collectionName, new Schema<S>(schema));
 }

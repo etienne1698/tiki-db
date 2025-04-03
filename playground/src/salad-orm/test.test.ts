@@ -26,6 +26,6 @@ const db = database({
 });
 
 test("test", () => {
-  db.schema.users.relations;
+  console.error(db.schema.pets.relations)
   expect(db.schema.pets.dbName).toBe("pets");
 });
