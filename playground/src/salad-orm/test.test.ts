@@ -1,6 +1,7 @@
 import type { Field } from "./schema/field";
 import { Schema } from "./schema/schema";
 import { string } from "./schema/string";
+import type { PrimaryKey } from "./types";
 
 class Collection<
   CollectionName extends string = string,
@@ -69,6 +70,35 @@ function relations<
   return new Relations(collection, setup({ hasMany, belongsTo }));
 }
 
+interface CollectionRelationalConfig {
+  name: string;
+  relations: Record<string, Relation>;
+  fields: Record<string, Field>;
+  primaryKey: PrimaryKey;
+}
+
+type DatabaseRelationalConfig = Record<string, CollectionRelationalConfig>;
+
+/* export interface DatabaseRelationalConfig<
+	DConfig extends DatabaseConfig,
+> {
+	fullSchema: Record<string, unknown>;
+	schema: DConfig;
+	tableNamesMap: Record<string, string>;
+}
+ */
+
+function extract<DConfig extends DatabaseRelationalConfig>(config: DConfig) {
+  return Object.entries(config).reduce((acc, [key, value]) => {
+    acc[key]
+    return acc;
+  }, {} as DatabaseRelationalConfig);
+}
+
+class Database {
+  constructor() {}
+}
+
 // --------
 
 const users = collection("users", {
@@ -87,3 +117,16 @@ const usersRelations = relations(users, ({ hasMany }) => ({
 const petsRelations = relations(pets, ({ belongsTo }) => ({
   user: belongsTo(users, "user_id"),
 }));
+
+extract({
+  a: {
+    name: "users",
+    primaryKey: "id",
+    fields: {
+      id: string("id", ""),
+    },
+    relations: {
+      pets: hasMany(pets, "user_id"),
+    },
+  },
+});
