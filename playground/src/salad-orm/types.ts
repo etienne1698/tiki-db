@@ -1,7 +1,6 @@
 import type { Collection } from "./collections/collections";
 import type { Relation, Relations } from "./relations/relations";
 import type { Field } from "./schema/field";
-import type { Schema } from "./schema/schema";
 
 export type MaybeAsArray<T> = T | T[];
 
@@ -37,7 +36,7 @@ export type ExtractCollectionRelationsFromSchema<
     : never;
 }>;
 
-export type ExtractDatabaseWithRelations<
+export type ExtractDatabaseSchema<
   TSchema extends Record<string, unknown>
 > = {
   [K in keyof TSchema as TSchema[K] extends Collection
@@ -56,7 +55,7 @@ export type ExtractDatabaseWithRelations<
     : never;
 };
 
-export interface CollectionRelationalConfig {
+export interface CollectionRelationalSchema {
   dbName: string;
   tsName: string;
   relations: Record<string, Relation>;
@@ -64,8 +63,8 @@ export interface CollectionRelationalConfig {
   primaryKey: PrimaryKey;
 }
 
-export type InferNormalizedSchema<S extends Schema> = ReturnType<
-  S["normalize"]
+export type InferNormalizedSchema<C extends Collection> = ReturnType<
+  C["normalize"]
 >;
 
 export type InferNormalizedField<F extends Field> = ReturnType<F["normalize"]>;

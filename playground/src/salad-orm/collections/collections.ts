@@ -1,14 +1,14 @@
 import type { Field } from "../schema/field";
 
 export class Collection<
-  CollectionName extends string = string,
-  S extends Record<string, Field> = Record<string, Field>
+  TCollectionName extends string = string,
+  TSchema extends Record<string, Field> = Record<string, Field>
 > {
-  constructor(public dbName: CollectionName, public schema: S) {}
+  constructor(public dbName: TCollectionName, public schema: TSchema) {}
 
   normalize(data: any) {
-    const normalizedData: { [K in keyof S]: S[K]["defaultValue"] } = {} as {
-      [K in keyof S]: S[K]["defaultValue"];
+    const normalizedData: { [K in keyof TSchema]: TSchema[K]["defaultValue"] } = {} as {
+      [K in keyof TSchema]: TSchema[K]["defaultValue"];
     };
     for (const key in this.schema) {
       const field = this.schema[key];
@@ -19,8 +19,8 @@ export class Collection<
 }
 
 export function collection<
-  CollectionName extends string,
-  S extends Record<string, Field> = Record<string, Field>
->(collectionName: CollectionName, schema: S) {
+  TCollectionName extends string,
+  TSchema extends Record<string, Field> = Record<string, Field>
+>(collectionName: TCollectionName, schema: TSchema) {
   return new Collection(collectionName, schema);
 }

@@ -1,13 +1,16 @@
 import { Collection } from "../collections/collections";
 import { Relations } from "../relations/relations";
-import type { CollectionRelationalConfig, ExtractDatabaseWithRelations } from "../types";
+import type {
+  CollectionRelationalSchema,
+  ExtractDatabaseSchema,
+} from "../types";
 import { is } from "../utils";
 
-export type DatabaseRelationalConfig = Record<string, CollectionRelationalConfig>;
+export type DatabaseSchema = Record<string, CollectionRelationalSchema>;
 
-export function extractDatabaseRelationalConfig<
-  DSchema extends DatabaseRelationalConfig
->(schema: Record<string, unknown>) {
+export function extractDatabaseSchema<TSchema extends DatabaseSchema>(
+  schema: Record<string, unknown>
+) {
   return Object.entries(schema).reduce((acc, [key, value]) => {
     if (is(value, Collection)) {
       acc[value.dbName] = {
@@ -21,18 +24,20 @@ export function extractDatabaseRelationalConfig<
       acc[value.collectionName].relations = value.config;
     }
     return acc;
-  }, {} as DatabaseRelationalConfig) as DSchema;
+  }, {} as DatabaseSchema) as TSchema;
 }
 
 export class Database<
-  DFullSchema extends Record<string, unknown>,
-  DSchema extends DatabaseRelationalConfig
+  TFullSchema extends Record<string, unknown>,
+  TSchema extends DatabaseSchema
 > {
-  constructor(public fullSchema: DFullSchema, public schema: DSchema) {}
+  constructor(public fullSchema: TFullSchema, public schema: TSchema) {}
 }
 
-export function database<S extends Record<string, unknown>>(schema: S) {
+export function database<TFullSchema extends Record<string, unknown>>(
+  schema: TFullSchema
+) {
   const dbSchema =
-    extractDatabaseRelationalConfig<ExtractDatabaseWithRelations<S>>(schema);
+    extractDatabaseSchema<ExtractDatabaseSchema<TFullSchema>>(schema);
   return new Database(schema, dbSchema);
 }

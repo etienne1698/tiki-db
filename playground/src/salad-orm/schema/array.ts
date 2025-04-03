@@ -1,16 +1,16 @@
 import type { InferNormalizedField } from "../types";
 import { Field } from "./field";
 
-export class ArrayField<F extends Field> extends Field<
-  Array<InferNormalizedField<F>>
+export class ArrayField<TField extends Field> extends Field<
+  Array<InferNormalizedField<TField>>
 > {
-  protected declare contentField: F;
+  protected declare contentField: TField;
 
   constructor(name: string, defaultValue: Array<any> | null) {
     super(name, defaultValue);
   }
 
-  check(data: any): data is Array<InferNormalizedField<F>> {
+  check(data: any): data is Array<InferNormalizedField<TField>> {
     if (!Array.isArray(data)) return false;
     data = data.map((field) => this.contentField.normalize(field));
     return data;
