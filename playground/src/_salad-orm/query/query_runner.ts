@@ -19,7 +19,7 @@ export default class QueryRunner<D extends Database, C extends Collection> {
     saveRelations: boolean = true
   ) {
     return this.database.store.saveOne(
-      this.collection.model,
+      this.collection,
       data,
       saveRelations
     );
@@ -29,11 +29,11 @@ export default class QueryRunner<D extends Database, C extends Collection> {
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations: boolean = true
   ) {
-    return this.database.store.save(this.collection.model, data, saveRelations);
+    return this.database.store.save(this.collection, data, saveRelations);
   }
 
   delete(primary: string) {
-    return this.database.store.delete(this.collection.model, primary);
+    return this.database.store.delete(this.collection, primary);
   }
 
   /* query() {
@@ -41,10 +41,10 @@ export default class QueryRunner<D extends Database, C extends Collection> {
   } */
 
   all() {
-    return this.database.store.get(this.collection.model);
+    return this.database.store.get(this.collection);
   }
 
   getByPrimary(primary: Primary) {
-    return this.database.store.getByPrimary(this.collection.model, primary);
+    return this.database.store.getByPrimary(this.collection, primary);
   }
 }
