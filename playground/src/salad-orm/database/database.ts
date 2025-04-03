@@ -1,13 +1,13 @@
 import { Collection } from "../collections/collections";
 import { Relations } from "../relations/relations";
 import type {
-  CollectionRelationalSchema,
+  CollectionFullSchema,
   ExtractDatabaseSchema,
 } from "../types";
 import { is } from "../utils";
 import type { Datastore } from "./datastore";
 
-export type DatabaseSchema = Record<string, CollectionRelationalSchema>;
+export type DatabaseSchema = Record<string, CollectionFullSchema>;
 
 export function extractDatabaseSchema<TSchema extends DatabaseSchema>(
   schema: Record<string, unknown>

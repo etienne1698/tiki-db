@@ -1,65 +1,63 @@
-import type { Collection } from "../collections/collections";
 import type { Query } from "../query/query";
 import type { Relation } from "../relations/relations";
 import type {
   AnyButMaybeT,
-  InferCollectionNormalizedType,
+  Document,
   MaybeAsArray,
   Primary,
+  CollectionFullSchema,
 } from "../types";
 
 export interface Datastore {
-  get<M extends Collection>(
-    model: M,
-    query?: Query<M>
-  ): InferCollectionNormalizedType<M>[];
+  get<TCollection extends CollectionFullSchema>(
+    model: TCollection,
+    query?: Query<TCollection>
+  ): Document<TCollection>[];
 
-  load<M extends Collection>(model: M): void;
+  load<TCollection extends CollectionFullSchema>(model: TCollection): void;
 
-  delete<M extends Collection>(
-    model: M,
+  delete<TCollection extends CollectionFullSchema>(
+    model: TCollection,
     primary: Primary,
-    query?: Query<M>
-  ): Partial<InferCollectionNormalizedType<M>> | undefined;
+    query?: Query<TCollection>
+  ): Partial<Document<TCollection>> | undefined;
 
-  update<M extends Collection>(
-    model: M,
+  update<TCollection extends CollectionFullSchema>(
+    model: TCollection,
     primary: Primary,
-    data: AnyButMaybeT<InferCollectionNormalizedType<M>>,
-    query?: Query<M>
-  ): Partial<InferCollectionNormalizedType<M>> | undefined;
+    data: AnyButMaybeT<Document<TCollection>>,
+    query?: Query<TCollection>
+  ): Partial<Document<TCollection>> | undefined;
 
-  insert<M extends Collection>(
-    model: M,
-    data: MaybeAsArray<AnyButMaybeT<InferCollectionNormalizedType<M>>>
-  ): Partial<InferCollectionNormalizedType<M>>[];
+  insert<TCollection extends CollectionFullSchema>(
+    model: TCollection,
+    data: MaybeAsArray<AnyButMaybeT<Document<TCollection>>>
+  ): Partial<Document<TCollection>>[];
 
-  save<M extends Collection>(
-    model: M,
-    data: MaybeAsArray<AnyButMaybeT<InferCollectionNormalizedType<M>>>,
+  save<TCollection extends CollectionFullSchema>(
+    model: TCollection,
+    data: MaybeAsArray<AnyButMaybeT<Document<TCollection>>>,
     saveRelations?: boolean
-  ):
-    | Partial<InferCollectionNormalizedType<M>>
-    | Partial<InferCollectionNormalizedType<M>>[];
+  ): Partial<Document<TCollection>> | Partial<Document<TCollection>>[];
 
-  saveOne<M extends Collection>(
-    model: M,
-    data: AnyButMaybeT<InferCollectionNormalizedType<M>>,
+  saveOne<TCollection extends CollectionFullSchema>(
+    model: TCollection,
+    data: AnyButMaybeT<Document<TCollection>>,
     saveRelations?: boolean
-  ): Partial<InferCollectionNormalizedType<M>> | undefined;
+  ): Partial<Document<TCollection>> | undefined;
 
   saveRelations<R extends Record<string, Relation>>(
     relations: R,
     data: Record<string, any>
   ): void;
 
-  getByPrimary<M extends Collection>(
-    model: M,
+  getByPrimary<TCollection extends CollectionFullSchema>(
+    model: TCollection,
     primary: Primary
-  ): InferCollectionNormalizedType<M> | undefined;
+  ): Document<TCollection> | undefined;
 
-  getByPrimaries<M extends Collection>(
-    model: M,
+  getByPrimaries<TCollection extends CollectionFullSchema>(
+    model: TCollection,
     primaries: Primary[]
-  ): InferCollectionNormalizedType<M>[];
+  ): Document<TCollection>[];
 }

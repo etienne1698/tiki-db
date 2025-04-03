@@ -30,6 +30,6 @@ const db = setupDatabase(
 );
 
 test("test", () => {
-  console.error(db.schema.users.relations.pets);
+
   expect(db.schema.pets.dbName).toBe("pets");
 });

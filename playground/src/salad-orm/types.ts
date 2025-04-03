@@ -36,9 +36,7 @@ export type ExtractCollectionRelationsFromSchema<
     : never;
 }>;
 
-export type ExtractDatabaseSchema<
-  TSchema extends Record<string, unknown>
-> = {
+export type ExtractDatabaseSchema<TSchema extends Record<string, unknown>> = {
   [K in keyof TSchema as TSchema[K] extends Collection
     ? K
     : never]: TSchema[K] extends Collection
@@ -55,16 +53,15 @@ export type ExtractDatabaseSchema<
     : never;
 };
 
-export interface CollectionRelationalSchema {
+export interface CollectionFullSchema {
   dbName: string;
   tsName: string;
   relations: Record<string, Relation>;
   fields: Record<string, Field>;
   primaryKey: PrimaryKey;
 }
-
-export type InferCollectionNormalizedType<C extends Collection> = ReturnType<
-  C["normalize"]
->;
+export type Document<C extends CollectionFullSchema> = {
+  [K in keyof C["fields"]]: C["fields"][K] extends Field<infer T> ? T : never;
+};
 
 export type InferNormalizedField<F extends Field> = ReturnType<F["normalize"]>;
