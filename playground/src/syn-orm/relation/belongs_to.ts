@@ -6,13 +6,13 @@ import type { InferModelFieldName, InferNormalizedSchema } from "../types";
 import { Relation } from "./relation";
 
 export class BelongsToRelation<
-  SRelated extends Schema = Schema
-> extends Relation<SRelated> {
+  MRelated extends Model = Model
+> extends Relation<MRelated> {
   override getFor<From extends Model>(
     model: From,
     _data: any,
     store: Datastore
-  ): InferNormalizedSchema<SRelated> {
+  ): InferNormalizedSchema<MRelated["schema"]> {
     return (
       new QueryBuilder(store, this.related)
         // @ts-ignore

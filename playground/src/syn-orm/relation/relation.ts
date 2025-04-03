@@ -1,12 +1,8 @@
 import type { Datastore } from "../database/datastore";
 import type { Model } from "../model/model";
-import type { Schema } from "../schema/schema";
 import type { InferModelNormalizedType } from "../types";
 
-export abstract class Relation<
-  SRelated extends Schema = Schema,
-  MRelated extends Model = Model<SRelated, any>
-> {
+export abstract class Relation<MRelated extends Model = Model> {
   constructor(public related: MRelated, public field: unknown) {}
 
   abstract getFor<From extends Model>(
@@ -16,9 +12,6 @@ export abstract class Relation<
   ): InferModelNormalizedType<MRelated> | InferModelNormalizedType<MRelated>[];
 }
 
-/* export function relations<R extends Record<string, Relation>>(
-  model: Model,
-  relations: () => R
-) {
-  
-} */
+export type Relations<R extends Record<string, Relation> = Record<string, Relation>> = R;
+
+export function relations<M extends Model, R extends Relations>(model: M, relations: R) {}

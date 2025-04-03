@@ -6,15 +6,18 @@ import type { InferModelFieldName, InferNormalizedSchema } from "../types";
 import { Relation } from "./relation";
 
 export class HasManyRelation<
-  SRelated extends Schema = Schema
-> extends Relation<SRelated> {
+  MRelated extends Model
+> extends Relation<MRelated> {
   override getFor<From extends Model>(
     model: From,
     data: any,
     store: Datastore
-  ): InferNormalizedSchema<SRelated>[] {
+  ): InferNormalizedSchema<MRelated['schema']>[] {
     return new QueryBuilder(store, this.related)
-      .whereEq(this.field as keyof SRelated["schema"], model.primary(data))
+      .whereEq(
+        this.field as keyof MRelated["schema"]["schema"],
+        model.primary(data)
+      )
       .get();
   }
 }

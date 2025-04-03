@@ -1,4 +1,3 @@
-import type { Relation } from "../relation/relation";
 import type { Field } from "../schema/field";
 import { Schema } from "../schema/schema";
 import type {
@@ -8,16 +7,11 @@ import type {
   PrimaryKey,
 } from "../types";
 
-
-export class Model<
-  S extends Schema = Schema,
-  R extends Record<string, Relation> = Record<string, Relation>
-> {
+export class Model<S extends Schema = Schema> {
   constructor(
     public name: string,
     public primaryKey: PrimaryKey,
-    public schema: S,
-    public relations: () => R
+    public schema: S
   ) {}
 
   primary(data: AnyButMaybeT<InferModelNormalizedType<typeof this>>): Primary {
@@ -28,21 +22,12 @@ export class Model<
   }
 }
 
-export function model<
-  S extends Record<string, Field>,
-  R extends Record<string, Relation> = Record<string, Relation>
->(
+export function model<S extends Record<string, Field>>(
   name: string,
   schema: S,
   opts?: Partial<{
     primaryKey: PrimaryKey;
-    relations: () => R;
   }>
 ) {
-  return new Model(
-    name,
-    opts?.primaryKey || "id",
-    new Schema(schema),
-    opts?.relations || (() => ({} as R))
-  );
+  return new Model(name, opts?.primaryKey || "id", new Schema(schema));
 }
