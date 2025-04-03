@@ -3,6 +3,13 @@ import { Schema } from "./schema/schema";
 import { string } from "./schema/string";
 import type { PrimaryKey } from "./types";
 
+function is<T extends abstract new (...args: any) => any>(
+  value: any,
+  type: T
+): value is InstanceType<T> {
+  return value instanceof type;
+}
+
 class Collection<
   CollectionName extends string = string,
   S extends Schema = Schema
@@ -88,15 +95,31 @@ type DatabaseRelationalConfig = Record<string, CollectionRelationalConfig>;
 }
  */
 
-function extract<DConfig extends DatabaseRelationalConfig>(config: DConfig) {
-  return Object.entries(config).reduce((acc, [key, value]) => {
-    acc[key]
+function extractDatabaseRelationalConfig<
+  DConfig extends DatabaseRelationalConfig
+>(schema: Record<string, unknown>) {
+  return Object.entries(schema).reduce((acc, [_key, value]) => {
+    if (is(value, Collection)) {
+      acc[value.collectionName] = {
+        fields: value.schema.schema,
+        name: value.collectionName,
+        primaryKey: "",
+        relations: {},
+      };
+    } else if (is(value, Relations)) {
+      acc[value.collection.collectionName].relations = value.config;
+    }
     return acc;
-  }, {} as DatabaseRelationalConfig);
+  }, {} as DatabaseRelationalConfig) as DConfig;
 }
 
-class Database {
-  constructor() {}
+class Database<DConfig extends DatabaseRelationalConfig> {
+  constructor(public config: DConfig) {}
+}
+
+function database(schema: Record<string, unknown>) {
+  const dbConfig = extractDatabaseRelationalConfig(schema);
+  return new Database(dbConfig);
 }
 
 // --------
@@ -105,7 +128,7 @@ const users = collection("users", {
   id: string("id", ""),
 });
 
-const pets = collection("users", {
+const pets = collection("pets", {
   id: string("id", ""),
   user_id: string("id", ""),
 });
@@ -118,15 +141,9 @@ const petsRelations = relations(pets, ({ belongsTo }) => ({
   user: belongsTo(users, "user_id"),
 }));
 
-extract({
-  a: {
-    name: "users",
-    primaryKey: "id",
-    fields: {
-      id: string("id", ""),
-    },
-    relations: {
-      pets: hasMany(pets, "user_id"),
-    },
-  },
+const db = database({
+  users,
+  pets,
+  usersRelations,
+  petsRelations,
 });
