@@ -41,7 +41,7 @@ export function relations<
   Config extends Record<string, Relation> = Record<string, Relation>
 >(collection: C, setup: RelationSetupFn<C, Config>) {
   return new Relations<(typeof collection)["dbName"], Config>(
-    (collection as Collection<CName>).dbName,
+    collection.dbName,
     setup({ hasMany, belongsTo })
   );
 }
