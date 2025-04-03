@@ -18,7 +18,7 @@ export function extractDatabaseRelationalConfig<
         relations: acc[value.dbName]?.relations || {},
       };
     } else if (is(value, Relations)) {
-      acc[value.collection.dbName].relations = value.config;
+      acc[value.collectionName].relations = value.config;
     }
     return acc;
   }, {} as DatabaseRelationalConfig) as DSchema;

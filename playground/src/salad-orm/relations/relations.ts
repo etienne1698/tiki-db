@@ -1,7 +1,6 @@
 import type { Collection } from "../collections/collections";
 import type { Schema } from "../schema/schema";
 
-
 export class Relation<RefCName extends string = string> {
   declare referencedCollectionName: RefCName;
 
@@ -28,7 +27,6 @@ export class BelongsTo<
   RefCName extends string = string
 > extends Relation<RefCName> {}
 
-
 export type RelationSetupFn<
   C extends Collection = Collection,
   Config extends Record<string, Relation> = Record<string, Relation>
@@ -39,13 +37,13 @@ export type RelationSetupFn<
 
 export function relations<
   CName extends string,
-  C extends Collection<CName> = Collection<CName>,
+  C extends Collection<CName>,
   Config extends Record<string, Relation> = Record<string, Relation>
->(
-  collection: Collection<CName>,
-  setup: RelationSetupFn<C, Config>
-) {
-  return new Relations<CName, Config>(collection.dbName, setup({ hasMany, belongsTo }));
+>(collection: C, setup: RelationSetupFn<C, Config>) {
+  return new Relations<(typeof collection)["dbName"], Config>(
+    (collection as Collection<CName>).dbName,
+    setup({ hasMany, belongsTo })
+  );
 }
 
 export function hasMany<RefC extends Collection>(
@@ -60,4 +58,3 @@ export function belongsTo<
 >(referencedCollection: RefC, field: keyof C["schema"]["schema"]) {
   return new BelongsTo(referencedCollection, field as string);
 }
-
