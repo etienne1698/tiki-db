@@ -63,7 +63,7 @@ export interface CollectionRelationalSchema {
   primaryKey: PrimaryKey;
 }
 
-export type InferNormalizedSchema<C extends Collection> = ReturnType<
+export type InferCollectionNormalizedType<C extends Collection> = ReturnType<
   C["normalize"]
 >;
 
