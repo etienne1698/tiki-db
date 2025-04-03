@@ -1,6 +1,6 @@
 import type { Datastore } from "../database/datastore";
 import type { Model } from "../document/document";
-import type { InferModelFieldName, InferNormalizedSchema } from "../types";
+import type { InferModelFieldName, InferModelNormalizedType } from "../types";
 import { Relation } from "./relation";
 
 export class BelongsToRelation<
@@ -11,7 +11,7 @@ export class BelongsToRelation<
     _model: M,
     _data: any,
     _store: Datastore
-  ): InferNormalizedSchema<MRelated["schema"]> {
+  ): InferModelNormalizedType<MRelated> {
     throw new Error(
       "Method not implemented. This is a placeholder for the belongsTo relation."
     );
