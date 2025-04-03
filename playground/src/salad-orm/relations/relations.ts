@@ -1,5 +1,4 @@
 import type { Collection } from "../collections/collections";
-import type { Schema } from "../schema/schema";
 
 export class Relation<RefCName extends string = string> {
   declare referencedCollectionName: RefCName;
@@ -48,13 +47,13 @@ export function relations<
 
 export function hasMany<RefC extends Collection>(
   referencedCollection: RefC,
-  field: keyof RefC["schema"]["schema"]
+  field: keyof RefC["schema"]
 ) {
   return new HasMany(referencedCollection, field as string);
 }
 export function belongsTo<
   C extends Collection,
   RefC extends Collection = Collection
->(referencedCollection: RefC, field: keyof C["schema"]["schema"]) {
+>(referencedCollection: RefC, field: keyof C["schema"]) {
   return new BelongsTo(referencedCollection, field as string);
 }

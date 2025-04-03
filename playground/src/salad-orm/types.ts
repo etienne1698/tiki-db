@@ -46,7 +46,7 @@ export type ExtractDatabaseWithRelations<
     ? {
         tsName: K & string;
         dbName: TSchema[K]["dbName"];
-        fields: TSchema[K]["schema"]["schema"];
+        fields: TSchema[K]["schema"];
         relations: ExtractCollectionRelationsFromSchema<
           TSchema,
           TSchema[K]["dbName"]

@@ -11,7 +11,7 @@ export function extractDatabaseRelationalConfig<
   return Object.entries(schema).reduce((acc, [key, value]) => {
     if (is(value, Collection)) {
       acc[value.dbName] = {
-        fields: value.schema.schema,
+        fields: value.schema,
         dbName: value.dbName,
         tsName: key,
         primaryKey: "",
