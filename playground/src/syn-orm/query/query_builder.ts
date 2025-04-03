@@ -1,6 +1,6 @@
 import type { Datastore } from "../database/datastore";
-import type { Model, RelationsOf } from "../model/model";
-import type { InferModelFieldName, Primary } from "../types";
+import type { Model } from "../model/model";
+import type { InferModelFieldName, Primary, RelationsOf } from "../types";
 import { Operator, type OperatorValueType, type Query } from "./query";
 
 export class QueryBuilder<M extends Model> {

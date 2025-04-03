@@ -2,10 +2,15 @@ import { createVueDatabase } from "../";
 import { hasMany, model, string } from "../../syn-orm/";
 
 export function getTestBase() {
+
+  
+
   const pets = model("pet", {
     id: string("id", ""),
     user_id: string("user_id", ""),
     name: string("name", ""),
+  }, {
+    
   });
   const users = model(
     "users",

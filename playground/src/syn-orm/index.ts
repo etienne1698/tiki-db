@@ -21,6 +21,7 @@ export { model, Model } from "./model/model";
 
 export { Relation } from "./relation/relation";
 export { HasManyRelation, hasMany } from "./relation/has_many";
+export { BelongsToRelation, belongsTo } from "./relation/belongs_to";
 
 export {
   type Query,

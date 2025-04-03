@@ -8,7 +8,6 @@ import type {
   PrimaryKey,
 } from "../types";
 
-export type RelationsOf<M extends Model> = keyof ReturnType<M["relations"]>;
 
 export class Model<
   S extends Schema = Schema,

@@ -25,3 +25,6 @@ export type InferNormalizedSchema<S extends Schema> = ReturnType<
 >;
 
 export type InferNormalizedField<F extends Field> = ReturnType<F["normalize"]>;
+
+
+export type RelationsOf<M extends Model> = keyof ReturnType<M["relations"]>;

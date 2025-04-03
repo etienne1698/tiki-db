@@ -12,6 +12,13 @@ export abstract class Relation<
   abstract getFor<From extends Model>(
     model: From,
     data: any,
-    store: Datastore,
+    store: Datastore
   ): InferModelNormalizedType<MRelated> | InferModelNormalizedType<MRelated>[];
 }
+
+/* export function relations<R extends Record<string, Relation>>(
+  model: Model,
+  relations: () => R
+) {
+  
+} */
