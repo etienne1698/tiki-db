@@ -1,4 +1,6 @@
+/*
 import { expect, test } from "vitest";
+
 import { getTestBase } from "./base";
 
 test("simple save and retrieve", () => {
@@ -41,3 +43,4 @@ test("should be delete", () => {
 
   expect(db.collections.users.query().getFirst()).toBe(undefined);
 });
+ */

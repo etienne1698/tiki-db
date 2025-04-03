@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import type { Field } from "./schema/field";
 import { Schema } from "./schema/schema";
 import { string } from "./schema/string";
@@ -14,7 +15,7 @@ class Collection<
   CollectionName extends string = string,
   S extends Schema = Schema
 > {
-  constructor(public collectionName: CollectionName, public schema: S) {}
+  constructor(public dbName: CollectionName, public schema: S) {}
 }
 
 class Relation<RefCName extends string = string> {
@@ -24,7 +25,7 @@ class Relation<RefCName extends string = string> {
     referencedCollection: Collection<RefCName>,
     public field: string
   ) {
-    this.referencedCollectionName = referencedCollection.collectionName;
+    this.referencedCollectionName = referencedCollection.dbName;
   }
 }
 
@@ -37,16 +38,16 @@ class Relations<
   Config extends Record<string, Relation> = Record<string, Relation>
 > {
   constructor(
-    public collection: Collection<CollectionName>,
+    public collectionName: CollectionName,
     public config: Config
   ) {}
 }
 
 function collection<
-  CollectionName extends string = string,
+  CollectionName extends string,
   S extends Record<string, Field> = Record<string, Field>
 >(collectionName: CollectionName, schema: S) {
-  return new Collection(collectionName, new Schema(schema));
+  return new Collection<CollectionName>(collectionName, new Schema<S>(schema));
 }
 
 function hasMany<RefC extends Collection>(
@@ -71,55 +72,94 @@ type RelationSetupFn<
 }) => Config;
 
 function relations<
-  C extends Collection = Collection,
+  S extends Schema,
+  CName extends string,
+  C extends Collection = Collection<CName, S>,
   Config extends Record<string, Relation> = Record<string, Relation>
 >(collection: C, setup: RelationSetupFn<C, Config>) {
-  return new Relations(collection, setup({ hasMany, belongsTo }));
+  return new Relations<CName>(collection.dbName as CName, setup({ hasMany, belongsTo }));
 }
 
 interface CollectionRelationalConfig {
-  name: string;
+  dbName: string;
+  tsName: string;
   relations: Record<string, Relation>;
   fields: Record<string, Field>;
   primaryKey: PrimaryKey;
 }
 
+export type ExtractObjectValues<T> = T[keyof T];
+
+export type CollectionRelationsKeysOnly<
+  TSchema extends Record<string, unknown>,
+  TCollectionName extends string,
+  K extends keyof TSchema
+> = TSchema[K] extends Relations<TCollectionName> ? K : never;
+
+export type ExtractCollectionRelationsFromSchema<
+  TSchema extends Record<string, unknown>,
+  TCollectionName extends string
+> = ExtractObjectValues<{
+  [K in keyof TSchema as CollectionRelationsKeysOnly<
+    TSchema,
+    TCollectionName,
+    K
+  >]: TSchema[K] extends Relations<TCollectionName, infer TConfig>
+    ? TConfig
+    : never;
+}>;
+
+export type ExtractDatabaseWithRelations<
+  TSchema extends Record<string, unknown>
+> = {
+  [K in keyof TSchema as TSchema[K] extends Collection
+    ? K
+    : never]: TSchema[K] extends Collection
+    ? {
+        tsName: K & string;
+        dbName: TSchema[K]["dbName"];
+        fields: TSchema[K]["schema"]["schema"];
+        relations: ExtractCollectionRelationsFromSchema<
+          TSchema,
+          TSchema[K]["dbName"]
+        >;
+        primaryKey: string;
+      }
+    : never;
+};
+
 type DatabaseRelationalConfig = Record<string, CollectionRelationalConfig>;
 
-/* export interface DatabaseRelationalConfig<
-	DConfig extends DatabaseConfig,
-> {
-	fullSchema: Record<string, unknown>;
-	schema: DConfig;
-	tableNamesMap: Record<string, string>;
-}
- */
-
 function extractDatabaseRelationalConfig<
-  DConfig extends DatabaseRelationalConfig
+  DSchema extends DatabaseRelationalConfig
 >(schema: Record<string, unknown>) {
-  return Object.entries(schema).reduce((acc, [_key, value]) => {
+  return Object.entries(schema).reduce((acc, [key, value]) => {
     if (is(value, Collection)) {
-      acc[value.collectionName] = {
+      acc[value.dbName] = {
         fields: value.schema.schema,
-        name: value.collectionName,
+        dbName: value.dbName,
+        tsName: key,
         primaryKey: "",
-        relations: {},
+        relations: acc[value.dbName]?.relations || {},
       };
     } else if (is(value, Relations)) {
-      acc[value.collection.collectionName].relations = value.config;
+      acc[value.collectionName].relations = value.config;
     }
     return acc;
-  }, {} as DatabaseRelationalConfig) as DConfig;
+  }, {} as DatabaseRelationalConfig) as DSchema;
 }
 
-class Database<DConfig extends DatabaseRelationalConfig> {
-  constructor(public config: DConfig) {}
+class Database<
+  DFullSchema extends Record<string, unknown>,
+  DSchema extends DatabaseRelationalConfig
+> {
+  constructor(public fullSchema: DFullSchema, public schema: DSchema) {}
 }
 
-function database(schema: Record<string, unknown>) {
-  const dbConfig = extractDatabaseRelationalConfig(schema);
-  return new Database(dbConfig);
+function database<S extends Record<string, unknown>>(schema: S) {
+  const dbSchema =
+    extractDatabaseRelationalConfig<ExtractDatabaseWithRelations<S>>(schema);
+  return new Database(schema, dbSchema);
 }
 
 // --------
@@ -146,4 +186,9 @@ const db = database({
   pets,
   usersRelations,
   petsRelations,
+});
+
+test("test", () => {
+  db.schema.users.relations
+  expect(db.schema.pets.dbName).toBe("pets");
 });
