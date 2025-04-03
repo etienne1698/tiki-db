@@ -1,3 +1,4 @@
+import type { Collection } from "./collection/collection";
 import type { Model } from "./document/document";
 import type { Field } from "./document/field";
 import type { Schema } from "./document/schema";
@@ -25,6 +26,3 @@ export type InferNormalizedSchema<S extends Schema> = ReturnType<
 >;
 
 export type InferNormalizedField<F extends Field> = ReturnType<F["normalize"]>;
-
-
-export type RelationsOf<M extends Model> = keyof ReturnType<M["relations"]>;

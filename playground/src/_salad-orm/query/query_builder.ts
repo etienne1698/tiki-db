@@ -1,14 +1,18 @@
+import type { Collection } from "../collection/collection";
 import type { Datastore } from "../database/datastore";
-import type { Model } from "../document/document";
-import type { InferModelFieldName, Primary, RelationsOf } from "../types";
+import type { InferModelFieldName, Primary } from "../types";
 import { Operator, type OperatorValueType, type Query } from "./query";
 
-export class QueryBuilder<M extends Model> {
-  declare query: Query<M>;
+export class QueryBuilder<C extends Collection> {
+  declare query: Query<C>;
 
-  constructor(public datastore: Datastore, public model: M, query?: Query<M>) {
+  constructor(
+    public datastore: Datastore,
+    public collection: C,
+    query?: Query<C>
+  ) {
     this.datastore = datastore;
-    this.model = model;
+    this.collection = collection;
     this.query = query || {
       filters: {
         [Operator.EQ]: {},
@@ -20,7 +24,7 @@ export class QueryBuilder<M extends Model> {
     };
   }
 
-  with(...relations: RelationsOf<M>[]) {
+  with(...relations: (keyof C["relations"])[]) {
     relations.forEach((r) => {
       this.query.with.add(r as string);
     });
@@ -35,7 +39,7 @@ export class QueryBuilder<M extends Model> {
   }
 
   where<T extends keyof OperatorValueType>(
-    field: InferModelFieldName<M>,
+    field: InferModelFieldName<C["model"]>,
     op: T,
     value: OperatorValueType[T]
   ) {
@@ -44,20 +48,20 @@ export class QueryBuilder<M extends Model> {
     return this;
   }
 
-  whereEq(field: InferModelFieldName<M>, value: any) {
+  whereEq(field: InferModelFieldName<C["model"]>, value: any) {
     return this.where(field, Operator.EQ, value);
   }
 
-  whereNe(field: InferModelFieldName<M>, value: any) {
+  whereNe(field: InferModelFieldName<C["model"]>, value: any) {
     return this.where(field, Operator.NE, value);
   }
 
-  whereIn(field: InferModelFieldName<M>, value: Array<any>) {
+  whereIn(field: InferModelFieldName<C["model"]>, value: Array<any>) {
     return this.where(field, Operator.IN, value);
   }
 
   get() {
-    return this.datastore.get(this.model, this.query);
+    return this.datastore.get(this.collection, this.query);
   }
 
   getFirst() {
