@@ -24,7 +24,7 @@ export class QueryBuilder<C extends Collection> {
     };
   }
 
-  with(...relations: (keyof C["relations"])[]) {
+  with<K extends keyof C['relations']['schema']>(...relations: K[]) {
     relations.forEach((r) => {
       this.query.with.add(r as string);
     });

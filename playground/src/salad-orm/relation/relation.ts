@@ -36,5 +36,5 @@ export function relations<
   M extends Model,
   R extends Record<string, Relation> = Record<string, Relation>
 >(model: M, setup: RelationSetupFn<M, R>) {
-  return new Relations<M, R>(model, setup({ hasMany, belongsTo }));
+  return new Relations(model, setup({ hasMany, belongsTo }));
 }
