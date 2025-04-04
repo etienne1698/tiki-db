@@ -1,6 +1,6 @@
 import type { Collection } from "../collection/collection";
 import { Database } from "../database/database";
-import type { DeepPartial, InferModelFieldName } from "../types";
+import type { InferModelFieldName } from "../types";
 
 export enum Filters {
   EQ = "$eq",
@@ -31,7 +31,14 @@ export type Query<C extends Collection, D extends Database> = {
   primaries: Array<string>;
   // todo: add deep query
   with: Partial<{
-    [K in keyof C["relations"]['schema']]: boolean
+    [K in keyof C["relations"]["schema"]]: C["relations"]["schema"][K]["related"]["dbName"] extends keyof D["mapCollectionDbNameCollection"]
+      ?
+          | boolean
+          | Query<
+              D["mapCollectionDbNameCollection"][C["relations"]["schema"][K]["related"]["dbName"]],
+              D
+            >
+      : boolean;
   }>;
 };
 

@@ -112,7 +112,7 @@ export const createDefaultStorage = <D extends Database>(
       for (const [key, value] of Object.entries(data)) {
         const relation = relations.schema[key];
         if (relation) {
-          save(database.dbMapCollection[relation.related.dbName], value, true);
+          save(database.mapCollectionDbNameCollection[relation.related.dbName], value, true);
 
           // @ts-ignore
           // eslint-disable-next-line @typescript-eslint/no-dynamic-delete

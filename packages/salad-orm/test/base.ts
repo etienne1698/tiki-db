@@ -8,14 +8,14 @@ import {
 } from "../src/index";
 
 export function getTestDatabase(storage: Storage) {
-  const users = model("users", {
+  const users = model("usersDbName", {
     id: string("id", ""),
     firstname: string("firstname", ""),
     lastname: string("lastname", ""),
     email: string("email", ""),
     phone: string("phone", ""),
   });
-  const posts = model("posts", {
+  const posts = model("postsDbName", {
     id: string("id", ""),
     title: string("title", ""),
     content: string("content", ""),
