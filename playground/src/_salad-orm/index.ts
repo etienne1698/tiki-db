@@ -13,7 +13,7 @@
 
 export * from "./types";
 
-export { Database, createDatabase } from "./database/database";
+export { Database, database } from "./database/database";
 export { type Datastore } from "./database/datastore";
 export { collection, Collection } from "./collection/collection";
 

@@ -25,7 +25,7 @@ export class Database<
   } */
 }
 
-export function createDatabase<
+export function database<
   Collections extends Record<string, Collection> = Record<string, Collection>
 >(collections: Collections, store: Datastore) {
   return new Database(collections, store);
