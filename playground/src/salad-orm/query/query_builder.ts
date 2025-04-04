@@ -48,16 +48,16 @@ export class QueryBuilder<C extends Collection> {
     return this;
   }
 
-  whereEq(field: InferModelFieldName<C["model"]>, value: any) {
-    return this.where(field, Operator.EQ, value);
+  whereEq(field: InferModelFieldName<C["model"]>, value: OperatorValueType[Operator.EQ]) {
+    this.query.filters[Operator.EQ][field] = value;
   }
 
-  whereNe(field: InferModelFieldName<C["model"]>, value: any) {
-    return this.where(field, Operator.NE, value);
+  whereNe(field: InferModelFieldName<C["model"]>, value: OperatorValueType[Operator.NE]) {
+    this.query.filters[Operator.NE][field] = value;
   }
 
-  whereIn(field: InferModelFieldName<C["model"]>, value: Array<any>) {
-    return this.where(field, Operator.IN, value);
+  whereIn(field: InferModelFieldName<C["model"]>, value: OperatorValueType[Operator.IN]) {
+    this.query.filters[Operator.IN][field] = value;
   }
 
   get() {
