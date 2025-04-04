@@ -1,6 +1,6 @@
 {
   "name": "salad-orm",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SaladORM provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
   "repository": "etienne1698/salad-orm",
   "main": "dist/index.js",
