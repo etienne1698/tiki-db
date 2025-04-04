@@ -32,9 +32,9 @@ test("has_many get query should worke", () => {
   db.collections.users.save({ id: "123" });
   db.collections.posts.save({ id: "1", userId: "123" });
 
-  expect(db.collections.users.query().with("posts").getFirst().posts[0].id).toBe(
-    "1"
-  );
+  expect(
+    db.collections.users.query().with("posts").getFirst().posts[0].id
+  ).toBe("1");
 });
 
 test("should be delete", () => {

@@ -31,8 +31,8 @@ export { Database, database } from "./database/database";
 
 export {
   type Query,
-  type OperatorValueType,
-  type Operator,
+  type FiltersValueType as OperatorValueType,
+  type Filters as Operator,
 } from "./query/query";
 export { QueryBuilder } from "./query/query_builder";
 export { QueryRunner } from "./query/query_runner";

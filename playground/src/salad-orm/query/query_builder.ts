@@ -1,30 +1,23 @@
 import type { Collection } from "../collection/collection";
 import type { Storage } from "../storage/storage";
 import type { InferModelFieldName, Primary } from "../types";
-import { Operator, type OperatorValueType, type Query } from "./query";
+import {
+  createDefaultQuery,
+  Filters,
+  type FiltersValueType,
+  type Query,
+} from "./query";
 
 export class QueryBuilder<C extends Collection> {
   declare query: Query<C>;
 
-  constructor(
-    public storage: Storage,
-    public collection: C,
-    query?: Query<C>
-  ) {
+  constructor(public storage: Storage, public collection: C, query?: Query<C>) {
     this.storage = storage;
     this.collection = collection;
-    this.query = query || {
-      filters: {
-        [Operator.EQ]: {},
-        [Operator.IN]: {},
-        [Operator.NE]: {},
-      },
-      with: new Set<string>(),
-      primaries: [],
-    };
+    this.query = query || createDefaultQuery<C>();
   }
 
-  with<K extends keyof C['relations']['schema']>(...relations: K[]) {
+  with<K extends keyof C["relations"]["schema"]>(...relations: K[]) {
     relations.forEach((r) => {
       this.query.with.add(r as string);
     });
@@ -38,29 +31,38 @@ export class QueryBuilder<C extends Collection> {
     return this;
   }
 
-  where<T extends keyof OperatorValueType>(
+  where<T extends keyof FiltersValueType>(
     field: InferModelFieldName<C["model"]>,
     op: T,
-    value: OperatorValueType[T]
+    value: FiltersValueType[T]
   ) {
-    this.query.filters[op][field] =
-      value as OperatorValueType[keyof OperatorValueType];
+    if (!this.query.filters[field]) {
+      this.query.filters[field] = {};
+    }
+    this.query.filters[field][op] =
+      value as FiltersValueType[keyof FiltersValueType];
     return this;
   }
 
-  whereEq(field: InferModelFieldName<C["model"]>, value: OperatorValueType[Operator.EQ]) {
-    this.query.filters[Operator.EQ][field] = value;
-    return this;
+  whereEq(
+    field: InferModelFieldName<C["model"]>,
+    value: FiltersValueType[Filters.EQ]
+  ) {
+    return this.where(field, Filters.EQ, value);
   }
 
-  whereNe(field: InferModelFieldName<C["model"]>, value: OperatorValueType[Operator.NE]) {
-    this.query.filters[Operator.NE][field] = value;
-    return this;
+  whereNe(
+    field: InferModelFieldName<C["model"]>,
+    value: FiltersValueType[Filters.NE]
+  ) {
+    return this.where(field, Filters.NE, value);
   }
 
-  whereIn(field: InferModelFieldName<C["model"]>, value: OperatorValueType[Operator.IN]) {
-    this.query.filters[Operator.IN][field] = value;
-    return this;
+  whereIn(
+    field: InferModelFieldName<C["model"]>,
+    value: FiltersValueType[Filters.IN]
+  ) {
+    return this.where(field, Filters.IN, value);
   }
 
   get() {
