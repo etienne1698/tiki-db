@@ -17,17 +17,11 @@ export class HasManyRelation<
     data: any,
     database: Database
   ): InferModelNormalizedType<MRelated>[] {
-    /**
- * query(this.related)
-      .where(this.field, "$eq", model.$primary())
-      .get();
- */
-
     return (
       database.collections[model.dbName] as QueryRunner<AnyCollection>
     ).find({
       filters: {
-        $eq: { [this.field as string]: model.primary(data) },
+        [this.field as string]: { $eq: model.primary(data) },
       },
     }) as unknown as InferModelNormalizedType<MRelated>[];
   }

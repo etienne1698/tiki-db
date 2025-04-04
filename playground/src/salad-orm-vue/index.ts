@@ -137,7 +137,11 @@ export abstract class RefStorage extends Storage {
   ): void {
     for (const [key, value] of Object.entries(data)) {
       if (relations.schema[key]) {
-        // this.save(relations.schema[key].related, value, true);
+        this.save(
+          this.database.dbMapCollection[relations.schema[key].related.dbName],
+          value,
+          true
+        );
 
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
