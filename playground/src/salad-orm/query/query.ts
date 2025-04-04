@@ -1,4 +1,11 @@
-import type { CollectionFullSchema } from "../types";
+import type { Collection } from "../collection/collection";
+import type { InferModelFieldName } from "../types";
+
+export enum Operator {
+  EQ = "$eq",
+  IN = "$in",
+  NE = "$ne",
+}
 
 export type OperatorValueType = {
   $eq: any;
@@ -6,12 +13,10 @@ export type OperatorValueType = {
   $ne: any;
 };
 
-export type Operator = keyof OperatorValueType;
-
-export type Query<C extends CollectionFullSchema> = {
+export type Query<C extends Collection> = {
   filters: Record<
     keyof OperatorValueType,
-    Partial<Record<keyof C["fields"], any>>
+    Partial<Record<InferModelFieldName<C["model"]>, any>>
   >;
   with: Set<string>;
   primaries: Array<string>;

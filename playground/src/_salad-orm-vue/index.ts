@@ -7,8 +7,8 @@ import {
   type Datastore,
   Relation,
   createDatabase,
-} from "../salad-orm";
-import type { AnyButMaybeT, MaybeAsArray } from "../salad-orm/types";
+} from "../______test______";
+import type { AnyButMaybeT, MaybeAsArray } from "../______test______/types";
 
 export abstract class RefDatastore implements Datastore {
   abstract getStore<M extends Model = Model>(
