@@ -7,19 +7,19 @@ export class Database<
   Collections extends Record<string, Collection> = Record<string, Collection>
 > {
   declare storage: Storage;
-  declare query: {
+  declare collections: {
     [K in keyof Collections]: QueryRunner<typeof this, Collections[K]>;
   };
 
-  constructor(public collections: Collections, storage: Constructor<Storage>) {
+  constructor(collections: Collections, storage: Constructor<Storage>) {
     this.storage = new storage(this) 
-    this.query = {} as {
+    this.collections = {} as {
       [K in keyof Collections]: QueryRunner<typeof this, Collections[K]>;
     };
 
     for (const [key, collection] of Object.entries(collections)) {
       // @ts-ignore
-      this.query[key] = new QueryRunner(this, collection);
+      this.collections[key] = new QueryRunner(this, collection);
     }
   }
 
