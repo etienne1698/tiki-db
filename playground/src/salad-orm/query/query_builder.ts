@@ -2,7 +2,6 @@ import type { Collection } from "../collection/collection";
 import type { Storage } from "../storage/storage";
 import type { InferModelFieldName, Primary } from "../types";
 import {
-  AndOrFilters,
   createDefaultQuery,
   FILTER_OR,
   Filters,
@@ -18,13 +17,6 @@ export class QueryBuilder<C extends Collection> {
     this.storage = storage;
     this.collection = collection;
     this.query = query || createDefaultQuery<C>();
-  }
-
-  with<K extends keyof C["relations"]["schema"]>(...relations: K[]) {
-    relations.forEach((r) => {
-      this.query.with.add(r as string);
-    });
-    return this;
   }
 
   byPrimary(primaries: Primary[]) {

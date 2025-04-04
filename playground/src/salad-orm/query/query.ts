@@ -27,14 +27,12 @@ export type QueryOrFilters<C extends Collection> = Partial<{
 
 export type Query<C extends Collection> = {
   filters: QueryFilters<C> & QueryOrFilters<C>;
-  with: Set<string>;
   primaries: Array<string>;
 };
 
 export function createDefaultQuery<C extends Collection>(): Query<C> {
   return {
     filters: {},
-    with: new Set<string>(),
     primaries: [],
   };
 }

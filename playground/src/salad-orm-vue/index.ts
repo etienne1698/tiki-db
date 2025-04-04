@@ -16,32 +16,6 @@ export abstract class RefStorage extends Storage {
 
   abstract load<C extends Collection>(collection: C): boolean;
 
-  #loadRelated<C extends Collection>(
-    query: Query<C>,
-    collection: C,
-    data: InferModelNormalizedType<C["model"]>[]
-  ) {
-    return data.map((data) => {
-      const m = { ...data } as InferModelNormalizedType<C["model"]>;
-      for (const relation of query.with.values()) {
-        // @ts-ignore
-        m[relation] = collection.relations.schema[relation].getFor(
-          collection.model,
-          data,
-          this.database
-        );
-      }
-      return m;
-    });
-  }
-
-  #applyFilters<C extends Collection>(
-    query: Query<C>,
-    data: InferModelNormalizedType<C["model"]>[]
-  ): InferModelNormalizedType<C["model"]>[] {
-    return data;
-  }
-
   get<C extends Collection>(
     collection: C,
     query?: Query<C>
@@ -55,14 +29,6 @@ export abstract class RefStorage extends Storage {
       : (Object.values(
           this.getStore<C>(collection).value || []
         ) as InferModelNormalizedType<C["model"]>[]);
-    result = this.#applyFilters(query, result);
-    if (query.with.size > 0) {
-      result = this.#loadRelated(
-        query,
-        collection,
-        result
-      ) as InferModelNormalizedType<C["model"]>[];
-    }
     return result as InferModelNormalizedType<C["model"]>[];
   }
 

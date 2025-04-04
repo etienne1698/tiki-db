@@ -14,9 +14,6 @@ export class Database<
     [K in keyof Collections]: QueryRunner<Collections[K], Collections>;
   };
 
-  /**
-   * Same as `collections`, but with the dbName of the collection as the key.
-   */
   dbMapCollection: {
     [K in keyof Collections]: Collections[K];
   } = {} as {

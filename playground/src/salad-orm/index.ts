@@ -1,8 +1,8 @@
 /**
  * README 👋
  *
- * `SynDB` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
- * It provides a structured way to interact with data models and relationships while remaining store-agnostic.
+ * `SaladORM` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
+ * It provides a structured way to interact with data models and relationships while remaining storage-agnostic.
  *
  *
  * Inspirations:
