@@ -13,10 +13,10 @@ export type FiltersValueType = {
   [Filters.NE]: any;
 };
 
-export type QueryFilters<C extends Collection> = DeepPartial<{
-  [field in InferModelFieldName<C["model"]>]: {
+export type QueryFilters<C extends Collection> = Partial<{
+  [field in InferModelFieldName<C["model"]>]: Partial<{
     [key in Filters]: FiltersValueType[key];
-  };
+  }>;
 }>;
 
 export enum AndOrFilters {
@@ -29,10 +29,10 @@ export type AndOrFiltersValueType = {
   [AndOrFilters.OR]: Array<any>;
 };
 
-export type QueryAndOrFilters<C extends Collection> = DeepPartial<{
-  [key in AndOrFilters]: QueryFilters<C> & {
+export type QueryAndOrFilters<C extends Collection> = Partial<{
+  [key in AndOrFilters]: QueryFilters<C> & Partial<{
     [key in AndOrFilters]: QueryFilters<C>;
-  };
+  }>;
 }>;
 
 /**

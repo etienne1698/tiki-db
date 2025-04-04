@@ -39,18 +39,6 @@ export abstract class RefStorage extends Storage {
     query: Query<C>,
     data: InferModelNormalizedType<C["model"]>[]
   ): InferModelNormalizedType<C["model"]>[] {
-    for (const [key, value] of Object.entries(query.filters.$eq)) {
-      // @ts-ignore
-      data = data.filter((model) => model[key] == value);
-    }
-    for (const [key, value] of Object.entries(query.filters.$in)) {
-      // @ts-ignore
-      data = data.filter((model) => value.includes(model[key]));
-    }
-    for (const [key, value] of Object.entries(query.filters.$ne)) {
-      // @ts-ignore
-      data = data.filter((model) => model[key] != value);
-    }
     return data;
   }
 

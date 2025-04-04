@@ -2,6 +2,7 @@ import type { Collection } from "../collection/collection";
 import type { Storage } from "../storage/storage";
 import type { InferModelFieldName, Primary } from "../types";
 import {
+  AndOrFilters,
   createDefaultQuery,
   Filters,
   type FiltersValueType,
@@ -31,13 +32,32 @@ export class QueryBuilder<C extends Collection> {
     return this;
   }
 
+  orWhere(callback: (qb: QueryBuilder<C>) => QueryBuilder<C>) {
+    this.query.filters[AndOrFilters.OR] = callback(
+      new QueryBuilder(this.storage, this.collection)
+    ).query.filters;
+    return this;
+  }
+
+  
+  andWhere(callback: (qb: QueryBuilder<C>) => QueryBuilder<C>) {
+    this.query.filters[AndOrFilters.AND] = callback(
+      new QueryBuilder(this.storage, this.collection)
+    ).query.filters;
+    return this;
+  }
+
   where<T extends keyof FiltersValueType>(
     field: InferModelFieldName<C["model"]>,
     op: T,
     value: FiltersValueType[T]
   ) {
     if (!this.query.filters[field]) {
+      // @ts-ignore
       this.query.filters[field] = {};
+      if (!this.query.filters[field][op]) {
+        this.query.filters[field][op] = {} as any;
+      }
     }
     this.query.filters[field][op] =
       value as FiltersValueType[keyof FiltersValueType];
