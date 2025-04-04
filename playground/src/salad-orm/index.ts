@@ -18,7 +18,8 @@ export { Field } from "./model/field";
 export { string, StringField } from "./model/string";
 export { array, ArrayField } from "./model/array";
 
-export { Relation, Relations, relations } from "./relation/relation";
+export { Relation, Relations } from "./relation/relation";
+export { relations } from "./relation/relation_functions";
 export { HasManyRelation, hasMany } from "./relation/has_many";
 export { BelongsToRelation, belongsTo } from "./relation/belongs_to";
 
@@ -35,6 +36,3 @@ export {
 } from "./query/query";
 export { QueryBuilder } from "./query/query_builder";
 export { QueryRunner } from "./query/query_runner";
-
-
-
