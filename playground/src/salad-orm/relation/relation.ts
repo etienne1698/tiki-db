@@ -1,3 +1,4 @@
+import type { Database } from "../database/database";
 import type { Model } from "../model/model";
 import type { InferModelNormalizedType } from "../types";
 
@@ -9,7 +10,8 @@ export abstract class Relation<
 
   abstract getFor(
     model: M,
-    data: any
+    data: any,
+    database: Database
   ):
     | InferModelNormalizedType<MRelated>
     | undefined

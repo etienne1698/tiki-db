@@ -27,7 +27,8 @@ export abstract class RefStorage extends Storage {
         // @ts-ignore
         m[relation] = collection.relations.schema[relation].getFor(
           collection.model,
-          data
+          data,
+          this.database
         );
       }
       return m;

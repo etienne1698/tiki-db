@@ -26,10 +26,11 @@ test("relation should be save to the relation entity state", () => {
   expect(db.collections.posts.query().getFirst().id).toBe("1");
 });
 
-test("has_many query should worke", () => {
+test("has_many get query should worke", () => {
   const { db } = getTestBase();
 
-  db.collections.users.save({ id: "123", posts: [{ id: "1", userId: "123" }] });
+  db.collections.users.save({ id: "123" });
+  db.collections.posts.save({ id: "1", userId: "123" });
 
   expect(db.collections.users.query().with("posts").getFirst().posts[0].id).toBe(
     "1"

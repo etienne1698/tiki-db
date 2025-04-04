@@ -1,5 +1,5 @@
 import type { Collection } from "../collection/collection";
-import type { InferModelFieldName } from "../types";
+import type { DeepPartial, InferModelFieldName } from "../types";
 
 export enum Operator {
   EQ = "$eq",
@@ -24,3 +24,15 @@ export type Query<C extends Collection> = {
   with: Set<string>;
   primaries: Array<string>;
 };
+
+export function createDefaultQuery<C extends Collection>(): Query<C> {
+  return {
+    filters: {
+      [Operator.EQ]: {},
+      [Operator.IN]: {},
+      [Operator.NE]: {},
+    },
+    with: new Set<string>(),
+    primaries: [],
+  };
+}

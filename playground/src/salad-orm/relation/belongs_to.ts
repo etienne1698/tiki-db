@@ -1,3 +1,4 @@
+import type { Database } from "../database/database";
 import type { Model } from "../model/model";
 import type { InferModelFieldName, InferModelNormalizedType } from "../types";
 import { Relation } from "./relation";
@@ -8,7 +9,8 @@ export class BelongsToRelation<
 > extends Relation<M, MRelated> {
   getFor(
     _model: M,
-    _data: any
+    _data: any,
+     _database: Database
   ): InferModelNormalizedType<MRelated> | undefined {
     return undefined;
   }

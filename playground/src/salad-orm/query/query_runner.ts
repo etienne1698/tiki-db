@@ -2,13 +2,18 @@ import type { Collection } from "../collection/collection";
 import type { Database } from "../database/database";
 import type {
   AnyButMaybeT,
+  DeepPartial,
   InferModelNormalizedType,
   MaybeAsArray,
   Primary,
 } from "../types";
+import { createDefaultQuery, type Query } from "./query";
 import { QueryBuilder } from "./query_builder";
 
-export class QueryRunner<Collections extends Record<string, Collection>, C extends Collection> {
+export class QueryRunner<
+  C extends Collection,
+  Collections extends Record<string, Collection> = Record<string, Collection>
+> {
   constructor(private database: Database<Collections>, private collection: C) {}
 
   saveRelations(data: Record<string, any>) {
@@ -35,6 +40,11 @@ export class QueryRunner<Collections extends Record<string, Collection>, C exten
 
   query() {
     return new QueryBuilder(this.database.storage, this.collection);
+  }
+
+  $query(query: DeepPartial<Query<C>>) {
+    const finalQuery = Object.assign(createDefaultQuery<C>(), query);
+    this.database.storage.get(this.collection, finalQuery);
   }
 
   all() {

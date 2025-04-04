@@ -8,13 +8,13 @@ export class Database<
 > {
   declare storage: Storage;
   declare collections: {
-    [K in keyof Collections]: QueryRunner<Collections, Collections[K]>;
+    [K in keyof Collections]: QueryRunner<Collections[K], Collections>;
   };
 
   constructor(collections: Collections, storage: Constructor<Storage>) {
     this.storage = new storage(this);
     this.collections = {} as {
-      [K in keyof Collections]: QueryRunner<Collections, Collections[K]>;
+      [K in keyof Collections]: QueryRunner<Collections[K], Collections>;
     };
 
     for (const [key, collection] of Object.entries(collections)) {
