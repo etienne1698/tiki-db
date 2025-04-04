@@ -1,5 +1,11 @@
-import { vueDatabase } from "..";
-import { collection, model, relations, string } from "../../salad-orm";
+import { VueStorage } from "..";
+import {
+  collection,
+  model,
+  relations,
+  string,
+  database,
+} from "../../salad-orm";
 
 export function getTestBase() {
   const users = model("users", {
@@ -24,10 +30,13 @@ export function getTestBase() {
     user: belongsTo(users, "userId"),
   }));
 
-  const db = vueDatabase({
-    users: collection(users, usersRelations),
-    posts: collection(posts, postsRelations),
-  });
+  const db = database(
+    {
+      users: collection(users, usersRelations),
+      posts: collection(posts, postsRelations),
+    },
+    VueStorage
+  );
 
   return {
     db,

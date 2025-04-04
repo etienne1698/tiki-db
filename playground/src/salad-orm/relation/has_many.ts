@@ -1,4 +1,4 @@
-import type { Datastore } from "../database/datastore";
+import type { Storage } from "../database/storage";
 import type { Model } from "../model/model";
 import type { InferModelFieldName, InferModelNormalizedType } from "../types";
 import { Relation } from "./relation";
@@ -10,7 +10,7 @@ export class HasManyRelation<
   override getFor(
     _model: M,
     _data: any,
-    _store: Datastore
+    _store: Storage
   ): InferModelNormalizedType<MRelated>[] {
     return [];
   }

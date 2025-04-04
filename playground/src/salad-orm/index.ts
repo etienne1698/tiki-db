@@ -14,7 +14,7 @@
 export * from "./types";
 
 export { Database, database } from "./database/database";
-export { Datastore } from "./database/datastore";
+export { Storage } from "./database/storage";
 export { collection, Collection } from "./collection/collection";
 
 export { model, Model } from "./model/model";

@@ -1,5 +1,5 @@
 import type { Collection } from "../collection/collection";
-import type { Datastore } from "../database/datastore";
+import type { Storage } from "../database/storage";
 import type { InferModelFieldName, Primary } from "../types";
 import { Operator, type OperatorValueType, type Query } from "./query";
 
@@ -7,11 +7,11 @@ export class QueryBuilder<C extends Collection> {
   declare query: Query<C>;
 
   constructor(
-    public datastore: Datastore,
+    public storage: Storage,
     public collection: C,
     query?: Query<C>
   ) {
-    this.datastore = datastore;
+    this.storage = storage;
     this.collection = collection;
     this.query = query || {
       filters: {
@@ -61,7 +61,7 @@ export class QueryBuilder<C extends Collection> {
   }
 
   get() {
-    return this.datastore.get(this.collection, this.query);
+    return this.storage.get(this.collection, this.query);
   }
 
   getFirst() {

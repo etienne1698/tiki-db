@@ -3,14 +3,13 @@ import {
   type Query,
   type InferModelNormalizedType,
   type Primary,
-  Datastore,
+  Storage,
   Relations,
-  database,
   Collection,
 } from "../salad-orm";
 import type { AnyButMaybeT, MaybeAsArray } from "../salad-orm/types";
 
-export abstract class RefDatastore extends Datastore {
+export abstract class RefStorage extends Storage {
   abstract getStore<C extends Collection = Collection>(
     name: string
   ): Ref<Record<Primary, InferModelNormalizedType<C["model"]>>>;
@@ -172,7 +171,7 @@ export abstract class RefDatastore extends Datastore {
   }
 }
 
-export class VueDatastore extends RefDatastore {
+export class VueStorage extends RefStorage {
   stores: Record<string, Ref<Record<Primary, any>>> = {};
 
   load<C extends Collection>(collection: C) {
@@ -187,10 +186,4 @@ export class VueDatastore extends RefDatastore {
       Record<Primary, InferModelNormalizedType<C["model"]>>
     >;
   }
-}
-
-export function vueDatabase<
-  Collections extends Record<string, Collection> = Record<string, Collection>
->(collections: Collections) {
-  return database(collections, VueDatastore);
 }

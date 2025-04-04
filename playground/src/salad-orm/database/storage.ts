@@ -9,7 +9,7 @@ import type {
 } from "../types";
 import type { Database } from "./database";
 
-export abstract class Datastore<D extends Database = Database> {
+export abstract class Storage<D extends Database = Database> {
   constructor(public database: D) {}
 
   abstract get<C extends Collection>(
