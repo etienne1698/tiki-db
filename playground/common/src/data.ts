@@ -1,4 +1,12 @@
-import { collection, model, relations, string } from "./re-export";
+import {
+  model,
+  collection,
+  relations,
+  string,
+  Database,
+  InferModelNormalizedType,
+} from "./re-export";
+import { faker } from "@faker-js/faker";
 
 const users = model("users", {
   id: string("id", ""),
@@ -36,8 +44,24 @@ const commentsRelations = relations(comments, ({ belongsTo }) => ({
   author: belongsTo(users, "authorId"),
 }));
 
-export default {
+export const collections = {
   users: collection(users, usersRelations),
   posts: collection(posts, postsRelations),
   comments: collection(comments, commentsRelations),
 };
+
+export function seed(db: Database<typeof collections>) {
+  db.collections.users.save(
+    faker.helpers.multiple(
+      () =>
+        ({
+          id: faker.string.uuid(),
+          email: faker.internet.email(),
+          firstname: faker.person.firstName(),
+          lastname: faker.person.lastName(),
+          age: faker.number.int({ min: 12, max: 90 }).toString(),
+        } as InferModelNormalizedType<typeof users>),
+      { count: 20 }
+    )
+  );
+}
