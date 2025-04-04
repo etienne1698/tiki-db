@@ -44,7 +44,7 @@ export class QueryRunner<
 
   find(query: DeepPartial<Query<C>>) {
     const finalQuery = Object.assign(createDefaultQuery<C>(), query);
-    this.database.storage.get(this.collection, finalQuery);
+    return this.database.storage.get(this.collection, finalQuery);
   }
 
   findFirst(query: DeepPartial<Query<C>>) {

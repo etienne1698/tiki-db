@@ -22,7 +22,7 @@ test("Direct Query and Query through QueryBuilder should return same result", ()
         },
       },
     })
-  ).toBe(
+  ).toStrictEqual(
     db.collections.users
       .query()
       .orWhere([
