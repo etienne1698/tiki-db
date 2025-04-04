@@ -1,9 +1,12 @@
 import { expect, test } from "vitest";
 
-import { getTestBase } from "./base";
+import { getTestDatabase } from "./base";
+import { inMemoryStorage } from "../src";
+
+const storage = inMemoryStorage();
 
 test("Direct Query and Query through QueryBuilder should return same result", () => {
-  const { db } = getTestBase();
+  const { db } = getTestDatabase(storage);
 
   expect(
     db.collections.users.find({

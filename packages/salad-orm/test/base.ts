@@ -4,10 +4,10 @@ import {
   relations,
   string,
   database,
-  inMemoryStorage,
+  Storage,
 } from "../src/index";
 
-export function getTestBase() {
+export function getTestDatabase(storage: Storage) {
   const users = model("users", {
     id: string("id", ""),
     firstname: string("firstname", ""),
@@ -35,7 +35,7 @@ export function getTestBase() {
       users: collection(users, usersRelations),
       posts: collection(posts, postsRelations),
     },
-    inMemoryStorage()
+    storage
   );
 
   return {

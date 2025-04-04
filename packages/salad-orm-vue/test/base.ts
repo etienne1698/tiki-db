@@ -1,7 +1,13 @@
-import { vueStorage } from "../src";
-import { collection, model, relations, string, database } from "salad-orm";
+import {
+  collection,
+  model,
+  relations,
+  string,
+  database,
+  Storage,
+} from "salad-orm";
 
-export function getTestBase() {
+export function getTestDatabase(storage: Storage) {
   const users = model("users", {
     id: string("id", ""),
     firstname: string("firstname", ""),
@@ -29,7 +35,7 @@ export function getTestBase() {
       users: collection(users, usersRelations),
       posts: collection(posts, postsRelations),
     },
-    vueStorage()
+    storage
   );
 
   return {

@@ -1,9 +1,12 @@
 import { expect, test } from "vitest";
 
-import { getTestBase } from "./base";
+import { getTestDatabase } from "./base";
+import { vueStorage } from "../src";
+
+const storage = vueStorage();
 
 test("simple save and retrieve", () => {
-  const { db } = getTestBase();
+  const { db } = getTestDatabase(storage);
 
   db.collections.users.save({ id: "123" });
 
@@ -11,7 +14,7 @@ test("simple save and retrieve", () => {
 });
 
 test("relation should not be saved in entity state", () => {
-  const { db } = getTestBase();
+  const { db } = getTestDatabase(storage);
 
   db.collections.users.save({ id: "123", posts: [{ id: "1", userId: "123" }] });
 
@@ -19,7 +22,7 @@ test("relation should not be saved in entity state", () => {
 });
 
 test("relation should be save to the relation entity state", () => {
-  const { db } = getTestBase();
+  const { db } = getTestDatabase(storage);
 
   db.collections.users.save({ id: "123", posts: [{ id: "1", userId: "123" }] });
 
@@ -27,7 +30,7 @@ test("relation should be save to the relation entity state", () => {
 });
 
 /* test("has_many get query should work", () => {
-  const { db } = getTestBase();
+  const { db } = getTestDatabase(storage);
 
   db.collections.users.save({ id: "123" });
   db.collections.posts.save({ id: "1", userId: "123" });
@@ -38,7 +41,7 @@ test("relation should be save to the relation entity state", () => {
 }); */
 
 test("should be delete", () => {
-  const { db } = getTestBase();
+  const { db } = getTestDatabase(storage);
 
   db.collections.users.save({ id: "123" });
   db.collections.users.delete("123");

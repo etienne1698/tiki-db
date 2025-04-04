@@ -1,7 +1,7 @@
 {
   "name": "salad-orm-vue",
   "version": "0.3.0",
-  "description": "SaladORMVue is a lightweight and efficient ORM library for Vue 3 using vue `ref`",
+  "description": "`SaladORM Vue` is a storage implementation for `SaladORM` using vue `ref`",
   "repository": "etienne1698/salad-orm",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
