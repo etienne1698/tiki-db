@@ -102,7 +102,6 @@ export const createDefaultStorage = <D extends Database>(
       }
       const res = collection.model.normalize(data);
       state[primary] = res as InferModelNormalizedType<C["model"]>;
-      console.error(getStore<C>(collection)[primary]);
       return res as InferModelNormalizedType<C["model"]>;
     }
 
