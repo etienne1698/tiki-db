@@ -83,7 +83,7 @@ export abstract class RefStorage extends Storage {
     _query?: Query<C>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete this.getStore(collection.model.type).value[primary];
+    delete this.getStore(collection).value[primary];
     return undefined;
   }
 
