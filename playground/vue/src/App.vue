@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import "./data/seeds";
-
 import { AgGridVue } from "ag-grid-vue3";
 import type { ColDef } from "ag-grid-community";
-
-import repositories from "./data/repositories";
+import { db } from "./data";
 
 const belongsToColDef: Partial<ColDef> = {
   headerClass: "text-emerald-600",
@@ -52,7 +49,7 @@ const hasManyThroughColDef: Partial<ColDef> = {
       <div>
         <div class="text-xl mb-1">User</div>
         <ag-grid-vue
-          :rowData="repositories.users.query().with('pets', 'city').get()"
+          :rowData="db.collections.users.query().find()"
           :columnDefs="[
             {
               field: 'id',
@@ -86,85 +83,6 @@ const hasManyThroughColDef: Partial<ColDef> = {
             },
           ]"
           style="height: 300px"
-        />
-      </div>
-      <div>
-        <div class="text-xl mb-1">Pet</div>
-        <ag-grid-vue
-          :rowData="repositories.pets.query().with('user').get()"
-          :columnDefs="[
-            {
-              field: 'id',
-              flex: 1,
-            },
-            {
-              field: 'name',
-              flex: 1,
-            },
-            {
-              field: 'type',
-              flex: 1,
-            },
-            {
-              ...belongsToColDef,
-              field: 'user',
-              flex: 1,
-            },
-          ]"
-          style="height: 300px"
-        />
-      </div>
-      <div>
-        <div class="text-xl mb-1">Role</div>
-        <ag-grid-vue
-          :rowData="repositories.roles.query().with('users').get()"
-          :columnDefs="[
-            {
-              field: 'id',
-              flex: 1,
-            },
-            {
-              field: 'name',
-              flex: 1,
-            },
-            {
-              ...belongsToManyColDef,
-              field: 'users',
-              flex: 1,
-            },
-          ]"
-          style="height: 300px"
-        />
-      </div>
-      <div>
-        <div class="text-xl mb-1">City</div>
-        <ag-grid-vue
-          :rowData="repositories.cities.query().with('users', 'pets').get()"
-          :columnDefs="[
-            {
-              field: 'id',
-              flex: 1,
-            },
-            {
-              field: 'name',
-              flex: 1,
-            },
-            {
-              field: 'country',
-              flex: 1,
-            },
-            {
-              ...hasManyColDef,
-              field: 'users',
-              flex: 1,
-            },
-            {
-              ...hasManyThroughColDef,
-              field: 'pets',
-              flex: 1,
-            },
-          ]"
-          style="height: 310px"
         />
       </div>
     </div>
