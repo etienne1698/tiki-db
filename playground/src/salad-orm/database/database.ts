@@ -1,5 +1,5 @@
 import { Collection } from "../collection/collection";
-import type { Storage } from "./storage";
+import type { Storage } from "../storage/storage";
 import { QueryRunner } from "../query/query_runner";
 import type { Constructor } from "../types";
 

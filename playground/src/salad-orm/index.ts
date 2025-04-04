@@ -25,7 +25,7 @@ export { BelongsToRelation, belongsTo } from "./relation/belongs_to";
 
 export { collection, Collection } from "./collection/collection";
 
-export { Storage } from "./database/storage";
+export { Storage } from "./storage/storage";
 
 export { Database, database } from "./database/database";
 

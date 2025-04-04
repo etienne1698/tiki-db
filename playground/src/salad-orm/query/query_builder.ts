@@ -1,5 +1,5 @@
 import type { Collection } from "../collection/collection";
-import type { Storage } from "../database/storage";
+import type { Storage } from "../storage/storage";
 import type { InferModelFieldName, Primary } from "../types";
 import { Operator, type OperatorValueType, type Query } from "./query";
 

@@ -7,7 +7,7 @@ import type {
   MaybeAsArray,
   Primary,
 } from "../types";
-import type { Database } from "./database";
+import type { Database } from "../database/database";
 
 export abstract class Storage<D extends Database = Database> {
   constructor(public database: D) {}
