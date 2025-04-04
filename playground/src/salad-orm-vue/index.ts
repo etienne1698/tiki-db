@@ -184,7 +184,6 @@ export class VueStorage extends RefStorage {
   getStore<C extends Collection>(
     collection: C
   ): Ref<Record<Primary, InferModelNormalizedType<C["model"]>>> {
-    this.load(collection);
     return this.stores[collection.model.type] as Ref<
       Record<Primary, InferModelNormalizedType<C["model"]>>
     >;

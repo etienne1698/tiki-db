@@ -20,6 +20,7 @@ export class Database<
     for (const [key, collection] of Object.entries(collections)) {
       // @ts-ignore
       this.collections[key] = new QueryRunner(this, collection);
+      this.storage.load(collection);
     }
   }
 
