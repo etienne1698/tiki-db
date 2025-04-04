@@ -23,20 +23,20 @@ export type Storage<D extends Database = Database> = (database: D) => {
 
   get<C extends Collection>(
     collection: C,
-    query?: Query<C>
+    query?: Query<C, D>
   ): InferModelNormalizedType<C["model"]>[];
 
   remove<C extends Collection>(
     collection: C,
     primary: Primary,
-    query?: Query<C>
+    query?: Query<C, D>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
   update<C extends Collection>(
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
-    query?: Query<C>
+    query?: Query<C, D>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
   insert<C extends Collection>(
