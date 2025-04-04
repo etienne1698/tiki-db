@@ -8,6 +8,7 @@ export type RelationSetupFn<
   R extends Record<string, Relation> = Record<string, Relation>
 > = (relations: {
   hasMany: typeof hasMany;
+  // TODO: here we lose the type for Mrelated ....
   belongsTo: typeof belongsTo<M>;
 }) => R;
 

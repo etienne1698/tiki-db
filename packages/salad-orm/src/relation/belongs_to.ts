@@ -16,9 +16,9 @@ export class BelongsToRelation<
   }
 }
 
-export function belongsTo<From extends Model, M extends Model = Model>(
-  model: M,
-  field: InferModelFieldName<From>
+export function belongsTo<M extends Model, MRelated extends Model = Model>(
+  model: MRelated,
+  field: InferModelFieldName<M>
 ) {
   return new BelongsToRelation(model, field);
 }

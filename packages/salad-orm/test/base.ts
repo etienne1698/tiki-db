@@ -27,7 +27,7 @@ export function getTestDatabase(storage: Storage) {
   }));
 
   const postsRelations = relations(posts, ({ belongsTo }) => ({
-    user: belongsTo(users, "userId"),
+    userqs: belongsTo(users, "userId"),
   }));
 
   const db = database(

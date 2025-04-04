@@ -18,7 +18,7 @@ export class HasManyRelation<
     database: Database
   ): InferModelNormalizedType<MRelated>[] {
     return (
-      database.collections[model.dbName] as QueryRunner<AnyCollection>
+      database.collections[model.dbName] as QueryRunner<AnyCollection, Database>
     ).find({
       filters: {
         [this.field as string]: { $eq: model.primary(data) },

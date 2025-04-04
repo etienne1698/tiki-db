@@ -15,7 +15,9 @@ test("has_many get query should work", () => {
     db.collections.users.findFirst({
       with: {
         posts: {
+          with: {
           
+          }
         }
       },
     }).posts[0].id
