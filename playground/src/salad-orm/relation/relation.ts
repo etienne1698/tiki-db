@@ -1,4 +1,3 @@
-import type { Storage } from "../database/storage";
 import type { Model } from "../model/model";
 import type { InferModelNormalizedType } from "../types";
 import { belongsTo } from "./belongs_to";
@@ -12,9 +11,11 @@ export abstract class Relation<
 
   abstract getFor(
     model: M,
-    data: any,
-    store: Storage
-  ): InferModelNormalizedType<MRelated> | InferModelNormalizedType<MRelated>[];
+    data: any
+  ):
+    | InferModelNormalizedType<MRelated>
+    | undefined
+    | InferModelNormalizedType<MRelated>[];
 }
 
 export class Relations<

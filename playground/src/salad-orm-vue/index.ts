@@ -21,12 +21,15 @@ export abstract class RefStorage extends Storage {
     collection: C,
     data: InferModelNormalizedType<C["model"]>[]
   ) {
-    const modelRelations = collection.relations;
     return data.map((data) => {
       const m = { ...data } as InferModelNormalizedType<C["model"]>;
       for (const relation of query.with.values()) {
         // @ts-ignore
-        m[relation] = modelRelations[relation].getFor(model, data, this);
+        m[relation] = collection.relations.schema[relation].getFor(
+          collection.model,
+          data,
+          this.database
+        );
       }
       return m;
     });
@@ -132,11 +135,11 @@ export abstract class RefStorage extends Storage {
     if (oldValue) {
       state.value[primary] = Object.assign(
         oldValue,
-        collection.model.schema.normalize(data)
+        collection.model.normalize(data)
       );
       return state.value[primary];
     }
-    const res = collection.model.schema.normalize(data);
+    const res = collection.model.normalize(data);
     state.value[primary] = res as InferModelNormalizedType<C["model"]>;
     return res as InferModelNormalizedType<C["model"]>;
   }
