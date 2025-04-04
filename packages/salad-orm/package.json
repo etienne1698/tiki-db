@@ -1,7 +1,7 @@
 {
-  "name": "abstracdb",
+  "name": "salad-orm",
   "version": "0.0.9",
-  "description": "AbstracDB is a lightweight abstraction layer for data access in JavaScript applications. It provides a structured way to interact with data models and relationships while remaining database-agnostic.",
+  "description": "SaladORM provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
   "repository": "etienne1698/abstracdb",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

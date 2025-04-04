@@ -1,11 +1,5 @@
-import { VueStorage } from "..";
-import {
-  collection,
-  model,
-  relations,
-  string,
-  database,
-} from "../../salad-orm";
+import { VueStorage } from "../src";
+import { collection, model, relations, string, database } from "salad-orm";
 
 export function getTestBase() {
   const users = model("users", {

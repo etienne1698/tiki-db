@@ -6,8 +6,8 @@ import {
   Storage,
   Relations,
   Collection,
-} from "../salad-orm";
-import type { AnyButMaybeT, MaybeAsArray } from "../salad-orm/types";
+} from "salad-orm";
+import type { AnyButMaybeT, MaybeAsArray } from "salad-orm";
 
 export abstract class RefStorage extends Storage {
   abstract getStore<C extends Collection = Collection>(
