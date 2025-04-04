@@ -6,45 +6,42 @@ import type {
   MaybeAsArray,
   Primary,
 } from "../types";
+import { QueryBuilder } from "./query_builder";
 
 export class QueryRunner<D extends Database, C extends Collection> {
   constructor(private database: D, private collection: C) {}
 
   saveRelations(data: Record<string, any>) {
-    return this.database.store.saveRelations(this.collection.relations, data);
+    return this.database.storage.saveRelations(this.collection.relations, data);
   }
 
   saveOne(
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations: boolean = true
   ) {
-    return this.database.store.saveOne(
-      this.collection,
-      data,
-      saveRelations
-    );
+    return this.database.storage.saveOne(this.collection, data, saveRelations);
   }
 
   save(
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations: boolean = true
   ) {
-    return this.database.store.save(this.collection, data, saveRelations);
+    return this.database.storage.save(this.collection, data, saveRelations);
   }
 
   delete(primary: string) {
-    return this.database.store.delete(this.collection, primary);
+    return this.database.storage.delete(this.collection, primary);
   }
 
-  /* query() {
-    return this.database.query(this.model);
-  } */
+  query() {
+    return new QueryBuilder(this.database.storage, this.collection);
+  }
 
   all() {
-    return this.database.store.get(this.collection);
+    return this.database.storage.get(this.collection);
   }
 
   getByPrimary(primary: Primary) {
-    return this.database.store.getByPrimary(this.collection, primary);
+    return this.database.storage.getByPrimary(this.collection, primary);
   }
 }
