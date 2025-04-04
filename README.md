@@ -22,11 +22,10 @@ Install SaladORM via npm:
 npm install salad-orm
 ```
 
-## Usage (exemple with salad-orm-vue storage)
+## Usage
 
 ```ts
-import { collection, model, relations, string, database } from "salad-orm";
-import { VueStorage } from "salad-orm-vue";
+import { collection, model, relations, string, database, inMemoryStorage } from "salad-orm";
 
 const users = model("users", {
   id: string("id", ""),
@@ -68,5 +67,5 @@ const db = database({
   users: collection(users, usersRelations),
   posts: collection(posts, postsRelations),
   comments: collection(comments, commentsRelations),
-}, VueStorage);
+}, inMemoryStorage());
 ```
