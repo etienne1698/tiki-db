@@ -8,8 +8,8 @@ import type {
 } from "../types";
 import { QueryBuilder } from "./query_builder";
 
-export class QueryRunner<D extends Database, C extends Collection> {
-  constructor(private database: D, private collection: C) {}
+export class QueryRunner<Collections extends Record<string, Collection>, C extends Collection> {
+  constructor(private database: Database<Collections>, private collection: C) {}
 
   saveRelations(data: Record<string, any>) {
     return this.database.storage.saveRelations(this.collection.relations, data);

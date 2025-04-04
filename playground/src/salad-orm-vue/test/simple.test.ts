@@ -13,7 +13,7 @@ test("simple save and retrieve", () => {
 test("relation should not be saved in entity state", () => {
   const { db } = getTestBase();
 
-  db.collections.users.save({ id: "123", posts: [{ id: "1", user_id: "123" }] });
+  db.collections.users.save({ id: "123", posts: [{ id: "1", userId: "123" }] });
 
   expect(db.collections.users.query().getFirst().posts).toBe(undefined);
 });
@@ -21,7 +21,7 @@ test("relation should not be saved in entity state", () => {
 test("relation should be save to the relation entity state", () => {
   const { db } = getTestBase();
 
-  db.collections.users.save({ id: "123", posts: [{ id: "1", user_id: "123" }] });
+  db.collections.users.save({ id: "123", posts: [{ id: "1", userId: "123" }] });
 
   expect(db.collections.posts.query().getFirst().id).toBe("1");
 });
@@ -29,7 +29,7 @@ test("relation should be save to the relation entity state", () => {
 test("has_many query should worke", () => {
   const { db } = getTestBase();
 
-  db.collections.users.save({ id: "123", posts: [{ id: "1", user_id: "123" }] });
+  db.collections.users.save({ id: "123", posts: [{ id: "1", userId: "123" }] });
 
   expect(db.collections.users.query().with("posts").getFirst().posts[0].id).toBe(
     "1"

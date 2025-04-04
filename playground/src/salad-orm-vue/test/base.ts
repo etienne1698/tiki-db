@@ -19,7 +19,7 @@ export function getTestBase() {
     id: string("id", ""),
     title: string("title", ""),
     content: string("content", ""),
-    userId: string("userId", ""),
+    userId: string("userId", "").notNull(),
   });
 
   const usersRelations = relations(users, ({ hasMany }) => ({
@@ -37,6 +37,7 @@ export function getTestBase() {
     },
     VueStorage
   );
+
 
   return {
     db,
