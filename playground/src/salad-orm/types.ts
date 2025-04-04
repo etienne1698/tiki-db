@@ -1,5 +1,5 @@
-import type { Model } from "./document/document";
-import type { Field } from "./document/field";
+import type { Model } from "./model/model";
+import type { Field } from "./model/field";
 
 export type Constructor<T> = new (...args: any[]) => T;
 

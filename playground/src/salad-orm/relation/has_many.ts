@@ -1,5 +1,5 @@
 import type { Datastore } from "../database/datastore";
-import type { Model } from "../document/document";
+import type { Model } from "../model/model";
 import type { InferModelFieldName, InferModelNormalizedType } from "../types";
 import { Relation } from "./relation";
 

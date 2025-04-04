@@ -17,7 +17,7 @@ export { Database, database } from "./database/database";
 export { Datastore } from "./database/datastore";
 export { collection, Collection } from "./collection/collection";
 
-export { model, Model } from "./document/document";
+export { model, Model } from "./model/model";
 
 export { Relation, Relations, relations } from "./relation/relation";
 export { HasManyRelation, hasMany } from "./relation/has_many";
@@ -31,8 +31,8 @@ export {
 export { QueryBuilder } from "./query/query_builder";
 export { QueryRunner } from "./query/query_runner";
 
-export { Schema } from "./document/schema";
-export { Field } from "./document/field";
+export { Schema } from "./model/schema";
+export { Field } from "./model/field";
 
-export { string, StringField } from "./document/string";
-export { array, ArrayField } from "./document/array";
+export { string, StringField } from "./model/string";
+export { array, ArrayField } from "./model/array";
