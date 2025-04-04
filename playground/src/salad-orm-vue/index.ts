@@ -11,7 +11,7 @@ import type { AnyButMaybeT, MaybeAsArray } from "../salad-orm/types";
 
 export abstract class RefStorage extends Storage {
   abstract getStore<C extends Collection = Collection>(
-    name: string
+    collection: C
   ): Ref<Record<Primary, InferModelNormalizedType<C["model"]>>>;
 
   abstract load<C extends Collection>(collection: C): void;
@@ -27,8 +27,7 @@ export abstract class RefStorage extends Storage {
         // @ts-ignore
         m[relation] = collection.relations.schema[relation].getFor(
           collection.model,
-          data,
-          this.database
+          data
         );
       }
       return m;
@@ -58,15 +57,14 @@ export abstract class RefStorage extends Storage {
     collection: C,
     query?: Query<C>
   ): InferModelNormalizedType<C["model"]>[] {
-    if (!query)
-      return Object.values(this.getStore<C>(collection.model.type).value || []);
+    if (!query) return Object.values(this.getStore<C>(collection).value || []);
     let result = query.primaries.length
       ? (this.getByPrimaries(
           collection,
           query.primaries
         ) as InferModelNormalizedType<C["model"]>[])
       : (Object.values(
-          this.getStore<C>(collection.model.type).value || []
+          this.getStore<C>(collection).value || []
         ) as InferModelNormalizedType<C["model"]>[]);
     result = this.#applyFilters(query, result);
     if (query.with.size > 0) {
@@ -128,7 +126,7 @@ export abstract class RefStorage extends Storage {
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
     if (saveRelations) this.saveRelations(collection.relations, data);
 
-    const state = this.getStore<C>(collection.model.type);
+    const state = this.getStore<C>(collection);
 
     const primary = collection.model.primary(data);
     const oldValue = state.value[primary];
@@ -150,7 +148,8 @@ export abstract class RefStorage extends Storage {
   ): void {
     for (const [key, value] of Object.entries(data)) {
       if (relations.schema[key]) {
-        this.save(relations.schema[key].related, value, true);
+        // this.save(relations.schema[key].related, value, true);
+
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete data[key];
@@ -162,14 +161,14 @@ export abstract class RefStorage extends Storage {
     collection: C,
     primary: Primary
   ): InferModelNormalizedType<C["model"]> | undefined {
-    return this.getStore<C>(collection.model.type).value[primary];
+    return this.getStore<C>(collection).value[primary];
   }
 
   getByPrimaries<C extends Collection>(
     collection: C,
     primaries: Primary[]
   ): InferModelNormalizedType<C["model"]>[] {
-    const state = this.getStore<C>(collection.model.type);
+    const state = this.getStore<C>(collection);
     return primaries.map((primary) => state.value[primary]);
   }
 }
@@ -183,9 +182,10 @@ export class VueStorage extends RefStorage {
   }
 
   getStore<C extends Collection>(
-    name: string
+    collection: C
   ): Ref<Record<Primary, InferModelNormalizedType<C["model"]>>> {
-    return this.stores[name] as Ref<
+    this.load(collection);
+    return this.stores[collection.model.type] as Ref<
       Record<Primary, InferModelNormalizedType<C["model"]>>
     >;
   }
