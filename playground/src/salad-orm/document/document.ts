@@ -9,7 +9,7 @@ import type {
 
 export class Model<S extends Schema = Schema> {
   constructor(
-    public name: string,
+    public type: string,
     public primaryKey: PrimaryKey,
     public schema: S
   ) {}

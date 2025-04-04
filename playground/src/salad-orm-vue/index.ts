@@ -1,105 +1,115 @@
-import type { Ref } from "vue";
+import { ref, type Ref } from "vue";
 import {
-  type Datastore,
-  type CollectionFullSchema,
-  type Document,
-  type Primary,
   type Query,
-  type AnyButMaybeT,
-  type MaybeAsArray,
-  Relation,
-} from "../______test______";
+  type InferModelNormalizedType,
+  type Primary,
+  Datastore,
+  Relations,
+  database,
+  Collection,
+} from "../salad-orm";
+import type { AnyButMaybeT, MaybeAsArray } from "../salad-orm/types";
 
-export abstract class RefDatastore implements Datastore {
-  abstract getStore<TCollection extends CollectionFullSchema = CollectionFullSchema>(
+export abstract class RefDatastore extends Datastore {
+  abstract getStore<C extends Collection = Collection>(
     name: string
-  ): Ref<Record<Primary, Document<TCollection>>>;
+  ): Ref<Record<Primary, InferModelNormalizedType<C["model"]>>>;
 
-  abstract load<TCollection extends CollectionFullSchema>(collection: TCollection): void;
+  abstract load<C extends Collection>(collection: C): void;
 
-  #loadRelated<TCollection extends CollectionFullSchema>(
-    query: Query<TCollection>,
-    collection: TCollection,
-    data: Document<TCollection>[]
+  #loadRelated<C extends Collection>(
+    query: Query<C>,
+    collection: C,
+    data: InferModelNormalizedType<C["model"]>[]
   ) {
-    const collectionRelations = collection.relations;
+    const modelRelations = collection.relations;
     return data.map((data) => {
-      const m = { ...data } as Document<TCollection>;
+      const m = { ...data } as InferModelNormalizedType<C["model"]>;
       for (const relation of query.with.values()) {
         // @ts-ignore
-        m[relation] = collectionRelations[relation].getFor(collection, data, this);
+        m[relation] = modelRelations[relation].getFor(model, data, this);
       }
       return m;
     });
   }
 
-  #applyFilters<TCollection extends CollectionFullSchema>(
-    query: Query<TCollection>,
-    data: Document<TCollection>[]
-  ): Document<TCollection>[] {
+  #applyFilters<C extends Collection>(
+    query: Query<C>,
+    data: InferModelNormalizedType<C["model"]>[]
+  ): InferModelNormalizedType<C["model"]>[] {
     for (const [key, value] of Object.entries(query.filters.$eq)) {
       // @ts-ignore
-      data = data.filter((collection) => collection[key] == value);
+      data = data.filter((model) => model[key] == value);
     }
     for (const [key, value] of Object.entries(query.filters.$in)) {
       // @ts-ignore
-      data = data.filter((collection) => value.includes(collection[key]));
+      data = data.filter((model) => value.includes(model[key]));
     }
     for (const [key, value] of Object.entries(query.filters.$ne)) {
       // @ts-ignore
-      data = data.filter((collection) => collection[key] != value);
+      data = data.filter((model) => model[key] != value);
     }
     return data;
   }
 
-  get<TCollection extends CollectionFullSchema>(
-    collection: CollectionFullSchema,
-    query?: Query<TCollection>
-  ): Document<TCollection>[] {
-    if (!query) return Object.values(this.getStore<TCollection>(collection.dbName).value || []);
+  get<C extends Collection>(
+    collection: C,
+    query?: Query<C>
+  ): InferModelNormalizedType<C["model"]>[] {
+    if (!query)
+      return Object.values(this.getStore<C>(collection.model.type).value || []);
     let result = query.primaries.length
-      ? (this.getByPrimaries(collection, query.primaries) as Document<TCollection>[])
+      ? (this.getByPrimaries(
+          collection,
+          query.primaries
+        ) as InferModelNormalizedType<C["model"]>[])
       : (Object.values(
-          this.getStore<TCollection>(collection.dbName).value || []
-        ) as Document<TCollection>[]);
+          this.getStore<C>(collection.model.type).value || []
+        ) as InferModelNormalizedType<C["model"]>[]);
     result = this.#applyFilters(query, result);
     if (query.with.size > 0) {
-      result = this.#loadRelated(query, collection, result) as Document<TCollection>[];
+      result = this.#loadRelated(
+        query,
+        collection,
+        result
+      ) as InferModelNormalizedType<C["model"]>[];
     }
-    return result as Document<TCollection>[];
+    return result as InferModelNormalizedType<C["model"]>[];
   }
 
-  delete<TCollection extends CollectionFullSchema>(
-    collection: TCollection,
+  delete<C extends Collection>(
+    collection: C,
     primary: Primary,
-    _query?: Query<TCollection>
-  ): Partial<Document<TCollection>> | undefined {
+    _query?: Query<C>
+  ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete this.getStore(collection.dbName).value[primary];
+    delete this.getStore(collection.model.type).value[primary];
     return undefined;
   }
 
-  update<TCollection extends CollectionFullSchema>(
-    _collection: TCollection,
+  update<C extends Collection>(
+    _collection: C,
     _primary: Primary,
-    _data: AnyButMaybeT<Document<TCollection>>,
-    _query?: Query<TCollection>
-  ): Partial<Document<TCollection>> | undefined {
+    _data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
+    _query?: Query<C>
+  ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
     throw new Error("Method not implemented.");
   }
 
-  insert<TCollection extends CollectionFullSchema>(
-    _collection: TCollection,
-    _data: MaybeAsArray<AnyButMaybeT<Document<TCollection>>>
-  ): Partial<Document<TCollection>>[] {
+  insert<C extends Collection>(
+    _collection: C,
+    _data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
+  ): Partial<InferModelNormalizedType<C["model"]>>[] {
     throw new Error("Method not implemented.");
   }
 
-  save<TCollection extends CollectionFullSchema>(
-    collection: TCollection,
-    data: MaybeAsArray<AnyButMaybeT<Document<TCollection>>>,
+  save<C extends Collection>(
+    collection: C,
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations?: boolean
-  ): Partial<Document<TCollection>> | Partial<Document<TCollection>>[] {
+  ):
+    | Partial<InferModelNormalizedType<C["model"]>>
+    | Partial<InferModelNormalizedType<C["model"]>>[] {
     if (Array.isArray(data)) {
       return data
         .map((d) => this.saveOne.bind(this)(collection, d, saveRelations))
@@ -109,36 +119,36 @@ export abstract class RefDatastore implements Datastore {
     return saveRes ? [saveRes] : [];
   }
 
-  saveOne<TCollection extends CollectionFullSchema>(
-    collection: TCollection,
-    data: AnyButMaybeT<Document<TCollection>>,
+  saveOne<C extends Collection>(
+    collection: C,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
-  ): Partial<Document<TCollection>> | undefined {
+  ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
     if (saveRelations) this.saveRelations(collection.relations, data);
 
-    const state = this.getStore<TCollection>(collection.dbName);
+    const state = this.getStore<C>(collection.model.type);
 
-    const primary = collection.primary(data);
+    const primary = collection.model.primary(data);
     const oldValue = state.value[primary];
     if (oldValue) {
       state.value[primary] = Object.assign(
         oldValue,
-        collection.schema.normalize(data)
+        collection.model.schema.normalize(data)
       );
       return state.value[primary];
     }
-    const res = collection.schema.normalize(data);
-    state.value[primary] = res as Document<TCollection>;
-    return res as Document<TCollection>;
+    const res = collection.model.schema.normalize(data);
+    state.value[primary] = res as InferModelNormalizedType<C["model"]>;
+    return res as InferModelNormalizedType<C["model"]>;
   }
 
-  saveRelations<R extends Record<string, Relation>>(
+  saveRelations<R extends Relations>(
     relations: R,
     data: Record<string, any>
   ): void {
     for (const [key, value] of Object.entries(data)) {
-      if (relations[key]) {
-        this.save(relations[key].related, value, true);
+      if (relations.schema[key]) {
+        this.save(relations.schema[key].related, value, true);
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete data[key];
@@ -146,20 +156,41 @@ export abstract class RefDatastore implements Datastore {
     }
   }
 
-  getByPrimary<TCollection extends CollectionFullSchema>(
-    collection: TCollection,
+  getByPrimary<C extends Collection>(
+    collection: C,
     primary: Primary
-  ): Document<TCollection> | undefined {
-    return this.getStore<TCollection>(collection.dbName).value[primary];
+  ): InferModelNormalizedType<C["model"]> | undefined {
+    return this.getStore<C>(collection.model.type).value[primary];
   }
 
-  getByPrimaries<TCollection extends CollectionFullSchema>(
-    collection: TCollection,
+  getByPrimaries<C extends Collection>(
+    collection: C,
     primaries: Primary[]
-  ): Document<TCollection>[] {
-    const state = this.getStore<TCollection>(collection.dbName);
+  ): InferModelNormalizedType<C["model"]>[] {
+    const state = this.getStore<C>(collection.model.type);
     return primaries.map((primary) => state.value[primary]);
   }
 }
 
-function createVueDatastore() {}
+export class VueDatastore extends RefDatastore {
+  stores: Record<string, Ref<Record<Primary, any>>> = {};
+
+  load<C extends Collection>(collection: C) {
+    if (this.stores[collection.model.type]) return;
+    this.stores[collection.model.type] = ref({});
+  }
+
+  getStore<C extends Collection>(
+    name: string
+  ): Ref<Record<Primary, InferModelNormalizedType<C["model"]>>> {
+    return this.stores[name] as Ref<
+      Record<Primary, InferModelNormalizedType<C["model"]>>
+    >;
+  }
+}
+
+export function createVueDatabase<
+  Collections extends Record<string, Collection> = Record<string, Collection>
+>(collections: Collections) {
+  return database(collections, new VueDatastore());
+}

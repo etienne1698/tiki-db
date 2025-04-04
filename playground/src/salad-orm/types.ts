@@ -1,6 +1,7 @@
 import type { Model } from "./document/document";
 import type { Field } from "./document/field";
-import type { Schema } from "./document/schema";
+
+export type Constructor<T> = new (...args: any[]) => T;
 
 export type MaybeAsArray<T> = T | T[];
 

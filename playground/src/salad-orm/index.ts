@@ -14,12 +14,12 @@
 export * from "./types";
 
 export { Database, database } from "./database/database";
-export { type Datastore } from "./database/datastore";
+export { Datastore } from "./database/datastore";
 export { collection, Collection } from "./collection/collection";
 
 export { model, Model } from "./document/document";
 
-export { Relation, relations } from "./relation/relation";
+export { Relation, Relations, relations } from "./relation/relation";
 export { HasManyRelation, hasMany } from "./relation/has_many";
 export { BelongsToRelation, belongsTo } from "./relation/belongs_to";
 

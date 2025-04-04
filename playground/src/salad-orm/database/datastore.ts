@@ -7,34 +7,37 @@ import type {
   MaybeAsArray,
   Primary,
 } from "../types";
+import type { Database } from "./database";
 
-export interface Datastore {
-  get<C extends Collection>(
+export abstract class Datastore<D extends Database = Database> {
+  constructor(public database: D) {}
+
+  abstract get<C extends Collection>(
     collection: C,
     query?: Query<C>
   ): InferModelNormalizedType<C["model"]>[];
 
-  load<C extends Collection>(collection: C): void;
+  abstract load<C extends Collection>(collection: C): void;
 
-  delete<C extends Collection>(
+  abstract delete<C extends Collection>(
     collection: C,
     primary: Primary,
     query?: Query<C>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  update<C extends Collection>(
+  abstract update<C extends Collection>(
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     query?: Query<C>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  insert<C extends Collection>(
+  abstract insert<C extends Collection>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
   ): Partial<InferModelNormalizedType<C["model"]>>[];
 
-  save<C extends Collection>(
+  abstract save<C extends Collection>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations?: boolean
@@ -42,23 +45,23 @@ export interface Datastore {
     | Partial<InferModelNormalizedType<C["model"]>>
     | Partial<InferModelNormalizedType<C["model"]>>[];
 
-  saveOne<C extends Collection>(
+  abstract saveOne<C extends Collection>(
     collection: C,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  saveRelations<R extends Relations>(
+  abstract saveRelations<R extends Relations>(
     relations: R,
     data: Record<string, any>
   ): void;
 
-  getByPrimary<C extends Collection>(
+  abstract getByPrimary<C extends Collection>(
     collection: C,
     primary: Primary
   ): InferModelNormalizedType<C["model"]> | undefined;
 
-  getByPrimaries<C extends Collection>(
+  abstract getByPrimaries<C extends Collection>(
     collection: C,
     primaries: Primary[]
   ): InferModelNormalizedType<C["model"]>[];
