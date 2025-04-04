@@ -12,7 +12,7 @@ export class Database<
   };
 
   constructor(collections: Collections, storage: Constructor<Storage>) {
-    this.storage = new storage(this) 
+    this.storage = new storage(this);
     this.collections = {} as {
       [K in keyof Collections]: QueryRunner<Collections, Collections[K]>;
     };

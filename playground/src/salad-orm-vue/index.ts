@@ -14,7 +14,7 @@ export abstract class RefStorage extends Storage {
     collection: C
   ): Ref<Record<Primary, InferModelNormalizedType<C["model"]>>>;
 
-  abstract load<C extends Collection>(collection: C): void;
+  abstract load<C extends Collection>(collection: C): boolean;
 
   #loadRelated<C extends Collection>(
     query: Query<C>,
@@ -177,14 +177,15 @@ export class VueStorage extends RefStorage {
   stores: Record<string, Ref<Record<Primary, any>>> = {};
 
   load<C extends Collection>(collection: C) {
-    if (this.stores[collection.model.type]) return;
-    this.stores[collection.model.type] = ref({});
+    if (this.stores[collection.model.dbName]) return true;
+    this.stores[collection.model.dbName] = ref({});
+    return true;
   }
 
   getStore<C extends Collection>(
     collection: C
   ): Ref<Record<Primary, InferModelNormalizedType<C["model"]>>> {
-    return this.stores[collection.model.type] as Ref<
+    return this.stores[collection.model.dbName] as Ref<
       Record<Primary, InferModelNormalizedType<C["model"]>>
     >;
   }

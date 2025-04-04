@@ -12,12 +12,19 @@ import type { Database } from "./database";
 export abstract class Storage<D extends Database = Database> {
   constructor(public database: D) {}
 
+  /**
+   * 
+   * @param collection The collection to load
+   * 
+   * This method is used to load the collection into the storage.
+   * It is called when the database is created or when a new collection is added.
+   */
+  abstract load<C extends Collection>(collection: C): boolean;
+
   abstract get<C extends Collection>(
     collection: C,
     query?: Query<C>
   ): InferModelNormalizedType<C["model"]>[];
-
-  abstract load<C extends Collection>(collection: C): void;
 
   abstract delete<C extends Collection>(
     collection: C,

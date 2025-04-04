@@ -10,7 +10,7 @@ export class Model<
   S extends Record<string, Field> = Record<string, Field<unknown>>
 > {
   constructor(
-    public type: string,
+    public dbName: string,
     public primaryKey: PrimaryKey,
     public schema: S
   ) {}

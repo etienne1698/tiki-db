@@ -38,7 +38,6 @@ export function getTestBase() {
     VueStorage
   );
 
-
   return {
     db,
   };
