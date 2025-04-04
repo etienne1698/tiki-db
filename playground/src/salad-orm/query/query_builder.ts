@@ -4,9 +4,11 @@ import type { InferModelFieldName, Primary } from "../types";
 import {
   AndOrFilters,
   createDefaultQuery,
+  FILTER_OR,
   Filters,
   type FiltersValueType,
   type Query,
+  type QueryFilters,
 } from "./query";
 
 export class QueryBuilder<C extends Collection> {
@@ -32,18 +34,8 @@ export class QueryBuilder<C extends Collection> {
     return this;
   }
 
-  orWhere(callback: (qb: QueryBuilder<C>) => QueryBuilder<C>) {
-    this.query.filters[AndOrFilters.OR] = callback(
-      new QueryBuilder(this.storage, this.collection)
-    ).query.filters;
-    return this;
-  }
-
-  
-  andWhere(callback: (qb: QueryBuilder<C>) => QueryBuilder<C>) {
-    this.query.filters[AndOrFilters.AND] = callback(
-      new QueryBuilder(this.storage, this.collection)
-    ).query.filters;
+  orWhere(ors: QueryFilters<C>[]) {
+    this.query.filters[FILTER_OR] = ors;
     return this;
   }
 
@@ -85,11 +77,11 @@ export class QueryBuilder<C extends Collection> {
     return this.where(field, Filters.IN, value);
   }
 
-  get() {
+  find() {
     return this.storage.get(this.collection, this.query);
   }
 
-  getFirst() {
-    return this.get()?.[0];
+  findFirst() {
+    return this.find()?.[0];
   }
 }

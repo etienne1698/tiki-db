@@ -25,7 +25,7 @@ export class HasManyRelation<
 
     return (
       database.collections[model.dbName] as QueryRunner<AnyCollection>
-    ).$query({
+    ).find({
       filters: {
         $eq: { [this.field as string]: model.primary(data) },
       },

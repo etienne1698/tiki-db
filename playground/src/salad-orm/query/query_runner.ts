@@ -42,9 +42,13 @@ export class QueryRunner<
     return new QueryBuilder(this.database.storage, this.collection);
   }
 
-  $query(query: DeepPartial<Query<C>>) {
+  find(query: DeepPartial<Query<C>>) {
     const finalQuery = Object.assign(createDefaultQuery<C>(), query);
     this.database.storage.get(this.collection, finalQuery);
+  }
+
+  findFirst(query: DeepPartial<Query<C>>) {
+    return this.find(query)?.[0];
   }
 
   all() {

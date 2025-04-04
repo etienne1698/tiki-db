@@ -19,43 +19,14 @@ export type QueryFilters<C extends Collection> = Partial<{
   }>;
 }>;
 
-export enum AndOrFilters {
-  AND = "$and",
-  OR = "$or",
-}
+export const FILTER_OR = "$or";
 
-export type AndOrFiltersValueType = {
-  [AndOrFilters.AND]: Array<any>;
-  [AndOrFilters.OR]: Array<any>;
-};
-
-export type QueryAndOrFilters<C extends Collection> = Partial<{
-  [key in AndOrFilters]: QueryFilters<C> & Partial<{
-    [key in AndOrFilters]: QueryFilters<C>;
-  }>;
+export type QueryOrFilters<C extends Collection> = Partial<{
+  [FILTER_OR]: QueryFilters<C>[];
 }>;
 
-/**
- * Example:
-  {
-    filters: {
-      $or: {
-        $and: {
-          id: {
-            $eq: "123",
-          },
-          firstname: { $eq: "John" },
-        },
-        lastname: { $eq: "Doe" },
-      },
-      email: {
-        $eq: "1",
-      },
-    },
-  }
- */
 export type Query<C extends Collection> = {
-  filters: QueryFilters<C> & QueryAndOrFilters<C>;
+  filters: QueryFilters<C> & QueryOrFilters<C>;
   with: Set<string>;
   primaries: Array<string>;
 };
