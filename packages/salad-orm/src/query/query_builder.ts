@@ -1,4 +1,5 @@
 import type { Collection } from "../collection/collection";
+import { Database } from "../database/database";
 import type { Storage } from "../storage/storage";
 import type { InferModelFieldName, Primary } from "../types";
 import {
@@ -10,13 +11,13 @@ import {
   type QueryFilters,
 } from "./query";
 
-export class QueryBuilder<C extends Collection> {
-  declare query: Query<C>;
+export class QueryBuilder<C extends Collection, D extends Database> {
+  declare query: Query<C, D>;
 
-  constructor(public storage: ReturnType<Storage>, public collection: C, query?: Query<C>) {
+  constructor(public storage: ReturnType<Storage>, public collection: C, query?: Query<C, D>) {
     this.storage = storage;
     this.collection = collection;
-    this.query = query || createDefaultQuery<C>();
+    this.query = query || createDefaultQuery<C, D>();
   }
 
   byPrimary(primaries: Primary[]) {

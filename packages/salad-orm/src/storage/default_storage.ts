@@ -24,7 +24,7 @@ export const createDefaultStorage = <D extends Database>(
   return (database: D) => {
     function get<C extends Collection>(
       collection: C,
-      query?: Query<C>
+      query?: Query<C, D>
     ): InferModelNormalizedType<C["model"]>[] {
       if (!query) return Object.values(getStore<C>(collection) || []);
       let result = query.primaries.length
@@ -41,7 +41,7 @@ export const createDefaultStorage = <D extends Database>(
     function remove<C extends Collection>(
       collection: C,
       primary: Primary,
-      _query?: Query<C>
+      _query?: Query<C, D>
     ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       const state = getStore(collection);
@@ -54,7 +54,7 @@ export const createDefaultStorage = <D extends Database>(
       _collection: C,
       _primary: Primary,
       _data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
-      _query?: Query<C>
+      _query?: Query<C, D>
     ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
       throw new Error("Method not implemented.");
     }

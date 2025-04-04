@@ -1,4 +1,5 @@
 import type { Collection } from "../collection/collection";
+import { Database } from "../database/database";
 import type { DeepPartial, InferModelFieldName } from "../types";
 
 export enum Filters {
@@ -25,14 +26,22 @@ export type QueryOrFilters<C extends Collection> = Partial<{
   [FILTER_OR]: QueryFilters<C>[];
 }>;
 
-export type Query<C extends Collection> = {
+export type Query<C extends Collection, D extends Database> = {
   filters: QueryFilters<C> & QueryOrFilters<C>;
   primaries: Array<string>;
+  // todo: add deep query
+  with: Partial<{
+    [K in keyof C["relations"]['schema']]: boolean
+  }>;
 };
 
-export function createDefaultQuery<C extends Collection>(): Query<C> {
+export function createDefaultQuery<
+  C extends Collection,
+  D extends Database
+>(): Query<C, D> {
   return {
     filters: {},
     primaries: [],
+    with: {},
   };
 }

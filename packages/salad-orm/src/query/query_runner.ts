@@ -10,11 +10,8 @@ import type {
 import { createDefaultQuery, type Query } from "./query";
 import { QueryBuilder } from "./query_builder";
 
-export class QueryRunner<
-  C extends Collection,
-  Collections extends Record<string, Collection> = Record<string, Collection>
-> {
-  constructor(private database: Database<Collections>, private collection: C) {}
+export class QueryRunner<C extends Collection, D extends Database> {
+  constructor(private database: D, private collection: C) {}
 
   saveRelations(data: Record<string, any>) {
     return this.database.storage.saveRelations(this.collection.relations, data);
@@ -42,12 +39,12 @@ export class QueryRunner<
     return new QueryBuilder(this.database.storage, this.collection);
   }
 
-  find(query: DeepPartial<Query<C>>) {
-    const finalQuery = Object.assign(createDefaultQuery<C>(), query);
+  find(query: DeepPartial<Query<C, D>>) {
+    const finalQuery = Object.assign(createDefaultQuery<C, D>(), query);
     return this.database.storage.get(this.collection, finalQuery);
   }
 
-  findFirst(query: DeepPartial<Query<C>>) {
+  findFirst(query: DeepPartial<Query<C, D>>) {
     return this.find(query)?.[0];
   }
 

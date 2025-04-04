@@ -8,9 +8,9 @@ export class Database<
   declare storage: ReturnType<Storage>;
 
   collections: {
-    [K in keyof Collections]: QueryRunner<Collections[K], Collections>;
+    [K in keyof Collections]: QueryRunner<Collections[K], typeof this>;
   } = {} as {
-    [K in keyof Collections]: QueryRunner<Collections[K], Collections>;
+    [K in keyof Collections]: QueryRunner<Collections[K], typeof this>;
   };
 
   dbMapCollection: {
