@@ -17,9 +17,9 @@ export type PrimaryKey = string | string[];
 export type Primary = string;
 
 export type InferModelNormalizedType<M extends Model> = ReturnType<
-  M["schema"]["normalize"]
+  M["normalize"]
 >;
 
-export type InferModelFieldName<M extends Model> = keyof M["schema"]["schema"];
+export type InferModelFieldName<M extends Model> = keyof M["schema"];
 
 export type InferNormalizedField<F extends Field> = ReturnType<F["normalize"]>;

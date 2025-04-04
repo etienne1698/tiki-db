@@ -1,5 +1,4 @@
 import type { Field } from "./field";
-import { Schema } from "./schema";
 import type {
   AnyButMaybeT,
   InferModelNormalizedType,
@@ -7,7 +6,9 @@ import type {
   PrimaryKey,
 } from "../types";
 
-export class Model<S extends Schema = Schema> {
+export class Model<
+  S extends Record<string, Field> = Record<string, Field<unknown>>
+> {
   constructor(
     public type: string,
     public primaryKey: PrimaryKey,
@@ -20,6 +21,17 @@ export class Model<S extends Schema = Schema> {
     }
     return this.primaryKey.map((k) => data[k]).join();
   }
+
+  normalize(data: any) {
+    const normalizedData: { [K in keyof S]: S[K]["defaultValue"] } = {} as {
+      [K in keyof S]: S[K]["defaultValue"];
+    };
+    for (const key in this.schema) {
+      const field = this.schema[key];
+      normalizedData[key] = field.normalize(data[key]);
+    }
+    return normalizedData;
+  }
 }
 
 export function model<S extends Record<string, Field>>(
@@ -29,5 +41,5 @@ export function model<S extends Record<string, Field>>(
     primaryKey: PrimaryKey;
   }>
 ) {
-  return new Model(name, opts?.primaryKey || "id", new Schema(schema));
+  return new Model(name, opts?.primaryKey || "id", schema);
 }

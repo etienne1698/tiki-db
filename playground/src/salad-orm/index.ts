@@ -13,15 +13,20 @@
 
 export * from "./types";
 
-export { Database, database } from "./database/database";
-export { Storage } from "./database/storage";
-export { collection, Collection } from "./collection/collection";
-
 export { model, Model } from "./model/model";
+export { Field } from "./model/field";
+export { string, StringField } from "./model/string";
+export { array, ArrayField } from "./model/array";
 
 export { Relation, Relations, relations } from "./relation/relation";
 export { HasManyRelation, hasMany } from "./relation/has_many";
 export { BelongsToRelation, belongsTo } from "./relation/belongs_to";
+
+export { collection, Collection } from "./collection/collection";
+
+export { Storage } from "./database/storage";
+
+export { Database, database } from "./database/database";
 
 export {
   type Query,
@@ -31,8 +36,5 @@ export {
 export { QueryBuilder } from "./query/query_builder";
 export { QueryRunner } from "./query/query_runner";
 
-export { Schema } from "./model/schema";
-export { Field } from "./model/field";
 
-export { string, StringField } from "./model/string";
-export { array, ArrayField } from "./model/array";
+

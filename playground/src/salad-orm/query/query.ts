@@ -14,7 +14,9 @@ export type OperatorValueType = {
 };
 
 export type QueryFilters<C extends Collection> = {
-  [key in Operator]: Record<InferModelFieldName<C["model"]>, OperatorValueType[key]>;
+  [key in Operator]: Partial<{
+    [field in InferModelFieldName<C["model"]>]: OperatorValueType[key];
+  }>;
 };
 
 export type Query<C extends Collection> = {
