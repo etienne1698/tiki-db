@@ -136,9 +136,10 @@ export abstract class RefStorage extends Storage {
     data: Record<string, any>
   ): void {
     for (const [key, value] of Object.entries(data)) {
-      if (relations.schema[key]) {
+      const relation = relations.schema[key];
+      if (relation) {
         this.save(
-          this.database.dbMapCollection[relations.schema[key].related.dbName],
+          this.database.dbMapCollection[relation.related.dbName],
           value,
           true
         );

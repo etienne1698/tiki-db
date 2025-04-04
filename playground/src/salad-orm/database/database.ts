@@ -30,7 +30,7 @@ export class Database<
       // @ts-ignore
       this.collections[key] = new QueryRunner(this, collection);
       // @ts-ignore
-      this.dbMapCollection[collection.dbName] = collection;
+      this.dbMapCollection[collection.model.dbName] = collection;
       this.storage.load(collection);
     }
   }
