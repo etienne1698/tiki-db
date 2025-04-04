@@ -189,8 +189,8 @@ export class VueDatastore extends RefDatastore {
   }
 }
 
-export function createVueDatabase<
+export function vueDatabase<
   Collections extends Record<string, Collection> = Record<string, Collection>
 >(collections: Collections) {
-  return database(collections, new VueDatastore());
+  return database(collections, VueDatastore);
 }
