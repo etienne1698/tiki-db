@@ -1,11 +1,11 @@
 import { Database } from "../database/database";
 import { createDefaultStorage } from "./default_storage";
 
-export function inMemoryStorage<D extends Database>() {
+export function inMemoryStorage<D extends Database = Database>() {
   const stores: any = {};
 
   return createDefaultStorage<D>(
-    "inMemory",
+    "in-memory-storage",
     (collection) => {
       stores[collection.model.dbName] = stores[collection.model.dbName] || {};
       return true;

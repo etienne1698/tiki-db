@@ -14,6 +14,7 @@ export { collection, Collection } from "./collection/collection";
 
 export { Storage } from "./storage/storage";
 export { inMemoryStorage } from "./storage/in_memory";
+export { createDefaultStorage } from "./storage/default_storage";
 
 export { Database, database } from "./database/database";
 
