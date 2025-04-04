@@ -53,9 +53,9 @@ export const collections = {
 export function seed(db: Database<typeof collections>) {
   db.collections.users.save(
     faker.helpers.multiple(
-      () =>
+      (_, index) =>
         ({
-          id: faker.string.uuid(),
+          id: (index + 1).toString(),
           email: faker.internet.email(),
           firstname: faker.person.firstName(),
           lastname: faker.person.lastName(),
