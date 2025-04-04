@@ -71,14 +71,46 @@ const hasManyThroughColDef: Partial<ColDef> = {
               field: 'phone',
               flex: 1,
             },
+          ]"
+          style="height: 300px"
+        />
+      </div>
+      <div>
+        <div class="text-xl mb-1">Posts</div>
+        <ag-grid-vue
+          :rowData="db.collections.posts.query().find()"
+          :columnDefs="[
             {
-              ...hasManyColDef,
-              field: 'pets',
+              field: 'id',
               flex: 1,
             },
             {
-              ...belongsToColDef,
-              field: 'city',
+              field: 'title',
+              flex: 1,
+            },
+            {
+              field: 'content',
+              flex: 1,
+            },
+          ]"
+          style="height: 300px"
+        />
+      </div>
+      <div>
+        <div class="text-xl mb-1">Comments</div>
+        <ag-grid-vue
+          :rowData="db.collections.comments.query().find()"
+          :columnDefs="[
+            {
+              field: 'id',
+              flex: 1,
+            },
+            {
+              field: 'content',
+              flex: 1,
+            },
+            {
+              field: 'postId',
               flex: 1,
             },
           ]"

@@ -51,6 +51,7 @@ export const collections = {
 };
 
 export function seed(db: Database<typeof collections>) {
+  // users
   db.collections.users.save(
     faker.helpers.multiple(
       (_, index) =>
@@ -62,6 +63,36 @@ export function seed(db: Database<typeof collections>) {
           age: faker.number.int({ min: 12, max: 90 }).toString(),
         } as InferModelNormalizedType<typeof users>),
       { count: 20 }
+    )
+  );
+
+  // posts
+  db.collections.posts.save(
+    faker.helpers.multiple(
+      (_, index) =>
+        ({
+          id: (index + 1).toString(),
+          title: faker.lorem.sentence(),
+          content: faker.lorem.paragraphs(3),
+          authorId: (index + 1).toString(),
+        } as InferModelNormalizedType<typeof posts>),
+      { count: 10 }
+    )
+  );
+
+  // comments
+  db.collections.comments.save(
+    faker.helpers.multiple(
+      (_, index) => {
+        const postsLength = db.collections.posts.all().length - 1;
+        return {
+          id: (index + 1).toString(),
+          content: faker.lorem.sentence(),
+          postId: (postsLength - index + 1).toString(),
+          authorId: (index + 1).toString(),
+        } as InferModelNormalizedType<typeof comments>;
+      },
+      { count: 10 }
     )
   );
 }
