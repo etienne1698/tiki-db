@@ -1,19 +1,14 @@
-# AbstracDB
+# SaladORM
 
-AbstracDB is a lightweight abstraction layer for data access in JavaScript applications. It provides a structured way to interact with data models and relationships while remaining database-agnostic. 
-AbstracDB itself is not intended to be used directly but rather through a specific database implementation, such as VueDatabase.
+SaladORM is a lightweight abstraction layer for data access in JavaScript applications. It provides a structured way to interact with data models and relationships while remaining database-agnostic. 
+SaladORM itself is not intended to be used directly but rather through a specific database implementation, such as VueDatabase.
 
-more informations at [AbstracDB README](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb)
+more informations at [SaladORM README](https://github.com/etienne1698/SaladORM/tree/main/packages/SaladORM)
 
-## Database implementations
+## Storage implementations
 
-- [abstracdb-vue](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb-vue) - abstracdb using vue `ref`
-- [abstracdb-nuxt](https://github.com/etienne1698/abstracdb/tree/main/packages/abstracdb-nuxt) - abstracdb using nuxt `useState`
+- [salad-orm-vue](https://github.com/etienne1698/SaladORM/tree/main/packages/salad-orm-vue) - salad-orm storage using vue `ref`
 
-## Examples
-
-- [vue-example](https://github.com/etienne1698/abstracdb/tree/main/examples/vue-example) - Simple example using vue
-- [nuxt-example](https://github.com/etienne1698/abstracdb/tree/main/examples/nuxt-example) - Simple example using nuxt
 
 ## ✅ TODO
 
@@ -25,7 +20,7 @@ more informations at [AbstracDB README](https://github.com/etienne1698/abstracdb
 - update/delete by query
 
 
-- AbstracDB GitHub repository:
+- SaladORM GitHub repository:
   - github actions to keep readme up to date
   - playground project
   - documentation

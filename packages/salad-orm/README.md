@@ -4,15 +4,14 @@
 
 It provides a structured way to interact with data models and relationships while remaining storage-agnostic.
 
-
 Inspirations:
 - https://github.com/pubkey/rxdb
 - https://github.com/drizzle-team/drizzle-orm
 
 ## Installation
 
-Install AbstracDB via npm:
+Install SaladORM via npm:
 
 ```sh
-npm install abstracdb
+npm install salad-orm
 ```

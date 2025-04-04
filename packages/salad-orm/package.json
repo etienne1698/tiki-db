@@ -1,8 +1,8 @@
 {
   "name": "salad-orm",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "SaladORM provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
-  "repository": "etienne1698/abstracdb",
+  "repository": "etienne1698/salad-orm",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
