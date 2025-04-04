@@ -13,7 +13,7 @@ import {
 export class QueryBuilder<C extends Collection> {
   declare query: Query<C>;
 
-  constructor(public storage: Storage, public collection: C, query?: Query<C>) {
+  constructor(public storage: ReturnType<Storage>, public collection: C, query?: Query<C>) {
     this.storage = storage;
     this.collection = collection;
     this.query = query || createDefaultQuery<C>();

@@ -35,7 +35,7 @@ export class QueryRunner<
   }
 
   delete(primary: string) {
-    return this.database.storage.delete(this.collection, primary);
+    return this.database.storage.remove(this.collection, primary);
   }
 
   query() {

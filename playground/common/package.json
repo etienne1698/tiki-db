@@ -13,14 +13,11 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "dev": "tsup --watch"
   },
   "devDependencies": {
     "tsup": "^8.4.0",
-    "typescript": "^5.8.2",
-    "vitest": "^3.0.9"
+    "typescript": "^5.8.2"
   },
   "keywords": [
     "typescript",

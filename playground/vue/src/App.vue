@@ -68,7 +68,7 @@ const hasManyThroughColDef: Partial<ColDef> = {
               flex: 1,
             },
             {
-              field: 'phone',
+              field: 'age',
               flex: 1,
             },
           ]"
