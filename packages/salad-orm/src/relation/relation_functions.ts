@@ -1,15 +1,32 @@
 import type { Model } from "../model/model";
-import { belongsTo } from "./belongs_to";
-import { hasMany } from "./has_many";
+import { InferModelFieldName } from "../types";
+import { BelongsToRelation } from "./belongs_to";
+import { HasManyRelation } from "./has_many";
 import { Relations, type Relation } from "./relation";
+
+export function hasMany<MRelated extends Model = Model>(
+  model: MRelated,
+  field: InferModelFieldName<MRelated>
+) {
+  return new HasManyRelation(model, field);
+}
+
+export function belongsTo<M extends Model, MRelated extends Model = Model>(
+  model: MRelated,
+  field: InferModelFieldName<M>
+) {
+  return new BelongsToRelation(model, field);
+}
 
 export type RelationSetupFn<
   M extends Model = Model,
   R extends Record<string, Relation> = Record<string, Relation>
 > = (relations: {
   hasMany: typeof hasMany;
-  // TODO: here we lose the type for Mrelated ....
-  belongsTo: typeof belongsTo<M>;
+  belongsTo: <MRelated extends Model>(
+    model: MRelated,
+    field: InferModelFieldName<M>
+  ) => ReturnType<typeof belongsTo<M, MRelated>>;
 }) => R;
 
 export function relations<

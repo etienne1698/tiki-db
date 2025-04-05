@@ -26,10 +26,3 @@ export class HasManyRelation<
     }) as unknown as InferModelNormalizedType<MRelated>[];
   }
 }
-
-export function hasMany<M extends Model = Model>(
-  model: M,
-  field: InferModelFieldName<M>
-) {
-  return new HasManyRelation(model, field);
-}

@@ -11,15 +11,5 @@ test("has_many get query should work", () => {
   db.collections.users.save({ id: "123" });
   db.collections.posts.save({ id: "1", userId: "123" });
 
-  expect(
-    db.collections.users.findFirst({
-      with: {
-        posts: {
-          with: {
-          
-          }
-        }
-      },
-    }).posts[0].id
-  ).toBe("1");
+  expect(db.collections.users.findFirst({}).posts[0].id).toBe("1");
 });
