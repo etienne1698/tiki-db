@@ -26,21 +26,26 @@ npm install salad-orm
 ## Roadmap
 
 - Core 
-    - More tests + shared tests
-    - Basics storage wrapper:
+    - more tests + shared tests
+    - basics storage wrapper:
         - backupStorage
         - log
-    - Async database,query_runner,query_builder,storage 
+        - throw
+    - async database, query_runner, query_builder, storage 
 - Storage
     - localStorage
     - IndexedDB
     - OPFS
-
-- Extensions (as storage-wrapper's)
-    - Validations
+- Extensions (as storage-wrapper)
+    - validations
         - zod
         - arktype
-    - Replication 
+    - replication 
         - syncEngine
         - httpReplication
         - websocketReplication
+- For JS server runtimes (node, bun, deno)
+    - replication
+        - syncEngineServer
+        - httpReplicationServer (hono, express, koa)
+        - websocketReplicationServer
