@@ -6,6 +6,7 @@ It provides a structured way to interact with data models and relationships whil
 
 Inspirations:
 - https://github.com/pubkey/rxdb
+- https://github.com/codedredd/pinia-orm
 - https://github.com/drizzle-team/drizzle-orm
 
 
@@ -22,50 +23,24 @@ Install SaladORM via npm:
 npm install salad-orm
 ```
 
-## Usage
+## Roadmap
 
-```ts
-import { collection, model, relations, string, database, inMemoryStorage } from "salad-orm";
+- Core 
+    - More tests + shared tests
+    - Basics storage wrapper:
+        - backupStorage
+        - log
+    - Async database,query_runner,query_builder,storage 
+- Storage
+    - localStorage
+    - IndexedDB
+    - OPFS
 
-const users = model("users", {
-  id: string("id", ""),
-  firstname: string("name", ""),
-  lastname: string("lastname", ""),
-  email: string("email", ""),
-  age: string("age", ""),
-});
-
-const posts = model("posts", {
-  id: string("id", ""),
-  title: string("title", ""),
-  content: string("content", ""),
-  authorId: string("authorId", ""),
-});
-
-const comments = model("comments", {
-  id: string("id", ""),
-  postId: string("postId", ""),
-  content: string("content", ""),
-  authorId: string("authorId", ""),
-});
-
-const usersRelations = relations(users, ({ hasMany }) => ({
-  posts: hasMany(posts, "authorId"),
-}));
-
-const postsRelations = relations(posts, ({ belongsTo, hasMany }) => ({
-  author: belongsTo(users, "authorId"),
-  comments: hasMany(comments, "postId"),
-}));
-
-const commentsRelations = relations(comments, ({ belongsTo }) => ({
-  post: belongsTo(posts, "postId"),
-  author: belongsTo(users, "authorId"),
-}));
-
-const db = database({
-  users: collection(users, usersRelations),
-  posts: collection(posts, postsRelations),
-  comments: collection(comments, commentsRelations),
-}, inMemoryStorage());
-```
+- Extensions (as storage-wrapper's)
+    - Validations
+        - zod
+        - arktype
+    - Replication 
+        - syncEngine
+        - httpReplication
+        - websocketReplication
