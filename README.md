@@ -23,6 +23,13 @@ Install SaladORM via npm:
 npm install salad-orm
 ```
 
+## Brainstorming 
+
+- Le "storage" devrais etre async pour permettre le traitement des erreur 
+
+Je pense que tout ce qui est index, logique de recherche... peut etre commun 
+J'imagine que c'est simplement la recuperations du store pour chaque collection qui est spécifique a chaque implémentation
+
 ## Roadmap
 
 - Core 
