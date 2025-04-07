@@ -13,8 +13,8 @@ export { BelongsToRelation } from "./relation/belongs_to";
 export { collection, Collection } from "./collection/collection";
 
 export { Storage } from "./storage/storage";
-export { inMemoryStorage } from "./storage/in_memory";
-export { createDefaultStorage } from "./storage/default_storage";
+export { InMemoryStorage } from "./storage/in_memory";
+export { DefaultSyncStorage } from "./storage/default_storage";
 
 export { Database, database } from "./database/database";
 

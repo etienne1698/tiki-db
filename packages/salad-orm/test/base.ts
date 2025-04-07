@@ -5,9 +5,10 @@ import {
   string,
   database,
   Storage,
+  Constructor,
 } from "../src/index";
 
-export function getTestDatabase(storage: Storage) {
+export function getTestDatabase(storage: Constructor<Storage>) {
   const users = model("usersDbName", {
     id: string("id", ""),
     firstname: string("firstname", ""),

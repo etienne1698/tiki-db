@@ -1,9 +1,10 @@
 import { expect, test } from "vitest";
 
 import { getTestDatabase } from "./base";
-import { inMemoryStorage } from "../src";
+import { InMemoryStorage } from "../src";
 
-const storage = inMemoryStorage();
+const storage = InMemoryStorage;
+
 test("simple save and retrieve", () => {
   const { db } = getTestDatabase(storage);
 

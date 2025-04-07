@@ -1,17 +1,18 @@
+import { Collection } from "../collection/collection";
 import { Database } from "../database/database";
-import { createDefaultStorage } from "./default_storage";
+import { DefaultSyncStorage } from "./default_storage";
 
-export function inMemoryStorage<D extends Database = Database>() {
-  const stores: any = {};
+export class InMemoryStorage<
+  D extends Database = Database
+> extends DefaultSyncStorage<D> {
+  stores: any = {};
 
-  return createDefaultStorage<D>(
-    "in-memory-storage",
-    (collection) => {
-      stores[collection.model.dbName] = stores[collection.model.dbName] || {};
-      return true;
-    },
-    (collection) => {
-      return stores[collection.model.dbName];
-    }
-  );
+  getStore<C extends Collection>(collection: C) {
+    return this.stores[collection.model.dbName];
+  }
+
+  load<C extends Collection>(collection: C): boolean {
+    this.stores[collection.model.dbName] = {};
+    return true;
+  }
 }

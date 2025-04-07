@@ -9,42 +9,41 @@ import type {
 } from "../types";
 import type { Database } from "../database/database";
 
-export type Storage<D extends Database = Database> = (database: D) => {
-  name: string;
-
+export abstract class Storage<D extends Database = Database> {
+  constructor(public database: D) {}
   /**
-   * 
+   *
    * @param collection The collection to load
-   * 
+   *
    * This method is used to load the collection into the storage.
    * It is called when the database is created or when a new collection is added.
    */
-  load<C extends Collection>(collection: C): boolean;
+  abstract load<C extends Collection>(collection: C): boolean;
 
-  get<C extends Collection>(
+  abstract get<C extends Collection>(
     collection: C,
     query?: Query<C, D>
   ): InferModelNormalizedType<C["model"]>[];
 
-  remove<C extends Collection>(
+  abstract remove<C extends Collection>(
     collection: C,
     primary: Primary,
     query?: Query<C, D>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  update<C extends Collection>(
+  abstract update<C extends Collection>(
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     query?: Query<C, D>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  insert<C extends Collection>(
+  abstract insert<C extends Collection>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
   ): Partial<InferModelNormalizedType<C["model"]>>[];
 
-  save<C extends Collection>(
+  abstract save<C extends Collection>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations?: boolean
@@ -52,23 +51,23 @@ export type Storage<D extends Database = Database> = (database: D) => {
     | Partial<InferModelNormalizedType<C["model"]>>
     | Partial<InferModelNormalizedType<C["model"]>>[];
 
-  saveOne<C extends Collection>(
+  abstract saveOne<C extends Collection>(
     collection: C,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  saveRelations<R extends Relations>(
+  abstract saveRelations<R extends Relations>(
     relations: R,
     data: Record<string, any>
   ): void;
 
-  getByPrimary<C extends Collection>(
+  abstract getByPrimary<C extends Collection>(
     collection: C,
     primary: Primary
   ): InferModelNormalizedType<C["model"]> | undefined;
 
-  getByPrimaries<C extends Collection>(
+  abstract getByPrimaries<C extends Collection>(
     collection: C,
     primaries: Primary[]
   ): InferModelNormalizedType<C["model"]>[];

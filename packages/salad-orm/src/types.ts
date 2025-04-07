@@ -3,6 +3,8 @@ import type { Field } from "./model/field";
 import type { Relation, Relations } from "./relation/relation";
 import type { Collection } from "./collection/collection";
 
+export type Constructor<T> = new (...args: any) => T;
+
 export type MaybeAsArray<T> = T | T[];
 
 export type DeepPartial<T> = Partial<{
