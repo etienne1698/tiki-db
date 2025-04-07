@@ -10,10 +10,10 @@ import {
 } from "../types";
 import { Storage } from "./storage";
 
-export abstract class DefaultSyncStorage<
-  D extends Database
-> extends Storage<D> {
-
+export abstract class DefaultSyncStorage<D extends Database> extends Storage<
+  false,
+  D
+> {
   abstract getStore<C extends Collection>(c: C): any;
 
   get<C extends Collection>(

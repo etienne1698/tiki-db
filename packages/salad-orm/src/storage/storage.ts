@@ -5,11 +5,15 @@ import type {
   AnyButMaybeT,
   InferModelNormalizedType,
   MaybeAsArray,
+  MaybeAsPromise,
   Primary,
 } from "../types";
 import type { Database } from "../database/database";
 
-export abstract class Storage<D extends Database = Database> {
+export abstract class Storage<
+  IsAsync extends boolean = false,
+  D extends Database = Database
+> {
   constructor(public database: D) {}
   /**
    *
@@ -23,52 +27,63 @@ export abstract class Storage<D extends Database = Database> {
   abstract get<C extends Collection>(
     collection: C,
     query?: Query<C, D>
-  ): InferModelNormalizedType<C["model"]>[];
+  ): MaybeAsPromise<InferModelNormalizedType<C["model"]>[], IsAsync>;
 
   abstract remove<C extends Collection>(
     collection: C,
     primary: Primary,
     query?: Query<C, D>
-  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
+  ): MaybeAsPromise<
+    Partial<InferModelNormalizedType<C["model"]>> | undefined,
+    IsAsync
+  >;
 
   abstract update<C extends Collection>(
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     query?: Query<C, D>
-  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
+  ): MaybeAsPromise<
+    Partial<InferModelNormalizedType<C["model"]>> | undefined,
+    IsAsync
+  >;
 
   abstract insert<C extends Collection>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
-  ): Partial<InferModelNormalizedType<C["model"]>>[];
+  ): MaybeAsPromise<Partial<InferModelNormalizedType<C["model"]>>[], IsAsync>;
 
   abstract save<C extends Collection>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations?: boolean
-  ):
+  ): MaybeAsPromise<
     | Partial<InferModelNormalizedType<C["model"]>>
-    | Partial<InferModelNormalizedType<C["model"]>>[];
+    | Partial<InferModelNormalizedType<C["model"]>>[],
+    IsAsync
+  >;
 
   abstract saveOne<C extends Collection>(
     collection: C,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
-  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
+  ): MaybeAsPromise<
+    Partial<InferModelNormalizedType<C["model"]>> | undefined,
+    IsAsync
+  >;
 
   abstract saveRelations<R extends Relations>(
     relations: R,
     data: Record<string, any>
-  ): void;
+  ): MaybeAsPromise<void, IsAsync>;
 
   abstract getByPrimary<C extends Collection>(
     collection: C,
     primary: Primary
-  ): InferModelNormalizedType<C["model"]> | undefined;
+  ): MaybeAsPromise<InferModelNormalizedType<C["model"]> | undefined, IsAsync>;
 
   abstract getByPrimaries<C extends Collection>(
     collection: C,
     primaries: Primary[]
-  ): InferModelNormalizedType<C["model"]>[];
+  ): MaybeAsPromise<InferModelNormalizedType<C["model"]>[], IsAsync>;
 }
