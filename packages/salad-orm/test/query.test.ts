@@ -15,6 +15,7 @@ test("Direct Query and Query through QueryBuilder should return same result", ()
           {
             id: {
               $eq: "123",
+              
             },
             firstname: { $eq: "John" },
           },

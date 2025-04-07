@@ -1,4 +1,5 @@
 import type { Collection } from "../collection/collection";
+import { Database } from "../database/database";
 import type { Query } from "../query/query";
 import type { Relations } from "../relation/relation";
 import type {
@@ -8,13 +9,9 @@ import type {
   MaybeAsPromise,
   Primary,
 } from "../types";
-import type { Database } from "../database/database";
 
-export abstract class Storage<
-  IsAsync extends boolean = false,
-  D extends Database = Database
-> {
-  constructor(public database: D) {}
+export abstract class Storage<IsAsync extends boolean = false> {
+  constructor(public database: Database) {}
   /**
    *
    * @param collection The collection to load
@@ -26,13 +23,13 @@ export abstract class Storage<
 
   abstract get<C extends Collection>(
     collection: C,
-    query?: Query<C, D>
+    query?: Query<C>
   ): MaybeAsPromise<InferModelNormalizedType<C["model"]>[], IsAsync>;
 
   abstract remove<C extends Collection>(
     collection: C,
     primary: Primary,
-    query?: Query<C, D>
+    query?: Query<C>
   ): MaybeAsPromise<
     Partial<InferModelNormalizedType<C["model"]>> | undefined,
     IsAsync
@@ -42,7 +39,7 @@ export abstract class Storage<
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
-    query?: Query<C, D>
+    query?: Query<C>
   ): MaybeAsPromise<
     Partial<InferModelNormalizedType<C["model"]>> | undefined,
     IsAsync

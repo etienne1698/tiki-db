@@ -10,15 +10,12 @@ import {
 } from "../types";
 import { Storage } from "./storage";
 
-export abstract class DefaultSyncStorage<D extends Database> extends Storage<
-  false,
-  D
-> {
+export abstract class DefaultSyncStorage extends Storage<false> {
   abstract getStore<C extends Collection>(c: C): any;
 
   get<C extends Collection>(
     collection: C,
-    query?: Query<C, D>
+    query?: Query<C>
   ): InferModelNormalizedType<C["model"]>[] {
     if (!query) return Object.values(this.getStore<C>(collection) || []);
     let result = query.primaries.length
@@ -35,7 +32,7 @@ export abstract class DefaultSyncStorage<D extends Database> extends Storage<
   remove<C extends Collection>(
     collection: C,
     primary: Primary,
-    _query?: Query<C, D>
+    _query?: Query<C>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     const state = this.getStore(collection);
@@ -48,7 +45,7 @@ export abstract class DefaultSyncStorage<D extends Database> extends Storage<
     _collection: C,
     _primary: Primary,
     _data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
-    _query?: Query<C, D>
+    _query?: Query<C>
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined {
     throw new Error("Method not implemented.");
   }

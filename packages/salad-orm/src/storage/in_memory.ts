@@ -2,9 +2,7 @@ import { Collection } from "../collection/collection";
 import { Database } from "../database/database";
 import { DefaultSyncStorage } from "./default_storage";
 
-export class InMemoryStorage<
-  D extends Database = Database
-> extends DefaultSyncStorage<D> {
+export class InMemoryStorage extends DefaultSyncStorage {
   stores: any = {};
 
   getStore<C extends Collection>(collection: C) {

@@ -26,7 +26,7 @@ export type QueryOrFilters<C extends Collection> = Partial<{
   [FILTER_OR]: QueryFilters<C>[];
 }>;
 
-export type Query<C extends Collection, D extends Database> = {
+export type Query<C extends Collection, D extends Database = Database> = {
   filters: QueryFilters<C> & QueryOrFilters<C>;
   primaries: Array<string>;
   with: {

@@ -1,6 +1,5 @@
 import type { Collection } from "../collection/collection";
 import { Database } from "../database/database";
-import type { Storage } from "../storage/storage";
 import type { InferModelFieldName, Primary } from "../types";
 import {
   createDefaultQuery,
@@ -14,7 +13,11 @@ import {
 export class QueryBuilder<C extends Collection, D extends Database> {
   declare query: Query<C, D>;
 
-  constructor(public storage: ReturnType<Storage>, public collection: C, query?: Query<C, D>) {
+  constructor(
+    public storage: D["storage"],
+    public collection: C,
+    query?: Query<C, D>
+  ) {
     this.storage = storage;
     this.collection = collection;
     this.query = query || createDefaultQuery<C, D>();
