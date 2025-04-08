@@ -1,6 +1,8 @@
 # TikiDB
 
-<img src="./tiki-db.png" width="120">
+<p align="center">
+    <img src="./tiki-db.png" width="160" style="border-radius: 8px">
+</p>
 
 `TikiDB` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
 
