@@ -41,42 +41,53 @@ export interface Storage<IsAsync extends boolean = false> {
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     query?: Query<C, D>
   ): IsAsync extends true
-  ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
-  : Partial<InferModelNormalizedType<C["model"]>> | undefined;
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
+    : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
   insert<C extends Collection, D extends Database = Database>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
   ): IsAsync extends true
-  ? Promise<Partial<InferModelNormalizedType<C["model"]>[]> | undefined>
-  : Partial<InferModelNormalizedType<C["model"]>>[] | undefined;
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>[]> | undefined>
+    : Partial<InferModelNormalizedType<C["model"]>>[] | undefined;
 
   save<C extends Collection, D extends Database = Database>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations?: boolean
-  ):
-    | Partial<InferModelNormalizedType<C["model"]>>
-    | Partial<InferModelNormalizedType<C["model"]>>[];
+  ): IsAsync extends true
+    ? Promise<
+        | Partial<InferModelNormalizedType<C["model"]>>
+        | Partial<InferModelNormalizedType<C["model"]>>[]
+      >
+    :
+        | Partial<InferModelNormalizedType<C["model"]>>
+        | Partial<InferModelNormalizedType<C["model"]>>[];
 
   saveOne<C extends Collection, D extends Database = Database>(
     collection: C,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
-  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
+  ): IsAsync extends true
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
+    : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
   saveRelations<R extends Relations, D extends Database = Database>(
     relations: R,
     data: Record<string, any>
-  ): void;
+  ): IsAsync extends true ? Promise<void> : void;
 
   getByPrimary<C extends Collection, D extends Database = Database>(
     collection: C,
     primary: Primary
-  ): InferModelNormalizedType<C["model"]> | undefined;
+  ): IsAsync extends true
+    ? Promise<InferModelNormalizedType<C["model"]> | undefined>
+    : InferModelNormalizedType<C["model"]> | undefined;
 
   getByPrimaries<C extends Collection, D extends Database = Database>(
     collection: C,
     primaries: Primary[]
-  ): InferModelNormalizedType<C["model"]>[];
+  ): IsAsync extends true
+    ? Promise<InferModelNormalizedType<C["model"]>[]>
+    : InferModelNormalizedType<C["model"]>[];
 }
