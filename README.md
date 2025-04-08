@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./tiki-db.png" width="160">
+    <img src="./tiki-db.png" width="220">
 </p>
 <h4 align="center">
   A storage-agnostic database framework for frontend applications <br />
