@@ -4,9 +4,10 @@ import { QueryRunner } from "../query/query_runner";
 import { Constructor } from "../types";
 
 export class Database<
+  S extends Storage = Storage,
   Collections extends Record<string, Collection> = Record<string, Collection>
 > {
-  declare storage: Storage;
+  declare storage: S;
 
   collections: {
     [K in keyof Collections]: QueryRunner<Collections[K], typeof this>;
@@ -20,7 +21,7 @@ export class Database<
     [K in keyof Collections as Collections[K]["model"]["dbName"]]: Collections[K];
   };
 
-  constructor(collections: Collections, storage: Constructor<Storage>) {
+  constructor(collections: Collections, storage: Constructor<S>) {
     this.storage = new storage(this);
 
     for (const [key, collection] of Object.entries(collections)) {
@@ -38,7 +39,8 @@ export class Database<
 }
 
 export function database<
+  S extends Storage = Storage,
   Collections extends Record<string, Collection> = Record<string, Collection>
->(collections: Collections, storage: Constructor<Storage>) {
+>(collections: Collections, storage: Constructor<S>) {
   return new Database(collections, storage);
 }

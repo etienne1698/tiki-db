@@ -10,15 +10,13 @@ import {
 } from "../types";
 import { Storage } from "./storage";
 
-export abstract class DefaultStorage<D extends Database = Database>
-  implements Storage<D>
-{
-  constructor(public database: D) {}
+export abstract class DefaultSyncStorage implements Storage<false> {
+  constructor(public database: Database) {}
 
   abstract getStore<C extends Collection>(c: C): any;
   abstract load<C extends Collection>(collection: C): boolean;
 
-  get<C extends Collection>(
+  get<C extends Collection, D extends Database>(
     collection: C,
     query?: Query<C, D>
   ): InferModelNormalizedType<C["model"]>[] {
@@ -34,7 +32,7 @@ export abstract class DefaultStorage<D extends Database = Database>
     return result as InferModelNormalizedType<C["model"]>[];
   }
 
-  remove<C extends Collection>(
+  remove<C extends Collection, D extends Database>(
     collection: C,
     primary: Primary,
     _query?: Query<C, D>
@@ -46,7 +44,7 @@ export abstract class DefaultStorage<D extends Database = Database>
     return undefined;
   }
 
-  update<C extends Collection>(
+  update<C extends Collection, D extends Database>(
     _collection: C,
     _primary: Primary,
     _data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
@@ -55,14 +53,14 @@ export abstract class DefaultStorage<D extends Database = Database>
     throw new Error("Method not implemented.");
   }
 
-  insert<C extends Collection>(
+  insert<C extends Collection, D extends Database>(
     _collection: C,
     _data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
   ): Partial<InferModelNormalizedType<C["model"]>>[] {
     throw new Error("Method not implemented.");
   }
 
-  save<C extends Collection>(
+  save<C extends Collection, D extends Database>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     shouldSaveRelations?: boolean
@@ -78,7 +76,7 @@ export abstract class DefaultStorage<D extends Database = Database>
     return saveRes ? [saveRes] : [];
   }
 
-  saveOne<C extends Collection>(
+  saveOne<C extends Collection, D extends Database>(
     collection: C,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     shouldSaveRelations?: boolean
@@ -101,7 +99,7 @@ export abstract class DefaultStorage<D extends Database = Database>
     return res as InferModelNormalizedType<C["model"]>;
   }
 
-  saveRelations<R extends Relations>(
+  saveRelations<R extends Relations, D extends Database>(
     relations: R,
     data: Record<string, any>
   ): void {
@@ -121,14 +119,14 @@ export abstract class DefaultStorage<D extends Database = Database>
     }
   }
 
-  getByPrimary<C extends Collection>(
+  getByPrimary<C extends Collection, D extends Database>(
     collection: C,
     primary: Primary
   ): InferModelNormalizedType<C["model"]> | undefined {
     return this.getStore<C>(collection)[primary];
   }
 
-  getByPrimaries<C extends Collection>(
+  getByPrimaries<C extends Collection, D extends Database>(
     collection: C,
     primaries: Primary[]
   ): InferModelNormalizedType<C["model"]>[] {

@@ -9,8 +9,8 @@ import type {
   Primary,
 } from "../types";
 
-export interface Storage<D extends Database = Database> {
-  database: D;
+export interface Storage<IsAsync extends boolean = false> {
+  database: Database;
   /**
    *
    * @param collection The collection to load
@@ -20,30 +20,38 @@ export interface Storage<D extends Database = Database> {
    */
   load<C extends Collection>(collection: C): boolean;
 
-  get<C extends Collection>(
+  get<C extends Collection, D extends Database = Database>(
     collection: C,
     query?: Query<C, D>
-  ): InferModelNormalizedType<C["model"]>[];
+  ): IsAsync extends true
+    ? Promise<InferModelNormalizedType<C["model"]>[]>
+    : InferModelNormalizedType<C["model"]>[];
 
-  remove<C extends Collection>(
+  remove<C extends Collection, D extends Database = Database>(
     collection: C,
     primary: Primary,
     query?: Query<C, D>
-  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
+  ): IsAsync extends true
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
+    : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  update<C extends Collection>(
+  update<C extends Collection, D extends Database = Database>(
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     query?: Query<C, D>
-  ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
+  ): IsAsync extends true
+  ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
+  : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  insert<C extends Collection>(
+  insert<C extends Collection, D extends Database = Database>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
-  ): Partial<InferModelNormalizedType<C["model"]>>[];
+  ): IsAsync extends true
+  ? Promise<Partial<InferModelNormalizedType<C["model"]>[]> | undefined>
+  : Partial<InferModelNormalizedType<C["model"]>>[] | undefined;
 
-  save<C extends Collection>(
+  save<C extends Collection, D extends Database = Database>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations?: boolean
@@ -51,23 +59,23 @@ export interface Storage<D extends Database = Database> {
     | Partial<InferModelNormalizedType<C["model"]>>
     | Partial<InferModelNormalizedType<C["model"]>>[];
 
-  saveOne<C extends Collection>(
+  saveOne<C extends Collection, D extends Database = Database>(
     collection: C,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
   ): Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  saveRelations<R extends Relations>(
+  saveRelations<R extends Relations, D extends Database = Database>(
     relations: R,
     data: Record<string, any>
   ): void;
 
-  getByPrimary<C extends Collection>(
+  getByPrimary<C extends Collection, D extends Database = Database>(
     collection: C,
     primary: Primary
   ): InferModelNormalizedType<C["model"]> | undefined;
 
-  getByPrimaries<C extends Collection>(
+  getByPrimaries<C extends Collection, D extends Database = Database>(
     collection: C,
     primaries: Primary[]
   ): InferModelNormalizedType<C["model"]>[];

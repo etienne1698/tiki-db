@@ -8,7 +8,9 @@ import {
   Constructor,
 } from "../src/index";
 
-export function getTestDatabase(storage: Constructor<Storage>) {
+export function getTestDatabase<S extends Storage<true> | Storage<false>>(
+  storage: Constructor<S>
+) {
   const users = model("usersDbName", {
     id: string("id", ""),
     firstname: string("firstname", ""),
