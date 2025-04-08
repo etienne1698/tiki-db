@@ -1,8 +1,11 @@
 # TikiDB
 
 <p align="center">
-    <img src="./tiki-db.png" width="160" style="border-radius: 8px">
+    <img src="./tiki-db.png" width="160">
 </p>
+<h4 align="center">
+  A storage-agnostic database framework
+</h4>
 
 `TikiDB` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
 
@@ -10,8 +13,9 @@ It provides a structured way to interact with data models and relationships whil
 
 Inspirations:
 - https://github.com/pubkey/rxdb
-- https://github.com/codedredd/pinia-orm
+- https://github.com/Nozbe/WatermelonDB
 - https://github.com/drizzle-team/drizzle-orm
+- https://github.com/codedredd/pinia-orm
 
 
 ## Storage implementations
