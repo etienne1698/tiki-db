@@ -7,10 +7,6 @@ export type Constructor<T> = new (...args: any) => T;
 
 export type MaybeAsArray<T> = T | T[];
 
-export type MaybeAsPromise<T, IsAsync extends boolean> = IsAsync extends true
-  ? Promise<T>
-  : T;
-
 export type DeepPartial<T> = Partial<{
   [P in keyof T]?: DeepPartial<T[P]>;
 }>;

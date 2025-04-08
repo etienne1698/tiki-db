@@ -44,8 +44,8 @@ export class QueryRunner<C extends Collection, D extends Database> {
     return this.database.storage.get(this.collection, finalQuery);
   }
 
-  findFirst(query: DeepPartial<Query<C, D>>) {
-    return this.find(query)?.[0];
+  async findFirst(query: DeepPartial<Query<C, D>>) {
+    return (await this.find(query))?.[0];
   }
 
   all() {
