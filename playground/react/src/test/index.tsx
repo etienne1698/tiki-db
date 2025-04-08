@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useState } from "react";
-import { Database } from "salad-orm";
+import { Database } from "tiki-db";
 
 type DBContextType = Database | null;
 

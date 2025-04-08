@@ -1,8 +1,8 @@
 {
-  "name": "salad-orm",
+  "name": "tiki-db",
   "version": "0.4.0",
-  "description": "SaladORM provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
-  "repository": "etienne1698/salad-orm",
+  "description": "TikiDB provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
+  "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

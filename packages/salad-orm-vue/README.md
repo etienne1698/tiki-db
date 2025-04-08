@@ -1,11 +1,11 @@
-# SaladORM Vue
+# TikiDB Vue
 
-`SaladORM Vue` is a storage implementation for `SaladORM` using vue `ref`
+`TikiDB Vue` is a storage implementation for `TikiDB` using vue `ref`
 
 ## Installation
 
-Install `SaladORM Vue` via npm:
+Install `TikiDB Vue` via npm:
 
 ```sh
-npm install salad-orm salad-orm-vue
+npm install tiki-db tiki-db-vue
 ```

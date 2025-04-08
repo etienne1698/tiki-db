@@ -12,7 +12,7 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "salad-orm": "file::../../../../packages/salad-orm"
+    "tiki-db": "file::../../../../packages/tiki-db"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

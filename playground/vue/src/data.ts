@@ -6,8 +6,8 @@ import {
   collection,
   string,
   type InferModelNormalizedType,
-} from "salad-orm";
-import { vueStorage } from "salad-orm-vue";
+} from "tiki-db";
+import { vueStorage } from "tiki-db-vue";
 
 const users = model("users", {
   id: string("id", ""),

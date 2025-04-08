@@ -5,7 +5,7 @@ import {
   string,
   database,
   Storage,
-} from "salad-orm";
+} from "tiki-db";
 
 export function getTestDatabase(storage: Storage) {
   const users = model("users", {

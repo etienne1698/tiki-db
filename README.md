@@ -1,6 +1,8 @@
-# SaladORM
+# TikiDB
 
-`SaladORM` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
+![TikiDB logo](https://github.com/etienne1698/tiki-db/tree/main/tiki-db.png)
+
+`TikiDB` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
 
 It provides a structured way to interact with data models and relationships while remaining storage-agnostic.
 
@@ -12,15 +14,15 @@ Inspirations:
 
 ## Storage implementations
 
-- [salad-orm-vue](https://github.com/etienne1698/salad-orm/tree/main/packages/salad-orm-vue) - salad-orm storage using vue `ref`
+- [tiki-db-vue](https://github.com/etienne1698/tiki-db/tree/main/packages/tiki-db-vue) - tiki-db storage using vue `ref`
 
 
 ## Installation
 
-Install SaladORM via npm:
+Install TikiDB via npm:
 
 ```sh
-npm install salad-orm
+npm install tiki-db
 ```
 
 ## Brainstorming 

@@ -1,8 +1,8 @@
 {
-  "name": "salad-orm-vue",
+  "name": "tiki-db-vue",
   "version": "0.4.0",
-  "description": "`SaladORM Vue` is a storage implementation for `SaladORM` using vue `ref`",
-  "repository": "etienne1698/salad-orm",
+  "description": "`TikiDB Vue` is a storage implementation for `TikiDB` using vue `ref`",
+  "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -18,7 +18,7 @@
     "test:watch": "vitest"
   },
   "peerDependencies": {
-    "salad-orm": "^0.4.0",
+    "tiki-db": "^0.4.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { collection, createDefaultStorage, Database } from "salad-orm";
+import { collection, createDefaultStorage, Database } from "tiki-db";
 import { ref, Ref } from "vue";
 
 export const vueStorage = <D extends Database = Database>() => {
