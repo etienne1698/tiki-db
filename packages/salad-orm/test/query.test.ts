@@ -8,6 +8,8 @@ const storage = InMemoryStorage;
 test("Direct Query and Query through QueryBuilder should return same result", () => {
   const { db } = getTestDatabase(storage);
 
+  db.collections.posts.find({})[0]
+
   expect(
     db.collections.users.find({
       filters: {
@@ -15,7 +17,6 @@ test("Direct Query and Query through QueryBuilder should return same result", ()
           {
             id: {
               $eq: "123",
-              
             },
             firstname: { $eq: "John" },
           },
