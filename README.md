@@ -1,6 +1,6 @@
 # TikiDB
 
-![TikiDB logo](https://github.com/etienne1698/tiki-db/tree/main/tiki-db.png)
+![TikiDB logo](./tiki-db.png)
 
 `TikiDB` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
 
