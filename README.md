@@ -1,10 +1,9 @@
-# TikiDB
-
 <p align="center">
     <img src="./tiki-db.png" width="160">
 </p>
 <h4 align="center">
-  A storage-agnostic database framework
+  A storage-agnostic database framework for frontend applications <br />
+  Compatible with <em>Vue</em> and <em>React</em>
 </h4>
 
 `TikiDB` is a lightweight abstraction layer for data access in Javascript/Typescript applications, with great Typescript support.
