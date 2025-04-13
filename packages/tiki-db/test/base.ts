@@ -7,6 +7,7 @@ import {
   Storage,
   Constructor,
 } from "../src/index";
+import { LocalStorageStorage } from "../src/storage/localstorage_storage";
 
 export function getTestDatabase<S extends Storage<false>>(
   storage: Constructor<S>
@@ -38,7 +39,8 @@ export function getTestDatabase<S extends Storage<false>>(
       users: collection(users, usersRelations),
       posts: collection(posts, postsRelations),
     },
-    storage
+    storage,
+    LocalStorageStorage
   );
 
   return {

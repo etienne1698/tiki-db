@@ -7,52 +7,50 @@ import type {
   MaybeAsArray,
   Primary,
 } from "../types";
-import { createDefaultQuery, type Query } from "./query";
-import { QueryBuilder } from "./query_builder";
+import { type Query } from "./query";
 
 export class QueryRunner<C extends Collection, D extends Database> {
   constructor(private database: D, private collection: C) {}
 
   saveRelations(data: Record<string, any>) {
-    return this.database.storage.saveRelations(this.collection.relations, data);
+    return this.database.saveRelations(this.collection, data);
   }
 
   saveOne(
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations: boolean = true
   ) {
-    return this.database.storage.saveOne(this.collection, data, saveRelations);
+    return this.database.saveOne(this.collection, data, saveRelations);
   }
 
   save(
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations: boolean = true
   ) {
-    return this.database.storage.save(this.collection, data, saveRelations);
+    return this.database.save(this.collection, data, saveRelations);
   }
 
   delete(primary: string) {
-    return this.database.storage.remove(this.collection, primary);
+    return this.database.delete(this.collection, primary);
   }
 
   query() {
-    return new QueryBuilder(this.database.storage, this.collection);
+    return this.database.query(this.collection);
   }
 
   find(query: DeepPartial<Query<C, D>>) {
-    const finalQuery = Object.assign(createDefaultQuery<C, D>(), query);
-    return this.database.storage.get(this.collection, finalQuery as Query<C, D>);
+    return this.database.find(this.collection, query);
   }
 
   findFirst(query: DeepPartial<Query<C, D>>) {
-    return this.find(query)?.[0];
+    return this.database.findFirst(this.collection, query);
   }
 
   all() {
-    return this.database.storage.get(this.collection);
+    return this.find({});
   }
 
   getByPrimary(primary: Primary) {
-    return this.database.storage.getByPrimary(this.collection, primary);
+    return this.database.getByPrimary(this.collection, primary);
   }
 }

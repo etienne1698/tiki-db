@@ -5,13 +5,11 @@ import { InMemoryStorage } from "../src";
 
 const storage = InMemoryStorage;
 
-test("Direct Query and Query through QueryBuilder should return same result", () => {
+test("Direct Query and Query through QueryBuilder should return same result", async () => {
   const { db } = getTestDatabase(storage);
-
-  db.collections.posts.find({})[0]
   
   expect(
-    db.collections.users.find({
+    await db.collections.users.find({
       with: {
         posts: true,
         

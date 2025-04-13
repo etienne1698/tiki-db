@@ -13,13 +13,7 @@ import {
 export class QueryBuilder<C extends Collection, D extends Database> {
   declare query: Query<C, D>;
 
-  constructor(
-    public storage: D["storage"],
-    public collection: C,
-    query?: Query<C, D>
-  ) {
-    this.storage = storage;
-    this.collection = collection;
+  constructor(public database: D, public collection: C, query?: Query<C, D>) {
     this.query = query || createDefaultQuery<C, D>();
   }
 
@@ -74,10 +68,10 @@ export class QueryBuilder<C extends Collection, D extends Database> {
   }
 
   find() {
-    return this.storage.get(this.collection, this.query);
+    return this.database.find(this.collection, this.query);
   }
 
   findFirst() {
-    return this.find()?.[0];
+    return this.database.findFirst(this.collection, this.query);
   }
 }

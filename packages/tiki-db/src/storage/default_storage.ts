@@ -10,7 +10,7 @@ import {
 } from "../types";
 import { Storage } from "./storage";
 
-export abstract class DefaultSyncStorage implements Storage<false> {
+export abstract class DefaultStorage implements Storage<false> {
   constructor(public database: Database) {}
 
   abstract getStore<C extends Collection>(c: C): any;
