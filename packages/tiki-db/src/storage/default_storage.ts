@@ -1,6 +1,6 @@
 import { CollectionSchema } from "../collection/collection_schema";
 import { Database } from "../database/database";
-import { Query } from "../query/query";
+import { Query, QueryResult } from "../query/query";
 import { Relation, Relations } from "../relation/relation";
 import {
   AnyButMaybeT,
@@ -46,10 +46,10 @@ export abstract class DefaultStorage implements Storage<false> {
     });
   }
 
-  get<C extends CollectionSchema, D extends Database>(
+  get<C extends CollectionSchema, D extends Database, Q extends Query<C, D>>(
     collection: C,
-    query?: Query<C, D>
-  ): InferModelNormalizedType<C["model"]>[] {
+    query?: Q
+  ): QueryResult<C, D, Q> {
     if (!query) return Object.values(this.getStore<C>(collection) || []);
     let result = query.primaries.length
       ? (this.getByPrimaries(
@@ -61,7 +61,7 @@ export abstract class DefaultStorage implements Storage<false> {
         ) as InferModelNormalizedType<C["model"]>[]);
 
     result = this.#loadRelations(collection, result, query);
-    return result as InferModelNormalizedType<C["model"]>[];
+    return result as QueryResult<C, D, Q>;
   }
 
   remove<C extends CollectionSchema, D extends Database>(

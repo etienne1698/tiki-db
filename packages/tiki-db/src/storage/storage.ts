@@ -1,6 +1,6 @@
 import type { CollectionSchema } from "../collection/collection_schema";
 import { Database } from "../database/database";
-import type { Query } from "../query/query";
+import type { Query, QueryResult } from "../query/query";
 import type { Relations } from "../relation/relation";
 import type {
   AnyButMaybeT,
@@ -20,12 +20,12 @@ export interface Storage<IsAsync extends boolean = false> {
    */
   load<C extends CollectionSchema>(collection: C): boolean;
 
-  get<C extends CollectionSchema, D extends Database = Database>(
+  get<C extends CollectionSchema, D extends Database = Database, Q extends Query<C, D> = Query<C, D>>(
     collection: C,
-    query?: Query<C, D>
+    query?: Q
   ): IsAsync extends true
-    ? Promise<InferModelNormalizedType<C["model"]>[]>
-    : InferModelNormalizedType<C["model"]>[];
+    ? Promise<QueryResult<C, D, Q>>
+    : QueryResult<C, D, Q>;
 
   remove<C extends CollectionSchema, D extends Database = Database>(
     collection: C,

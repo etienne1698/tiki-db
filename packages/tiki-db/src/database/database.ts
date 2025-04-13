@@ -102,7 +102,7 @@ export class Database<
     const finalQuery = Object.assign(createDefaultQuery<C, D>(), query);
     const data = await this.persistentStorage.get(
       collection,
-      finalQuery as Query<C, D>
+      finalQuery 
     );
     this.storage.save(collection, data, true);
     return this.storage.get(
