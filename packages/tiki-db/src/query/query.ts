@@ -64,7 +64,9 @@ export type QueryResult<
   InferModelNormalizedType<C["model"]> & {
     [K in keyof Q["with"]]: K extends keyof C["relations"]["schema"]
       ? Q["with"][K] extends true
-        ? ReturnType<C["relations"]["schema"][K]['getFor']>
+        ? C["relations"]["schema"][K]["multiple"] extends true
+          ? InferModelNormalizedType<C["relations"]["schema"][K]["related"]>[]
+          : InferModelNormalizedType<C["relations"]["schema"][K]["related"]>
         : never
       : never;
   }

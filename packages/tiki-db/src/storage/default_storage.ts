@@ -32,11 +32,15 @@ export abstract class DefaultStorage implements Storage<false> {
           this.database.mapCollectionDbNameCollection[
             collection.relations.schema[relation].related.dbName
           ];
-        d[relation] = collection.relations.schema[relation].getFor(
-          d,
-          this.database,
-          this
+        d[relation] = this.get(
+          this.database.mapCollectionDbNameCollection[
+            collection.relations.schema[relation].related.dbName
+          ],
+          collection.relations.schema[relation].queryFor(d, this.database).query
         );
+        if (!collection.relations.schema[relation].multiple) {
+          d[relation] = d[relation]?.[0];
+        }
       }
       return d;
     });

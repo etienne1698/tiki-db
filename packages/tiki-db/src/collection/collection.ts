@@ -7,7 +7,7 @@ import type {
   MaybeAsArray,
   Primary,
 } from "../types";
-import { type Query } from "../query/query";
+import { QueryResult, type Query } from "../query/query";
 
 export class Collection<C extends CollectionSchema, D extends Database> {
   constructor(private database: D, private collection: C) {}
@@ -38,12 +38,12 @@ export class Collection<C extends CollectionSchema, D extends Database> {
     return this.database.query(this.collection);
   }
 
-  find(query: DeepPartial<Query<C, D>>) {
-    return this.database.find(this.collection, query);
+  find<Q extends DeepPartial<Query<C, D>>>(query: Q) {
+    return this.database.find(this.collection, query) as unknown as QueryResult<C, D, Q>;
   }
 
-  findFirst(query: DeepPartial<Query<C, D>>) {
-    return this.database.findFirst(this.collection, query);
+  async findFirst<Q extends DeepPartial<Query<C, D>>>(query: Q) {
+    return this.database.findFirst(this.collection, query) as unknown as QueryResult<C, D, Q>[0];
   }
 
   all() {
