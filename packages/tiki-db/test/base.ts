@@ -6,8 +6,8 @@ import {
   database,
   Storage,
   Constructor,
+  UselessPersistentStorage,
 } from "../src/index";
-import { LocalStorageStorage } from "../src/storage/localstorage_storage";
 
 export function getTestDatabase<S extends Storage<false>>(
   storage: Constructor<S>
@@ -40,7 +40,7 @@ export function getTestDatabase<S extends Storage<false>>(
       posts: collection(posts, postsRelations),
     },
     storage,
-    LocalStorageStorage
+    UselessPersistentStorage
   );
 
   return {

@@ -5,12 +5,15 @@ import { Relations, Relation } from "../relation/relation";
 import { Primary, AnyButMaybeT, MaybeAsArray } from "../types";
 import { Storage } from "./storage";
 
-export class LocalStorageStorage implements Storage<true> {
+export class UselessPersistentStorage implements Storage<true> {
+
+
   constructor(public database: Database) {}
 
   load<C extends CollectionSchema>(collection: C): boolean {
     return true
   }
+  
   async get<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     query?: Query<C, D> | undefined

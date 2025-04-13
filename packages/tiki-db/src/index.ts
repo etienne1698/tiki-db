@@ -16,7 +16,7 @@ export { Collection } from "./collection/collection";
 export { Storage } from "./storage/storage";
 export { InMemoryStorage } from "./storage/in_memory";
 export { DefaultStorage } from "./storage/default_storage";
-export { LocalStorageStorage } from "./storage/localstorage_storage";
+export { UselessPersistentStorage } from "./storage/useless_persistent_storage";
 
 export { Database, database } from "./database/database";
 

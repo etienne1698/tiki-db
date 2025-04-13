@@ -7,16 +7,15 @@ const storage = InMemoryStorage;
 
 test("Direct Query and Query through QueryBuilder should return same result", async () => {
   const { db } = getTestDatabase(storage);
-  
+
   expect(
     await db.collections.users.find({
       with: {
         posts: true,
-        
       },
       filters: {
         firstname: {
-          $eq: ""
+          $eq: "",
         },
         $or: [
           {
@@ -33,7 +32,7 @@ test("Direct Query and Query through QueryBuilder should return same result", as
       },
     })
   ).toStrictEqual(
-    db.collections.users
+    await db.collections.users
       .query()
       .orWhere([
         db.collections.users
