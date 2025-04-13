@@ -66,7 +66,7 @@ export type QueryResult<
       ? Q["with"][K] extends true
         ? C["relations"]["schema"][K]["multiple"] extends true
           ? InferModelNormalizedType<C["relations"]["schema"][K]["related"]>[]
-          : InferModelNormalizedType<C["relations"]["schema"][K]["related"]>
+          : InferModelNormalizedType<C["relations"]["schema"][K]["related"]> | undefined
         : never
       : never;
   }
