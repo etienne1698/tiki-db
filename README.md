@@ -30,30 +30,14 @@ Install TikiDB via npm:
 npm install tiki-db
 ```
 
-## Brainstorming 
-
-- Le "storage" devrais etre async pour permettre le traitement des erreur 
-
-Je pense que tout ce qui est index, logique de recherche... peut etre commun 
-J'imagine que c'est simplement la recuperations du store pour chaque collection qui est spécifique a chaque implémentation
-
 ## Roadmap
 
-- Core 
-    - more tests + shared tests
-    - basics storage wrapper:
-        - backupStorage
-        - log
-        - throw
-    - async database, query_runner, query_builder, storage 
+
 - Storage
     - localStorage
     - IndexedDB
     - OPFS
 - Extensions (as storage-wrapper)
-    - validations
-        - zod
-        - arktype
     - replication 
         - syncEngine
         - httpReplication

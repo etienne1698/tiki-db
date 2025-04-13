@@ -8,7 +8,6 @@ export class BelongsToRelation<
   MRelated extends Model = Model
 > extends Relation<M, MRelated> {
   getFor(
-    _model: M,
     _data: any,
      _database: Database
   ): InferModelNormalizedType<MRelated> | undefined {

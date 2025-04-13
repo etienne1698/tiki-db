@@ -1,6 +1,6 @@
 import type { CollectionSchema } from "../collection/collection_schema";
 import { Database } from "../database/database";
-import type { InferModelFieldName, Primary } from "../types";
+import type { DeepPartial, InferModelFieldName, Primary } from "../types";
 import {
   createDefaultQuery,
   FILTER_OR,
@@ -13,8 +13,12 @@ import {
 export class QueryBuilder<C extends CollectionSchema, D extends Database> {
   declare query: Query<C, D>;
 
-  constructor(public database: D, public collection: C, query?: Query<C, D>) {
-    this.query = query || createDefaultQuery<C, D>();
+  constructor(
+    public database: D,
+    public collection: C,
+    query?: DeepPartial<Query<C, D>>
+  ) {
+    this.query = Object.assign(createDefaultQuery<C, D>(), query);
   }
 
   byPrimary(primaries: Primary[]) {

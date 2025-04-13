@@ -1,7 +1,7 @@
 import { CollectionSchema } from "../collection/collection_schema";
 import { Database } from "../database/database";
 import { Query } from "../query/query";
-import { Relations } from "../relation/relation";
+import { Relation, Relations } from "../relation/relation";
 import {
   AnyButMaybeT,
   InferModelNormalizedType,
@@ -16,6 +16,32 @@ export abstract class DefaultStorage implements Storage<false> {
   abstract getStore<C extends CollectionSchema>(c: C): any;
   abstract load<C extends CollectionSchema>(collection: C): boolean;
 
+  #loadRelations<C extends CollectionSchema, D extends Database>(
+    collection: C,
+    data: InferModelNormalizedType<C["model"]>[],
+    query?: Query<C, D>
+  ) {
+    if (!query?.with) return data;
+    const relations = Object.keys(query.with).filter(
+      (k) => query.with[k] === true
+    );
+
+    return data.map((d) => {
+      for (const relation of relations) {
+        const relatedCollection =
+          this.database.mapCollectionDbNameCollection[
+            collection.relations.schema[relation].related.dbName
+          ];
+        d[relation] = collection.relations.schema[relation].getFor(
+          d,
+          this.database,
+          this
+        );
+      }
+      return d;
+    });
+  }
+
   get<C extends CollectionSchema, D extends Database>(
     collection: C,
     query?: Query<C, D>
@@ -29,6 +55,8 @@ export abstract class DefaultStorage implements Storage<false> {
       : (Object.values(
           this.getStore<C>(collection) || []
         ) as InferModelNormalizedType<C["model"]>[]);
+
+    result = this.#loadRelations(collection, result, query);
     return result as InferModelNormalizedType<C["model"]>[];
   }
 

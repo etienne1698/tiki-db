@@ -22,6 +22,7 @@ export { Database, database } from "./database/database";
 
 export {
   type Query,
+  type QueryResult,
   type FiltersValueType as OperatorValueType,
   type Filters as Operator,
 } from "./query/query";

@@ -10,12 +10,15 @@ import {
   Primary,
 } from "../types";
 import { QueryBuilder } from "../query/query_builder";
-import { createDefaultQuery, Query } from "../query/query";
+import { createDefaultQuery, Query, QueryResult } from "../query/query";
 
 export class Database<
   S extends Storage<false> = Storage<false>,
   PersistantStorage extends Storage<true> = Storage<true>,
-  Schema extends Record<string, CollectionSchema> = Record<string, CollectionSchema>
+  Schema extends Record<string, CollectionSchema> = Record<
+    string,
+    CollectionSchema
+  >
 > {
   declare storage: S;
   declare persistentStorage: PersistantStorage;
@@ -52,9 +55,13 @@ export class Database<
 
   query<C extends CollectionSchema, D extends Database = typeof this>(
     collection: C,
-    query?: Query<C, D>
+    query?: DeepPartial<Query<C, D>>
   ) {
-    return new QueryBuilder(this, collection, query as Query<C, typeof this>);
+    return new QueryBuilder(
+      this,
+      collection,
+      query as DeepPartial<Query<C, typeof this>>
+    );
   }
 
   async saveRelations<C extends CollectionSchema>(
@@ -98,17 +105,25 @@ export class Database<
       finalQuery as Query<C, D>
     );
     this.storage.save(collection, data, true);
-    return this.storage.get(collection, finalQuery as Query<C, D>);
+    return this.storage.get(
+      collection,
+      finalQuery as Query<C, D>
+    ) as QueryResult<C, D, typeof query>;
   }
 
   async findFirst<C extends CollectionSchema, D extends Database = typeof this>(
     collection: C,
     query: DeepPartial<Query<C, D>>
   ) {
-    return (await this.find(collection, query))?.[0];
+    return (
+      (await this.find(collection, query)) as QueryResult<C, D, typeof query>
+    )?.[0];
   }
 
-  async getByPrimary<C extends CollectionSchema>(collection: C, primary: Primary) {
+  async getByPrimary<C extends CollectionSchema>(
+    collection: C,
+    primary: Primary
+  ) {
     const data = await this.persistentStorage.getByPrimary(collection, primary);
     if (data) {
       this.storage.save(collection, data, true);
@@ -120,7 +135,10 @@ export class Database<
 export function database<
   S extends Storage<false> = Storage<false>,
   PersistantStorage extends Storage<true> = Storage<true>,
-  Collections extends Record<string, CollectionSchema> = Record<string, CollectionSchema>
+  Collections extends Record<string, CollectionSchema> = Record<
+    string,
+    CollectionSchema
+  >
 >(
   collections: Collections,
   storage: Constructor<S>,

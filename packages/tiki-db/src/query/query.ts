@@ -1,6 +1,10 @@
 import type { CollectionSchema } from "../collection/collection_schema";
 import { Database } from "../database/database";
-import type { InferModelFieldName } from "../types";
+import type {
+  DeepPartial,
+  InferModelFieldName,
+  InferModelNormalizedType,
+} from "../types";
 
 export enum Filters {
   EQ = "$eq",
@@ -51,3 +55,17 @@ export function createDefaultQuery<
     with: {},
   };
 }
+
+export type QueryResult<
+  C extends CollectionSchema,
+  D extends Database = Database,
+  Q extends DeepPartial<Query<C, D>> = Query<C, D>
+> = Array<
+  InferModelNormalizedType<C["model"]> & {
+    [K in keyof Q["with"]]: K extends keyof C["relations"]["schema"]
+      ? Q["with"][K] extends true
+        ? ReturnType<C["relations"]["schema"][K]['getFor']>
+        : never
+      : never;
+  }
+>;
