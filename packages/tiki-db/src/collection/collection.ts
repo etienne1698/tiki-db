@@ -1,16 +1,56 @@
-import type { Model } from "../model/model";
-import type { Relations } from "../relation/relation";
+import type { CollectionSchema } from "./collection_schema";
+import type { Database } from "../database/database";
+import type {
+  AnyButMaybeT,
+  DeepPartial,
+  InferModelNormalizedType,
+  MaybeAsArray,
+  Primary,
+} from "../types";
+import { type Query } from "../query/query";
 
-export class Collection<
-  M extends Model = Model,
-  R extends Relations = Relations
-> {
-  constructor(public model: M, public relations: R) {}
-}
+export class Collection<C extends CollectionSchema, D extends Database> {
+  constructor(private database: D, private collection: C) {}
 
-export function collection<
-  M extends Model = Model,
-  R extends Relations = Relations
->(model: M, relations: R) {
-  return new Collection<M, R>(model, relations);
+  saveRelations(data: Record<string, any>) {
+    return this.database.saveRelations(this.collection, data);
+  }
+
+  saveOne(
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
+    saveRelations: boolean = true
+  ) {
+    return this.database.saveOne(this.collection, data, saveRelations);
+  }
+
+  save(
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
+    saveRelations: boolean = true
+  ) {
+    return this.database.save(this.collection, data, saveRelations);
+  }
+
+  delete(primary: string) {
+    return this.database.delete(this.collection, primary);
+  }
+
+  query() {
+    return this.database.query(this.collection);
+  }
+
+  find(query: DeepPartial<Query<C, D>>) {
+    return this.database.find(this.collection, query);
+  }
+
+  findFirst(query: DeepPartial<Query<C, D>>) {
+    return this.database.findFirst(this.collection, query);
+  }
+
+  all() {
+    return this.find({});
+  }
+
+  getByPrimary(primary: Primary) {
+    return this.database.getByPrimary(this.collection, primary);
+  }
 }

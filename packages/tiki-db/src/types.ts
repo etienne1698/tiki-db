@@ -1,7 +1,7 @@
 import type { Model } from "./model/model";
 import type { Field } from "./model/field";
 import type { Relation, Relations } from "./relation/relation";
-import type { Collection } from "./collection/collection";
+import type { CollectionSchema } from "./collection/collection_schema";
 
 export type Constructor<T> = new (...args: any) => T;
 
@@ -41,4 +41,4 @@ export type AnyRelations<
 export type AnyCollection<
   M extends AnyModel = AnyModel,
   R extends AnyRelations = AnyRelations
-> = Collection<M, R>;
+> = CollectionSchema<M, R>;

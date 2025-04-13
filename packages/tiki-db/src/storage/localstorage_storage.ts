@@ -1,4 +1,4 @@
-import { Collection } from "../collection/collection";
+import { CollectionSchema } from "../collection/collection_schema";
 import { Database } from "../database/database";
 import { Query } from "../query/query";
 import { Relations, Relation } from "../relation/relation";
@@ -8,17 +8,17 @@ import { Storage } from "./storage";
 export class LocalStorageStorage implements Storage<true> {
   constructor(public database: Database) {}
 
-  load<C extends Collection>(collection: C): boolean {
+  load<C extends CollectionSchema>(collection: C): boolean {
     return true
   }
-  async get<C extends Collection, D extends Database = Database>(
+  async get<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     query?: Query<C, D> | undefined
   ): Promise<ReturnType<C["model"]["normalize"]>[]> {
     return [];
   }
 
-  async remove<C extends Collection, D extends Database = Database>(
+  async remove<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     primary: Primary,
     query?: Query<C, D> | undefined
@@ -26,7 +26,7 @@ export class LocalStorageStorage implements Storage<true> {
     return undefined;
   }
 
-  async update<C extends Collection, D extends Database = Database>(
+  async update<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
@@ -35,14 +35,14 @@ export class LocalStorageStorage implements Storage<true> {
     return undefined;
   }
 
-  async insert<C extends Collection, D extends Database = Database>(
+  async insert<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>
   ): Promise<(ReturnType<C["model"]["normalize"]> | undefined)[] | undefined> {
     return undefined;
   }
 
-  async save<C extends Collection, D extends Database = Database>(
+  async save<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>,
     saveRelations?: boolean
@@ -53,7 +53,7 @@ export class LocalStorageStorage implements Storage<true> {
     return {};
   }
 
-  async saveOne<C extends Collection, D extends Database = Database>(
+  async saveOne<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
     saveRelations?: boolean
@@ -66,14 +66,14 @@ export class LocalStorageStorage implements Storage<true> {
     data: Record<string, any>
   ): Promise<void> {}
 
-  async getByPrimary<C extends Collection, D extends Database = Database>(
+  async getByPrimary<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     primary: Primary
   ): Promise<ReturnType<C["model"]["normalize"]> | undefined> {
     return undefined;
   }
 
-  async getByPrimaries<C extends Collection, D extends Database = Database>(
+  async getByPrimaries<C extends CollectionSchema, D extends Database = Database>(
     collection: C,
     primaries: Primary[]
   ): Promise<ReturnType<C["model"]["normalize"]>[]> {

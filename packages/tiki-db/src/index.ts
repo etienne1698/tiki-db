@@ -10,11 +10,13 @@ export { relations, hasMany, belongsTo } from "./relation/relation_functions";
 export { HasManyRelation } from "./relation/has_many";
 export { BelongsToRelation } from "./relation/belongs_to";
 
-export { collection, Collection } from "./collection/collection";
+export { collection, CollectionSchema } from "./collection/collection_schema";
+export { Collection } from "./collection/collection";
 
 export { Storage } from "./storage/storage";
 export { InMemoryStorage } from "./storage/in_memory";
 export { DefaultStorage } from "./storage/default_storage";
+export { LocalStorageStorage } from "./storage/localstorage_storage";
 
 export { Database, database } from "./database/database";
 
@@ -24,4 +26,3 @@ export {
   type Filters as Operator,
 } from "./query/query";
 export { QueryBuilder } from "./query/query_builder";
-export { QueryRunner } from "./query/query_runner";

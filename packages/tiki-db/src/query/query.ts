@@ -1,4 +1,4 @@
-import type { Collection } from "../collection/collection";
+import type { CollectionSchema } from "../collection/collection_schema";
 import { Database } from "../database/database";
 import type { InferModelFieldName } from "../types";
 
@@ -14,7 +14,7 @@ export type FiltersValueType = {
   [Filters.NE]: any;
 };
 
-export type QueryFilters<C extends Collection> = Partial<{
+export type QueryFilters<C extends CollectionSchema> = Partial<{
   [field in InferModelFieldName<C["model"]>]: Partial<{
     [key in Filters]: FiltersValueType[key];
   }>;
@@ -22,11 +22,11 @@ export type QueryFilters<C extends Collection> = Partial<{
 
 export const FILTER_OR = "$or";
 
-export type QueryOrFilters<C extends Collection> = Partial<{
+export type QueryOrFilters<C extends CollectionSchema> = Partial<{
   [FILTER_OR]: QueryFilters<C>[];
 }>;
 
-export type Query<C extends Collection, D extends Database = Database> = {
+export type Query<C extends CollectionSchema, D extends Database = Database> = {
   filters: QueryFilters<C> & QueryOrFilters<C>;
   primaries: Array<string>;
   with: {
@@ -42,7 +42,7 @@ export type Query<C extends Collection, D extends Database = Database> = {
 };
 
 export function createDefaultQuery<
-  C extends Collection,
+  C extends CollectionSchema,
   D extends Database
 >(): Query<C, D> {
   return {

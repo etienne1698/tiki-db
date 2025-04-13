@@ -1,4 +1,4 @@
-import type { Collection } from "../collection/collection";
+import type { CollectionSchema } from "../collection/collection_schema";
 import { Database } from "../database/database";
 import type { InferModelFieldName, Primary } from "../types";
 import {
@@ -10,7 +10,7 @@ import {
   type QueryFilters,
 } from "./query";
 
-export class QueryBuilder<C extends Collection, D extends Database> {
+export class QueryBuilder<C extends CollectionSchema, D extends Database> {
   declare query: Query<C, D>;
 
   constructor(public database: D, public collection: C, query?: Query<C, D>) {

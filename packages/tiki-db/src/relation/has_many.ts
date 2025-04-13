@@ -1,6 +1,6 @@
 import type { Database } from "../database/database";
 import type { Model } from "../model/model";
-import type { QueryRunner } from "../query/query_runner";
+import type { Collection } from "../collection/collection";
 import type {
   AnyCollection,
   InferModelFieldName,
@@ -18,7 +18,7 @@ export class HasManyRelation<
     database: Database
   ): InferModelNormalizedType<MRelated>[] {
     return (
-      database.collections[model.dbName] as QueryRunner<AnyCollection, Database>
+      database.collections[model.dbName] as Collection<AnyCollection, Database>
     ).find({
       filters: {
         [this.field as string]: { $eq: model.primary(data) },
