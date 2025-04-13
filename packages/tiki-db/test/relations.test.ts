@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 
 import { getTestDatabase } from "./base";
-import { DeepPartial, InMemoryStorage, Query, type QueryResult } from "../src";
+import { InMemoryStorage } from "../src";
 
 const storage = InMemoryStorage;
 
@@ -18,7 +18,6 @@ test("has_many get query should work", async () => {
   });
   expect(res!.posts![0].id).toBe("1");
 });
-
 
 test("belongs_to get query should work", async () => {
   const { db } = getTestDatabase(storage);
