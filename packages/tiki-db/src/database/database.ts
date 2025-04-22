@@ -43,9 +43,10 @@ export class Database<
   S extends Storage<FullSchema> = Storage<FullSchema>
 > {
   constructor(public schema: FullSchema, public storage: S) {
-    for (const [key, collection] of Object.entries(schema)) {
+    for (const [key, collection] of Object.entries(schema.schema)) {
       // @ts-ignore
-      this.collections[key] = new Collection(this, collection);
+      //this.collections[key] = new Collection(this, collection);
+      this.storage.load(collection);
     }
   }
 

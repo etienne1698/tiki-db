@@ -39,5 +39,6 @@ export function getTestDatabase<S extends Storage>(storage: S) {
 
   return {
     db,
+    collections,
   };
 }

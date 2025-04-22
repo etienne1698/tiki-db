@@ -63,32 +63,12 @@ export interface Storage<
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
   ): IsAsync extends true
-    ? Promise<Partial<InferModelNormalizedType<C["model"]>[]> | undefined>
-    : Partial<InferModelNormalizedType<C["model"]>>[] | undefined;
-
-  save<C extends CollectionSchema>(
-    collection: C,
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
-    saveRelations?: boolean
-  ): IsAsync extends true
-    ? Promise<
-        | Partial<InferModelNormalizedType<C["model"]>>
-        | Partial<InferModelNormalizedType<C["model"]>>[]
-      >
-    :
-        | Partial<InferModelNormalizedType<C["model"]>>
-        | Partial<InferModelNormalizedType<C["model"]>>[];
-
-  saveOne<C extends CollectionSchema>(
-    collection: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
-    saveRelations?: boolean
-  ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  saveRelations<R extends Relations>(
-    relations: R,
+  insertRelations<C extends CollectionSchema>(
+    collection: C,
+    relation: keyof C['relations'],
     data: Record<string, any>
   ): IsAsync extends true ? Promise<void> : void;
 
