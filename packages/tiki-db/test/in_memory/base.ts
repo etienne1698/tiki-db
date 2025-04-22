@@ -3,19 +3,19 @@ import {
   model,
   relations,
   string,
-  database,
-  Storage,
-} from "tiki-db";
+  syncDatabase,
+} from "../../src/index";
+import { InMemoryStorage } from "../../src/storage/in_memory_storage";
 
-export function getTestDatabase(storage: Storage) {
-  const users = model("users", {
+export function getTestDatabase() {
+  const users = model("usersDbName", {
     id: string("id", ""),
     firstname: string("firstname", ""),
     lastname: string("lastname", ""),
     email: string("email", ""),
     phone: string("phone", ""),
   });
-  const posts = model("posts", {
+  const posts = model("postsDbName", {
     id: string("id", ""),
     title: string("title", ""),
     content: string("content", ""),
@@ -27,16 +27,16 @@ export function getTestDatabase(storage: Storage) {
   }));
 
   const postsRelations = relations(posts, ({ belongsTo }) => ({
-    user: belongsTo(users, "userId"),
+    userqs: belongsTo(users, "userId"),
   }));
 
-  const db = database(
-    {
-      users: collection(users, usersRelations),
-      posts: collection(posts, postsRelations),
-    },
-    storage
-  );
+  const collections = {
+    users: collection(users, usersRelations),
+    posts: collection(posts, postsRelations),
+  };
+
+  const storage = new InMemoryStorage();
+  const db = syncDatabase(collections, storage);
 
   return {
     db,

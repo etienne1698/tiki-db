@@ -17,10 +17,6 @@ Inspirations:
 - https://github.com/codedredd/pinia-orm
 
 
-## Storage implementations
-
-- [tiki-db-vue](https://github.com/etienne1698/tiki-db/tree/main/packages/tiki-db-vue) - tiki-db storage using vue `ref`
-
 
 ## Installation
 
@@ -42,8 +38,8 @@ npm install tiki-db
         - syncEngine
         - httpReplication
         - websocketReplication
-- For JS server runtimes (node, bun, deno)
-    - replication
-        - syncEngineServer
-        - httpReplicationServer (hono, express, koa)
-        - websocketReplicationServer
+        - For JS server runtimes (node, bun, deno)
+            - replication
+                - syncEngineServer
+                - httpReplicationServer (hono, express, koa)
+                - websocketReplicationServer

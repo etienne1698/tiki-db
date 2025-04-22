@@ -83,10 +83,10 @@ export function syncDatabase<
     DatabaseFullSchema<Collections>,
     false
   >
->(collections: Collections, storage: S) {
+>(collections: Collections, storage: Storage) {
   return new Database<false, DatabaseFullSchema<Collections>, S>(
     extractFullSchema(collections),
-    storage
+    storage as S
   );
 }
 
