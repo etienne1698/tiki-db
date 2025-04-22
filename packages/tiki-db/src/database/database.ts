@@ -73,13 +73,15 @@ export class Database<
     for (const [key, collection] of Object.entries(schema.schema)) {
       // @ts-ignore
       this.collections[key] = new Collection(this, collection);
-      this.storage.load(collection);
     }
+  }
+
+  init() {
+    return this.storage.init(this);
   }
 
   async migrate() {
     if (!this.migrator) return;
-    await this.storage.initMigrationsTable(this as Database);
     await this.migrator.migrate();
   }
 
@@ -103,7 +105,7 @@ export function syncDatabase<
   M extends Migrations<DatabaseFullSchema<Collections>> = Migrations<
     DatabaseFullSchema<Collections>
   >
->(collections: Collections, storage: Storage, migrations: Partial<M>) {
+>(collections: Collections, storage: Storage, migrations?: Partial<M>) {
   return new Database<false, DatabaseFullSchema<Collections>, S>(
     extractFullSchema(collections),
     storage as S,
@@ -123,7 +125,7 @@ export function asyncDatabase<
   M extends Migrations<DatabaseFullSchema<Collections>> = Migrations<
     DatabaseFullSchema<Collections>
   >
->(collections: Collections, storage: S, migrations: Partial<M>) {
+>(collections: Collections, storage: S, migrations?: Partial<M>) {
   return new Database<true, DatabaseFullSchema<Collections>, S>(
     extractFullSchema(collections),
     storage,

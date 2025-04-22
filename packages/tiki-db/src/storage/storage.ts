@@ -13,20 +13,13 @@ export interface Storage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   IsAsync extends boolean = false
 > {
-  /**
-   *
-   * @param collection
-   * To inform the storage that we will be working with this collection
-   *
-   */
-  load(collection: CollectionSchema): void;
 
   /**
    *
    * @param database
-   * To create the migrations collection in the storage
+   * To create the migrations collection in the storage and/or create all collections
    */
-  initMigrationsTable(database: Database): Promise<boolean>;
+  init(database: Database): Promise<boolean>;
 
   find<
     C extends CollectionSchema,

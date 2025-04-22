@@ -1,5 +1,5 @@
 import { CollectionSchema } from "../collection/collection_schema";
-import { DatabaseFullSchema } from "../database/database";
+import { Database, DatabaseFullSchema } from "../database/database";
 import { Query } from "../query/query";
 import { Primary, AnyButMaybeT, MaybeAsArray } from "../types";
 import { Storage } from "./storage";
@@ -14,12 +14,12 @@ export class InMemoryStorage<
     >;
   };
 
-  load(collection: CollectionSchema): void {
-    // @ts-ignore
-    this.stores[collection.model.dbName] = [];
-  }
 
-  async initMigrationsTable(): Promise<boolean> {
+  async init(database: Database): Promise<boolean> {
+    for (const collection of Object.values(database.schema.schema)) {
+      // @ts-ignore
+      this.stores[collection.model.dbName] = [];
+    }
     return true;
   }
 
