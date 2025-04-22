@@ -1,0 +1,49 @@
+import { Database, DatabaseFullSchema } from "../database/database";
+import { Query } from "../query/query";
+import {
+  AnyButMaybeT,
+  DeepPartial,
+  InferModelNormalizedType,
+  MaybeAsArray,
+} from "../types";
+import { CollectionSchema } from "./collection_schema";
+
+export class Collection<
+  Schema extends CollectionSchema,
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
+> {
+  constructor(public database: Database<DBFullSchema>, public schema: Schema) {}
+
+  insert(
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>
+  ) {
+    return this.database.storage.insert(this.schema, data);
+  }
+
+  find<
+    Q extends Query<Schema, typeof this.database.schema> = Query<
+      Schema,
+      typeof this.database.schema
+    >
+  >(query: Q) {
+    return this.database.storage.find(this.schema, query);
+  }
+
+  findFirst<
+    Q extends Query<Schema, typeof this.database.schema> = Query<
+      Schema,
+      typeof this.database.schema
+    >
+  >(query: Q) {
+    return this.database.storage.findFirst(this.schema, query);
+  }
+
+  query<
+    Q extends Query<Schema, typeof this.database.schema> = Query<
+      Schema,
+      typeof this.database.schema
+    >
+  >(query: DeepPartial<Q>) {
+    return this.database.query(this.schema, query);
+  }
+}

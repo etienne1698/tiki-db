@@ -3,6 +3,7 @@ import type { Storage } from "../storage/storage";
 import { DeepPartial } from "../types";
 import { QueryBuilder } from "../query/query_builder";
 import { Query } from "../query/query";
+import { Collection } from "../collection/collection";
 
 export type DatabaseFullSchema<
   Schema extends Record<string, CollectionSchema> = Record<
@@ -42,10 +43,22 @@ export class Database<
   FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   S extends Storage<FullSchema> = Storage<FullSchema>
 > {
+  collections: {
+    [K in keyof FullSchema["schema"]]: Collection<
+      FullSchema["schema"][K],
+      FullSchema
+    >;
+  } = {} as {
+    [K in keyof FullSchema["schema"]]: Collection<
+      FullSchema["schema"][K],
+      FullSchema
+    >;
+  };
+
   constructor(public schema: FullSchema, public storage: S) {
     for (const [key, collection] of Object.entries(schema.schema)) {
       // @ts-ignore
-      //this.collections[key] = new Collection(this, collection);
+      this.collections[key] = new Collection(this, collection);
       this.storage.load(collection);
     }
   }
