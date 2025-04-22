@@ -15,7 +15,12 @@ export { collection, CollectionSchema } from "./collection/collection_schema";
 export { Storage } from "./storage/storage";
 export { InMemoryStorage } from "./storage/in_memory_storage";
 
-export { Database, syncDatabase, asyncDatabase } from "./database/database";
+export {
+  Database,
+  DatabaseFullSchema,
+  syncDatabase,
+  asyncDatabase,
+} from "./database/database";
 
 export {
   Migration,

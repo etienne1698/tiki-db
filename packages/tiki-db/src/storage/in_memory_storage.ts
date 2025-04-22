@@ -14,7 +14,6 @@ export class InMemoryStorage<
     >;
   };
 
-
   async init(database: Database): Promise<void> {
     for (const collection of Object.values(database.schema.schema)) {
       // @ts-ignore
@@ -22,13 +21,14 @@ export class InMemoryStorage<
     }
   }
 
-  /* async migrate(collections: FullSchema["schema"]) {
-    for (const collection of Object.values(collections)) {
-      // @ts-ignore
-      this.stores[collection.model.dbName] = [];
-    }
-    return true;
-  } */
+  insert<C extends CollectionSchema>(
+    collection: C,
+    data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>
+  ): ReturnType<C["model"]["normalize"]> {
+    const inserted = collection.model.normalize(data);
+    this.stores[collection.model.dbName].push(inserted);
+    return inserted as ReturnType<C["model"]["normalize"]>;
+  }
 
   find<
     C extends CollectionSchema,
@@ -43,6 +43,7 @@ export class InMemoryStorage<
   >(collection: C, query?: Q | undefined) {
     return this.find(collection, query)?.[0];
   }
+
   remove<C extends CollectionSchema>(
     collection: C,
     primary: Primary,
@@ -57,14 +58,6 @@ export class InMemoryStorage<
     query?: Query<C, FullSchema> | undefined
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
     throw new Error("Method not implemented.");
-  }
-  insert<C extends CollectionSchema>(
-    collection: C,
-    data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>
-  ): ReturnType<C["model"]["normalize"]> {
-    const inserted = collection.model.normalize(data);
-    this.stores[collection.model.dbName].push(inserted);
-    return inserted as ReturnType<C["model"]["normalize"]>;
   }
 
   insertRelations<C extends CollectionSchema>(
