@@ -1,5 +1,5 @@
 import type { CollectionSchema } from "../collection/collection_schema";
-import { DatabaseFullSchema } from "../database/database";
+import { Database, DatabaseFullSchema } from "../database/database";
 import type { Query, QueryResult } from "../query/query";
 import type { Relations } from "../relation/relation";
 import type {
@@ -13,8 +13,20 @@ export interface Storage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   IsAsync extends boolean = false
 > {
+  /**
+   *
+   * @param collection
+   * To inform the storage that we will be working with this collection
+   *
+   */
+  load(collection: CollectionSchema): void;
 
-  migrate(collections: DBFullSchema['schema']): Promise<boolean>;
+  /**
+   *
+   * @param database
+   * To create the migrations collection in the storage
+   */
+  initMigrationsTable(database: Database): Promise<boolean>;
 
   find<
     C extends CollectionSchema,
@@ -62,7 +74,7 @@ export interface Storage<
 
   insertRelations<C extends CollectionSchema>(
     collection: C,
-    relation: keyof C['relations'],
+    relation: keyof C["relations"],
     data: Record<string, any>
   ): IsAsync extends true ? Promise<void> : void;
 

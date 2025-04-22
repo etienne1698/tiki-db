@@ -36,7 +36,16 @@ export function getTestDatabase() {
   };
 
   const storage = new InMemoryStorage();
-  const db = syncDatabase(collections, storage);
+  const db = syncDatabase(collections, storage, {
+    posts: [
+      {
+        async up(ctx) {
+          return true;
+        },
+        version: 2,
+      },
+    ],
+  });
 
   return {
     db,

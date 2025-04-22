@@ -56,6 +56,7 @@ export class Migrator<D extends Database = Database> extends Collection<
     )) {
       const modelDbName = this.database.schema.schema[modelName].model.dbName;
       const currentVersion = await this.getCurrentVersion(modelDbName);
+      if (!migrations) continue;
       for (const m of migrations) {
         if (m.version > currentVersion) {
           await m.up({ schema: this.database.schema });

@@ -1,7 +1,6 @@
 import { CollectionSchema } from "../collection/collection_schema";
 import { DatabaseFullSchema } from "../database/database";
-import { Query, QueryResult } from "../query/query";
-import { Relations } from "../relation/relation";
+import { Query } from "../query/query";
 import { Primary, AnyButMaybeT, MaybeAsArray } from "../types";
 import { Storage } from "./storage";
 
@@ -15,13 +14,22 @@ export class InMemoryStorage<
     >;
   };
 
-  async migrate(collections: FullSchema["schema"]) {
+  load(collection: CollectionSchema): void {
+    // @ts-ignore
+    this.stores[collection.model.dbName] = [];
+  }
+
+  async initMigrationsTable(): Promise<boolean> {
+    return true;
+  }
+
+  /* async migrate(collections: FullSchema["schema"]) {
     for (const collection of Object.values(collections)) {
       // @ts-ignore
       this.stores[collection.model.dbName] = [];
     }
     return true;
-  }
+  } */
 
   find<
     C extends CollectionSchema,
