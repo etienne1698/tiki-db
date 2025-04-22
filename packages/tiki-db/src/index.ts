@@ -14,7 +14,7 @@ export { collection, CollectionSchema } from "./collection/collection_schema";
 
 export { Storage } from "./storage/storage";
 
-export { Database, database } from "./database/database";
+export { Database, syncDatabase, asyncDatabase } from "./database/database";
 
 export {
   type Query,

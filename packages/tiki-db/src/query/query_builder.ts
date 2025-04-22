@@ -12,10 +12,11 @@ import {
 } from "./query";
 
 export class QueryBuilder<
+  IsAsync extends boolean ,
   C extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
-  S extends Storage<DBFullSchema> = Storage<DBFullSchema>,
-  D extends Database<DBFullSchema, S> = Database<DBFullSchema, S>
+  S extends Storage<DBFullSchema, IsAsync> = Storage<DBFullSchema, IsAsync>,
+  D extends Database<IsAsync, DBFullSchema, S> = Database<IsAsync, DBFullSchema, S>
 > {
   declare query: Query<C, DBFullSchema>;
 

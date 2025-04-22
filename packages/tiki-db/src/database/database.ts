@@ -40,16 +40,19 @@ function extractFullSchema<
 }
 
 export class Database<
+  IsAsync extends boolean = false,
   FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
-  S extends Storage<FullSchema> = Storage<FullSchema>
+  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>
 > {
   collections: {
     [K in keyof FullSchema["schema"]]: Collection<
+      IsAsync,
       FullSchema["schema"][K],
       FullSchema
     >;
   } = {} as {
     [K in keyof FullSchema["schema"]]: Collection<
+      IsAsync,
       FullSchema["schema"][K],
       FullSchema
     >;
@@ -67,11 +70,11 @@ export class Database<
     collection: C,
     query?: DeepPartial<Query<C, FullSchema>>
   ) {
-    return new QueryBuilder(this, collection, query);
+    return new QueryBuilder<IsAsync, C, FullSchema, S>(this, collection, query);
   }
 }
 
-export function database<
+export function syncDatabase<
   Collections extends Record<string, CollectionSchema> = Record<
     string,
     CollectionSchema
@@ -81,5 +84,24 @@ export function database<
     false
   >
 >(collections: Collections, storage: S) {
-  return new Database(extractFullSchema(collections), storage);
+  return new Database<false, DatabaseFullSchema<Collections>, S>(
+    extractFullSchema(collections),
+    storage
+  );
+}
+
+export function asyncDatabase<
+  Collections extends Record<string, CollectionSchema> = Record<
+    string,
+    CollectionSchema
+  >,
+  S extends Storage<DatabaseFullSchema<Collections>, true> = Storage<
+    DatabaseFullSchema<Collections>,
+    true
+  >
+>(collections: Collections, storage: S) {
+  return new Database<true, DatabaseFullSchema<Collections>, S>(
+    extractFullSchema(collections),
+    storage
+  );
 }

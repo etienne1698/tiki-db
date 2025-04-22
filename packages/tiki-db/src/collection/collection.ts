@@ -9,10 +9,14 @@ import {
 import { CollectionSchema } from "./collection_schema";
 
 export class Collection<
+  IsAsync extends boolean,
   Schema extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
 > {
-  constructor(public database: Database<DBFullSchema>, public schema: Schema) {}
+  constructor(
+    public database: Database<IsAsync, DBFullSchema>,
+    public schema: Schema
+  ) {}
 
   insert(
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>

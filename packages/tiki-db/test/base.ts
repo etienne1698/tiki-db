@@ -3,8 +3,9 @@ import {
   model,
   relations,
   string,
-  database,
   Storage,
+  asyncDatabase,
+  syncDatabase,
 } from "../src/index";
 
 export function getTestDatabase<S extends Storage>(storage: S) {
@@ -35,7 +36,7 @@ export function getTestDatabase<S extends Storage>(storage: S) {
     posts: collection(posts, postsRelations),
   };
 
-  const db = database(collections, storage);
+  const db = syncDatabase(collections, storage);
 
   return {
     db,
