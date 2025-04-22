@@ -1,7 +1,7 @@
 {
-  "name": "tiki-db-idb",
+  "name": "tiki-db-vue",
   "version": "0.8.0",
-  "description": "TikiDB IndexedDB implementation using idb",
+  "description": "TikiDB vue QueryWrapper",
   "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -18,14 +18,13 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "fake-indexeddb": "^6.0.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
   },
   "peerDependencies": {
-    "idb": "^8.0.2",
-    "tiki-db": "^0.11.0"
+    "tiki-db": "^0.12.0",
+    "vue": "^3.5.13"
   },
   "keywords": [
     "typescript",

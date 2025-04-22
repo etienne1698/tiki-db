@@ -5,12 +5,12 @@ import { Primary, AnyButMaybeT, MaybeAsArray } from "../types";
 import { Storage } from "./storage";
 
 export class InMemoryStorage<
-  FullSchema extends DatabaseFullSchema = DatabaseFullSchema
-> implements Storage<FullSchema>
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
+> implements Storage<DBFullSchema>
 {
-  stores: { [key in keyof FullSchema["schema"]]: any } = {} as {
-    [key in keyof FullSchema["schemaDbName"]]: Array<
-      ReturnType<FullSchema["schemaDbName"][key]["model"]["normalize"]>
+  stores: { [key in keyof DBFullSchema["schema"]]: any } = {} as {
+    [key in keyof DBFullSchema["schemaDbName"]]: Array<
+      ReturnType<DBFullSchema["schemaDbName"][key]["model"]["normalize"]>
     >;
   };
 
@@ -32,14 +32,14 @@ export class InMemoryStorage<
 
   find<
     C extends CollectionSchema,
-    Q extends Query<C, FullSchema> = Query<C, FullSchema>
+    Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(collection: C, query?: Q | undefined) {
     return this.stores[collection.model.dbName];
   }
 
   findFirst<
     C extends CollectionSchema,
-    Q extends Query<C, FullSchema> = Query<C, FullSchema>
+    Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(collection: C, query?: Q | undefined) {
     return this.find(collection, query)?.[0];
   }
@@ -47,7 +47,7 @@ export class InMemoryStorage<
   remove<C extends CollectionSchema>(
     collection: C,
     primary: Primary,
-    query?: Query<C, FullSchema> | undefined
+    query?: Query<C, DBFullSchema> | undefined
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
     throw new Error("Method not implemented.");
   }
@@ -55,7 +55,7 @@ export class InMemoryStorage<
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
-    query?: Query<C, FullSchema> | undefined
+    query?: Query<C, DBFullSchema> | undefined
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
     throw new Error("Method not implemented.");
   }
@@ -65,18 +65,6 @@ export class InMemoryStorage<
     relation: keyof C["relations"],
     data: Record<string, any>
   ): void {
-    throw new Error("Method not implemented.");
-  }
-  getByPrimary<C extends CollectionSchema>(
-    collection: C,
-    primary: Primary
-  ): ReturnType<C["model"]["normalize"]> | undefined {
-    throw new Error("Method not implemented.");
-  }
-  getByPrimaries<C extends CollectionSchema>(
-    collection: C,
-    primaries: Primary[]
-  ): ReturnType<C["model"]["normalize"]>[] {
     throw new Error("Method not implemented.");
   }
 }

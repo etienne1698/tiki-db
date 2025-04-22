@@ -11,6 +11,7 @@ export { HasManyRelation } from "./relation/has_many";
 export { BelongsToRelation } from "./relation/belongs_to";
 
 export { collection, CollectionSchema } from "./collection/collection_schema";
+export { Collection } from "./collection/collection";
 
 export { Storage } from "./storage/storage";
 export { InMemoryStorage } from "./storage/in_memory_storage";

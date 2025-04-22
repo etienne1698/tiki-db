@@ -13,7 +13,6 @@ export interface Storage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   IsAsync extends boolean = false
 > {
-
   /**
    *
    * @param database
@@ -70,18 +69,4 @@ export interface Storage<
     relation: keyof C["relations"],
     data: Record<string, any>
   ): IsAsync extends true ? Promise<void> : void;
-
-  getByPrimary<C extends CollectionSchema>(
-    collection: C,
-    primary: Primary
-  ): IsAsync extends true
-    ? Promise<InferModelNormalizedType<C["model"]> | undefined>
-    : InferModelNormalizedType<C["model"]> | undefined;
-
-  getByPrimaries<C extends CollectionSchema>(
-    collection: C,
-    primaries: Primary[]
-  ): IsAsync extends true
-    ? Promise<InferModelNormalizedType<C["model"]>[]>
-    : InferModelNormalizedType<C["model"]>[];
 }

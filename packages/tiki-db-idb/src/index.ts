@@ -20,6 +20,25 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
 
   private declare abstractDatabase: Database;
 
+  async getDB() {
+    if (!this.db) {
+      const schema = this.abstractDatabase.schema.schema;
+
+      this.db = await openDB(this.dbName, this.version, {
+        upgrade(db) {
+          for (const collection of Object.values(schema)) {
+            if (!db.objectStoreNames.contains(collection.model.dbName)) {
+              db.createObjectStore(collection.model.dbName, {
+                keyPath: collection.model.primaryKey,
+              });
+            }
+          }
+        },
+      });
+    }
+    return this.db;
+  }
+
   async init(database: Database): Promise<void> {
     this.abstractDatabase = database;
   }
@@ -88,36 +107,5 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     data: Record<string, any>
   ): Promise<void> {
     throw new Error("Method not implemented.");
-  }
-  getByPrimary<C extends CollectionSchema>(
-    collection: C,
-    primary: Primary
-  ): Promise<ReturnType<C["model"]["normalize"]> | undefined> {
-    throw new Error("Method not implemented.");
-  }
-  getByPrimaries<C extends CollectionSchema>(
-    collection: C,
-    primaries: Primary[]
-  ): Promise<ReturnType<C["model"]["normalize"]>[]> {
-    throw new Error("Method not implemented.");
-  }
-
-  async getDB() {
-    if (!this.db) {
-      const schema = this.abstractDatabase.schema.schema;
-
-      this.db = await openDB(this.dbName, this.version, {
-        upgrade(db) {
-          for (const collection of Object.values(schema)) {
-            if (!db.objectStoreNames.contains(collection.model.dbName)) {
-              db.createObjectStore(collection.model.dbName, {
-                keyPath: collection.model.primaryKey,
-              });
-            }
-          }
-        },
-      });
-    }
-    return this.db;
   }
 }
