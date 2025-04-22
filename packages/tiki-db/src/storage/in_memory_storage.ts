@@ -15,12 +15,11 @@ export class InMemoryStorage<
   };
 
 
-  async init(database: Database): Promise<boolean> {
+  async init(database: Database): Promise<void> {
     for (const collection of Object.values(database.schema.schema)) {
       // @ts-ignore
       this.stores[collection.model.dbName] = [];
     }
-    return true;
   }
 
   /* async migrate(collections: FullSchema["schema"]) {

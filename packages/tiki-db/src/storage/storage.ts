@@ -19,7 +19,7 @@ export interface Storage<
    * @param database
    * To create the migrations collection in the storage and/or create all collections
    */
-  init(database: Database): Promise<boolean>;
+  init(database: Database): Promise<void>;
 
   find<
     C extends CollectionSchema,
