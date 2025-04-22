@@ -7,10 +7,7 @@ test("simple insert and retrieve", async () => {
   await db.collections.users.insert({ id: "1", firstname: "Etienne" });
 
   expect(
-    (
-      await db.collections.users
-        .query({ filters: { id: { $eq: '"1"' } } })
-        .findFirst()
-    ).firstname
+    (await db.collections.users.findFirst({ filters: { id: { $eq: '"1"' } } }))
+      .firstname
   ).toBe("Etienne");
 });

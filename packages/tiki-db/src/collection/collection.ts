@@ -1,5 +1,5 @@
 import { Database, DatabaseFullSchema } from "../database/database";
-import { Query } from "../query/query";
+import { createDefaultQuery, Query } from "../query/query";
 import {
   AnyButMaybeT,
   DeepPartial,
@@ -36,8 +36,11 @@ export class Collection<
       Schema,
       typeof this.database.schema
     >
-  >(query: Q) {
-    return this.database.storage.find(this.schema, query);
+  >(query: Partial<Q>) {
+    return this.database.storage.find(
+      this.schema,
+      Object.assign(createDefaultQuery<Schema, DBFullSchema>(), query)
+    );
   }
 
   findFirst<
@@ -45,16 +48,19 @@ export class Collection<
       Schema,
       typeof this.database.schema
     >
-  >(query: Q) {
-    return this.database.storage.findFirst(this.schema, query);
+  >(query: Partial<Q>) {
+    return this.database.storage.findFirst(
+      this.schema,
+      Object.assign(createDefaultQuery<Schema, DBFullSchema>(), query)
+    );
   }
 
-  query<
+  queryBuilder<
     Q extends Query<Schema, typeof this.database.schema> = Query<
       Schema,
       typeof this.database.schema
     >
   >(query: DeepPartial<Q>) {
-    return this.database.query(this.schema, query);
+    return this.database.queryBuilder(this.schema, query);
   }
 }

@@ -18,7 +18,7 @@ export type IVueCollectionWrapper<
     DBFullSchema
   >
 > = {
-  [K in keyof Omit<C, "database" | "schema" | "query">]: C[K] extends (
+  [K in keyof Omit<C, "database" | "schema" | "queryBuilder">]: C[K] extends (
     ...args: any
   ) => any
     ? (...args: Parameters<C[K]>) => Ref<ReturnType<C[K]>>

@@ -85,11 +85,11 @@ export class Database<
     await this.migrator.migrate();
   }
 
-  query<C extends CollectionSchema>(
+  queryBuilder<C extends CollectionSchema>(
     collection: C,
     query?: DeepPartial<Query<C, FullSchema>>
   ) {
-    return new QueryBuilder<IsAsync, C, FullSchema, S>(this, collection, query);
+    return new QueryBuilder<C, FullSchema>(collection, query);
   }
 }
 

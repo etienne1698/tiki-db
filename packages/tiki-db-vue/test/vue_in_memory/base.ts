@@ -3,7 +3,7 @@ import {
   model,
   relations,
   string,
-  syncDatabase,
+  database,
   InMemoryStorage,
 } from "tiki-db";
 
@@ -40,7 +40,7 @@ export function getTestDatabase() {
   };
 
   const storage = new InMemoryStorage();
-  const db = new VueDatabaseWrapper(syncDatabase(collections, storage));
+  const db = new VueDatabaseWrapper(database(collections, storage));
 
   db.database.init();
 

@@ -35,7 +35,6 @@ export type Query<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
 > = {
   filters: QueryFilters<C> & QueryOrFilters<C>;
-  primaries: Array<string>;
   with: {
     [K in keyof C["relations"]["schema"]]?: C["relations"]["schema"][K]["related"]["dbName"] extends keyof DBFullSchema["schemaDbName"]
       ?
@@ -54,7 +53,6 @@ export function createDefaultQuery<
 >(): Query<C, DBFullSchema> {
   return {
     filters: {},
-    primaries: [],
     with: {},
   };
 }

@@ -7,7 +7,7 @@ test("simple insert and retrieve", () => {
   db.collections.users.insert({ id: "1", firstname: "Etienne" });
 
   expect(
-    db.collections.users.query({ filters: { id: { $eq: '"1"' } } }).findFirst()
+    db.collections.users.findFirst({ filters: { id: { $eq: '"1"' } } })
       .firstname
   ).toBe("Etienne");
 });
