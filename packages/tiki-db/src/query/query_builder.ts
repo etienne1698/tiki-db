@@ -1,5 +1,6 @@
 import type { CollectionSchema } from "../collection/collection_schema";
-import { Database } from "../database/database";
+import { Database, DatabaseFullSchema } from "../database/database";
+import { Storage } from "../storage/storage";
 import type { DeepPartial, InferModelFieldName, Primary } from "../types";
 import {
   createDefaultQuery,
@@ -10,15 +11,23 @@ import {
   type QueryFilters,
 } from "./query";
 
-export class QueryBuilder<C extends CollectionSchema, D extends Database> {
-  declare query: Query<C, D>;
+export class QueryBuilder<
+  C extends CollectionSchema,
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
+  S extends Storage<DBFullSchema> = Storage<DBFullSchema>,
+  D extends Database<DBFullSchema, S> = Database<DBFullSchema, S>
+> {
+  declare query: Query<C, DBFullSchema>;
 
   constructor(
     public database: D,
     public collection: C,
-    query?: DeepPartial<Query<C, D>>
+    query?: DeepPartial<Query<C, DBFullSchema>>
   ) {
-    this.query = Object.assign(createDefaultQuery<C, D>(), query);
+    this.query = Object.assign(
+      createDefaultQuery<C, DBFullSchema>(),
+      query
+    );
   }
 
   byPrimary(primaries: Primary[]) {
@@ -72,10 +81,10 @@ export class QueryBuilder<C extends CollectionSchema, D extends Database> {
   }
 
   find() {
-    return this.database.find(this.collection, this.query);
+    return this.database.storage.find(this.collection, this.query);
   }
 
   findFirst() {
-    return this.database.findFirst(this.collection, this.query);
+    return this.database.storage.findFirst(this.collection, this.query);
   }
 }

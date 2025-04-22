@@ -5,13 +5,9 @@ import {
   string,
   database,
   Storage,
-  Constructor,
-  UselessPersistentStorage,
 } from "../src/index";
 
-export function getTestDatabase<S extends Storage<false>>(
-  storage: Constructor<S>
-) {
+export function getTestDatabase<S extends Storage>(storage: S) {
   const users = model("usersDbName", {
     id: string("id", ""),
     firstname: string("firstname", ""),
@@ -34,14 +30,12 @@ export function getTestDatabase<S extends Storage<false>>(
     userqs: belongsTo(users, "userId"),
   }));
 
-  const db = database(
-    {
-      users: collection(users, usersRelations),
-      posts: collection(posts, postsRelations),
-    },
-    storage,
-    UselessPersistentStorage
-  );
+  const collections = {
+    users: collection(users, usersRelations),
+    posts: collection(posts, postsRelations),
+  };
+
+  const db = database(collections, storage);
 
   return {
     db,

@@ -1,5 +1,5 @@
 import type { CollectionSchema } from "../collection/collection_schema";
-import { Database } from "../database/database";
+import { Database, DatabaseFullSchema } from "../database/database";
 import type {
   DeepPartial,
   InferModelFieldName,
@@ -30,16 +30,19 @@ export type QueryOrFilters<C extends CollectionSchema> = Partial<{
   [FILTER_OR]: QueryFilters<C>[];
 }>;
 
-export type Query<C extends CollectionSchema, D extends Database = Database> = {
+export type Query<
+  C extends CollectionSchema,
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
+> = {
   filters: QueryFilters<C> & QueryOrFilters<C>;
   primaries: Array<string>;
   with: {
-    [K in keyof C["relations"]["schema"]]?: C["relations"]["schema"][K]["related"]["dbName"] extends keyof D["mapCollectionDbNameCollection"]
+    [K in keyof C["relations"]["schema"]]?: C["relations"]["schema"][K]["related"]["dbName"] extends keyof DBFullSchema["schemaDbName"]
       ?
           | boolean
           | Query<
-              D["mapCollectionDbNameCollection"][C["relations"]["schema"][K]["related"]["dbName"]],
-              D
+              DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
+              DBFullSchema
             >
       : boolean;
   };
@@ -47,8 +50,8 @@ export type Query<C extends CollectionSchema, D extends Database = Database> = {
 
 export function createDefaultQuery<
   C extends CollectionSchema,
-  D extends Database
->(): Query<C, D> {
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
+>(): Query<C, DBFullSchema> {
   return {
     filters: {},
     primaries: [],
@@ -58,15 +61,17 @@ export function createDefaultQuery<
 
 export type QueryResult<
   C extends CollectionSchema,
-  D extends Database = Database,
-  Q extends DeepPartial<Query<C, D>> = Query<C, D>
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
+  Q extends DeepPartial<Query<C, DBFullSchema>> = Query<C, DBFullSchema>
 > = Array<
   InferModelNormalizedType<C["model"]> & {
     [K in keyof Q["with"]]: K extends keyof C["relations"]["schema"]
       ? Q["with"][K] extends true
         ? C["relations"]["schema"][K]["multiple"] extends true
           ? InferModelNormalizedType<C["relations"]["schema"][K]["related"]>[]
-          : InferModelNormalizedType<C["relations"]["schema"][K]["related"]> | undefined
+          :
+              | InferModelNormalizedType<C["relations"]["schema"][K]["related"]>
+              | undefined
         : never
       : never;
   }

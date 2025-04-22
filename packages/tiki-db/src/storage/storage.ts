@@ -1,5 +1,5 @@
 import type { CollectionSchema } from "../collection/collection_schema";
-import { Database } from "../database/database";
+import { DatabaseFullSchema } from "../database/database";
 import type { Query, QueryResult } from "../query/query";
 import type { Relations } from "../relation/relation";
 import type {
@@ -9,8 +9,10 @@ import type {
   Primary,
 } from "../types";
 
-export interface Storage<IsAsync extends boolean = false> {
-  database: Database;
+export interface Storage<
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
+  IsAsync extends boolean = false
+> {
   /**
    *
    * @param collection The collection to load
@@ -20,38 +22,51 @@ export interface Storage<IsAsync extends boolean = false> {
    */
   load<C extends CollectionSchema>(collection: C): boolean;
 
-  get<C extends CollectionSchema, D extends Database = Database, Q extends Query<C, D> = Query<C, D>>(
+  find<
+    C extends CollectionSchema,
+    Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
+  >(
     collection: C,
     query?: Q
   ): IsAsync extends true
-    ? Promise<QueryResult<C, D, Q>>
-    : QueryResult<C, D, Q>;
+    ? Promise<QueryResult<C, DBFullSchema, Q>>
+    : QueryResult<C, DBFullSchema, Q>;
 
-  remove<C extends CollectionSchema, D extends Database = Database>(
+  findFirst<
+    C extends CollectionSchema,
+    Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
+  >(
+    collection: C,
+    query?: Q
+  ): IsAsync extends true
+    ? Promise<QueryResult<C, DBFullSchema, Q>[0]>
+    : QueryResult<C, DBFullSchema, Q>[0];
+
+  remove<C extends CollectionSchema>(
     collection: C,
     primary: Primary,
-    query?: Query<C, D>
+    query?: Query<C, DBFullSchema>
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  update<C extends CollectionSchema, D extends Database = Database>(
+  update<C extends CollectionSchema>(
     collection: C,
     primary: Primary,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
-    query?: Query<C, D>
+    query?: Query<C, DBFullSchema>
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  insert<C extends CollectionSchema, D extends Database = Database>(
+  insert<C extends CollectionSchema>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>[]> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>>[] | undefined;
 
-  save<C extends CollectionSchema, D extends Database = Database>(
+  save<C extends CollectionSchema>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
     saveRelations?: boolean
@@ -64,7 +79,7 @@ export interface Storage<IsAsync extends boolean = false> {
         | Partial<InferModelNormalizedType<C["model"]>>
         | Partial<InferModelNormalizedType<C["model"]>>[];
 
-  saveOne<C extends CollectionSchema, D extends Database = Database>(
+  saveOne<C extends CollectionSchema>(
     collection: C,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
@@ -72,19 +87,19 @@ export interface Storage<IsAsync extends boolean = false> {
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
-  saveRelations<R extends Relations, D extends Database = Database>(
+  saveRelations<R extends Relations>(
     relations: R,
     data: Record<string, any>
   ): IsAsync extends true ? Promise<void> : void;
 
-  getByPrimary<C extends CollectionSchema, D extends Database = Database>(
+  getByPrimary<C extends CollectionSchema>(
     collection: C,
     primary: Primary
   ): IsAsync extends true
     ? Promise<InferModelNormalizedType<C["model"]> | undefined>
     : InferModelNormalizedType<C["model"]> | undefined;
 
-  getByPrimaries<C extends CollectionSchema, D extends Database = Database>(
+  getByPrimaries<C extends CollectionSchema>(
     collection: C,
     primaries: Primary[]
   ): IsAsync extends true
