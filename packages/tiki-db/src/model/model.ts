@@ -12,8 +12,8 @@ export class Model<
 > {
   constructor(
     public dbName: DbName,
-    public primaryKey: PrimaryKey,
-    public schema: S
+    public schema: S,
+    public primaryKey: PrimaryKey
   ) {}
 
   primary(data: AnyButMaybeT<InferModelNormalizedType<typeof this>>): Primary {
@@ -46,5 +46,5 @@ export function model<
     version: number;
   }>
 ) {
-  return new Model(name, opts?.primaryKey || "id", schema);
+  return new Model(name, schema, opts?.primaryKey || "id");
 }

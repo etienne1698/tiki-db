@@ -18,6 +18,13 @@ export { InMemoryStorage } from "./storage/in_memory_storage";
 export { Database, syncDatabase, asyncDatabase } from "./database/database";
 
 export {
+  Migration,
+  MigrationContext,
+  Migrations,
+  Migrator,
+} from "./migration/migration";
+
+export {
   type Query,
   type QueryResult,
   type FiltersValueType as OperatorValueType,
