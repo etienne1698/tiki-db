@@ -8,7 +8,7 @@ import type {
 
 export class Model<
   S extends Record<string, Field> = Record<string, Field<unknown>>,
-  DbName extends string = string,
+  DbName extends string = string
 > {
   constructor(
     public dbName: DbName,
@@ -35,11 +35,15 @@ export class Model<
   }
 }
 
-export function model<S extends Record<string, Field>, DBName extends string = string>(
+export function model<
+  S extends Record<string, Field>,
+  DBName extends string = string
+>(
   name: DBName,
   schema: S,
   opts?: Partial<{
     primaryKey: PrimaryKey;
+    version: number;
   }>
 ) {
   return new Model(name, opts?.primaryKey || "id", schema);

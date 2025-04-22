@@ -4,8 +4,8 @@ import {
   relations,
   string,
   syncDatabase,
+  InMemoryStorage,
 } from "../../src/index";
-import { InMemoryStorage } from "../../src/storage/in_memory_storage";
 
 export function getTestDatabase() {
   const users = model("usersDbName", {
@@ -23,11 +23,11 @@ export function getTestDatabase() {
   });
 
   const usersRelations = relations(users, ({ hasMany }) => ({
-    posts: hasMany(posts, "userId"),
+    relatedPosts: hasMany(posts, "userId"),
   }));
 
   const postsRelations = relations(posts, ({ belongsTo }) => ({
-    userqs: belongsTo(users, "userId"),
+    relatedUser: belongsTo(users, "userId"),
   }));
 
   const collections = {

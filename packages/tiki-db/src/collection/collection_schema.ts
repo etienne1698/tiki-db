@@ -1,5 +1,5 @@
 import type { Model } from "../model/model";
-import type { Relations } from "../relation/relation";
+import { Relations } from "../relation/relation";
 
 export class CollectionSchema<
   M extends Model = Model,
@@ -11,6 +11,6 @@ export class CollectionSchema<
 export function collection<
   M extends Model = Model,
   R extends Relations = Relations
->(model: M, relations: R) {
-  return new CollectionSchema<M, R>(model, relations);
+>(model: M, relations?: R) {
+  return new CollectionSchema<M, R>(model, relations || (new Relations(model, {}) as unknown as R));
 }

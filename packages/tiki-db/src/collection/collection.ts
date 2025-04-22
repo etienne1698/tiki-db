@@ -24,6 +24,13 @@ export class Collection<
     return this.database.storage.insert(this.schema, data);
   }
 
+  update(
+    primary: ReturnType<typeof this.schema.model.primary>,
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>
+  ) {
+    return this.database.storage.update(this.schema, primary, data);
+  }
+
   find<
     Q extends Query<Schema, typeof this.database.schema> = Query<
       Schema,

@@ -13,14 +13,8 @@ export interface Storage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   IsAsync extends boolean = false
 > {
-  /**
-   *
-   * @param collection The collection to load
-   *
-   * This method is used to load the collection into the storage.
-   * It is called when the database is created or when a new collection is added.
-   */
-  load<C extends CollectionSchema>(collection: C): boolean;
+
+  migrate(collections: DBFullSchema['schema']): Promise<boolean>;
 
   find<
     C extends CollectionSchema,

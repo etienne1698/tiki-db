@@ -15,9 +15,11 @@ export class InMemoryStorage<
     >;
   };
 
-  load<C extends CollectionSchema>(collection: C): boolean {
-    // @ts-ignore
-    this.stores[collection.model.dbName] = [];
+  async migrate(collections: FullSchema["schema"]) {
+    for (const collection of Object.values(collections)) {
+      // @ts-ignore
+      this.stores[collection.model.dbName] = [];
+    }
     return true;
   }
 
@@ -57,7 +59,7 @@ export class InMemoryStorage<
     this.stores[collection.model.dbName].push(inserted);
     return inserted as ReturnType<C["model"]["normalize"]>;
   }
-  
+
   insertRelations<C extends CollectionSchema>(
     collection: C,
     relation: keyof C["relations"],
