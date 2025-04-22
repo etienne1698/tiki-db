@@ -1,6 +1,6 @@
 import { Collection } from "../collection/collection";
 import { collection } from "../collection/collection_schema";
-import { Database, DatabaseFullSchema } from "../database/database";
+import { Database, DatabaseFullSchema } from "./database";
 import { model } from "../model/model";
 import { string } from "../model/string";
 import { number } from "../model/number";

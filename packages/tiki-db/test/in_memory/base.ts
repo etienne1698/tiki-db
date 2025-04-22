@@ -3,7 +3,7 @@ import {
   model,
   relations,
   string,
-  syncDatabase,
+  database,
   InMemoryStorage,
 } from "../../src/index";
 
@@ -36,7 +36,7 @@ export function getTestDatabase() {
   };
 
   const storage = new InMemoryStorage();
-  const db = syncDatabase(collections, storage);
+  const db = database(collections, storage);
   db.init();
 
   return {

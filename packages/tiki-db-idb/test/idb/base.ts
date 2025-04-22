@@ -1,12 +1,4 @@
-import {
-  collection,
-  model,
-  relations,
-  string,
-  syncDatabase,
-  InMemoryStorage,
-  asyncDatabase,
-} from "tiki-db";
+import { collection, model, relations, string, asyncDatabase } from "tiki-db";
 
 import { IndexedDBStorage } from "../../src/index";
 
@@ -42,7 +34,7 @@ export function getTestDatabase() {
 
   const storage = new IndexedDBStorage();
   const db = asyncDatabase(collections, storage);
-  
+
   db.init();
 
   return {

@@ -4,7 +4,7 @@ import { DeepPartial } from "../types";
 import { QueryBuilder } from "../query/query_builder";
 import { Query } from "../query/query";
 import { Collection } from "../collection/collection";
-import { Migrations, Migrator } from "../migration/migration";
+import { Migrations, Migrator } from "./migration";
 
 export type DatabaseFullSchema<
   Schema extends Record<string, CollectionSchema> = Record<
@@ -93,7 +93,7 @@ export class Database<
   }
 }
 
-export function syncDatabase<
+export function database<
   Collections extends Record<string, CollectionSchema> = Record<
     string,
     CollectionSchema

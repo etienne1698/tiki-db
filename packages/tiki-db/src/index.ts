@@ -19,7 +19,7 @@ export { InMemoryStorage } from "./storage/in_memory_storage";
 export {
   Database,
   DatabaseFullSchema,
-  syncDatabase,
+  database,
   asyncDatabase,
 } from "./database/database";
 
@@ -28,7 +28,7 @@ export {
   MigrationContext,
   Migrations,
   Migrator,
-} from "./migration/migration";
+} from "./database/migration";
 
 export {
   type Query,

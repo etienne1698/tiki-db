@@ -6,17 +6,59 @@ import {
   Migrations,
   Storage,
 } from "tiki-db";
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 
-export class VueCollectionWrapper<
+export type IVueCollectionWrapper<
   IsAsync extends boolean,
   Schema extends CollectionSchema,
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
+  C extends Collection<IsAsync, Schema, DBFullSchema> = Collection<
+    IsAsync,
+    Schema,
+    DBFullSchema
+  >
+> = {
+  [K in keyof Omit<C, "database" | "schema" | "query">]: C[K] extends (
+    ...args: any
+  ) => any
+    ? (...args: Parameters<C[K]>) => Ref<ReturnType<C[K]>>
+    : never;
+};
+
+export class VueCollectionWrapper<
+  Schema extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
-> {
-  constructor(public collection: Collection<IsAsync, Schema, DBFullSchema>) {}
+> implements IVueCollectionWrapper<false, Schema, DBFullSchema>
+{
+  constructor(public collection: Collection<false, Schema, DBFullSchema>) {}
+
+  findFirst(query: Parameters<typeof this.collection.findFirst>[0]) {
+    const queryResult = this.collection.findFirst(query);
+    return ref(queryResult) as Ref<
+      ReturnType<typeof this.collection.findFirst>
+    >;
+  }
 
   find(query: Parameters<typeof this.collection.find>[0]) {
-    return ref(this.collection.find(query));
+    const queryResult = this.collection.find(query);
+    return ref(queryResult) as Ref<ReturnType<typeof this.collection.find>>;
+  }
+
+  update(
+    primary: Parameters<typeof this.collection.update>[0],
+    data: Parameters<typeof this.collection.update>[1]
+  ) {
+    const queryResult = this.collection.update(primary, data);
+    return ref(queryResult) as Ref<ReturnType<typeof this.collection.update>>;
+  }
+
+  insert(data: Parameters<typeof this.collection.insert>[0]) {
+    const queryResult = this.collection.insert(data);
+    return ref(queryResult) as Ref<ReturnType<typeof this.collection.insert>>;
+  }
+
+  query(query: Parameters<typeof this.collection.query>[0]) {
+    return this.collection.query(query);
   }
 }
 
@@ -28,7 +70,6 @@ export class VueDatabaseWrapper<
 > {
   declare collections: {
     [K in keyof FullSchema["schema"]]: VueCollectionWrapper<
-      IsAsync,
       FullSchema["schema"][K],
       FullSchema
     >;
