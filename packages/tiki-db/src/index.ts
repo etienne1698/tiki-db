@@ -14,7 +14,7 @@ export { collection, CollectionSchema } from "./collection/collection_schema";
 export { Collection } from "./collection/collection";
 
 export { Storage } from "./storage/storage";
-export { InMemoryStorage } from "./storage/in_memory_storage";
+export { InMemoryStorage } from "./storage/in_memory/in_memory_storage";
 
 export {
   Database,

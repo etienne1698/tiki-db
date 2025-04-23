@@ -56,10 +56,6 @@ export class VueCollectionWrapper<
     const queryResult = this.collection.insert(data);
     return ref(queryResult) as Ref<ReturnType<typeof this.collection.insert>>;
   }
-
-  query(query: Parameters<typeof this.collection.query>[0]) {
-    return this.collection.query(query);
-  }
 }
 
 export class VueDatabaseWrapper<
