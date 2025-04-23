@@ -27,10 +27,22 @@ export class InMemoryStorage<
   insert<C extends CollectionSchema>(
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>
-  ): ReturnType<C["model"]["normalize"]> {
-    const inserted = collection.model.normalize(data);
-    this.stores[collection.model.dbName].push(inserted);
-    return inserted as ReturnType<C["model"]["normalize"]>;
+  ): MaybeAsArray<ReturnType<C["model"]["normalize"]>> {
+    if (Array.isArray(data)) {
+      const allInserted: ReturnType<C["model"]["normalize"]>[] = [];
+      for (const d of data) {
+        const inserted = collection.model.normalize(d) as ReturnType<
+          C["model"]["normalize"]
+        >;
+        this.stores[collection.model.dbName].push(inserted);
+        allInserted.push(inserted);
+      }
+      return allInserted;
+    } else {
+      const inserted = collection.model.normalize(data);
+      this.stores[collection.model.dbName].push(inserted);
+      return inserted as ReturnType<C["model"]["normalize"]>;
+    }
   }
 
   find<

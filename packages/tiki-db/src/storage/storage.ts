@@ -60,6 +60,6 @@ export interface Storage<
     collection: C,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>
   ): IsAsync extends true
-    ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
-    : Partial<InferModelNormalizedType<C["model"]>> | undefined;
+    ? Promise<MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined>
+    : MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined;
 }

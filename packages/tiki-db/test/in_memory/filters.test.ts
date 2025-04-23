@@ -24,9 +24,11 @@ test("bad $eq request should not retrieve obj", () => {
 test("$in should work", () => {
   const { db } = getTestDatabase();
 
-  db.collections.users.insert({ id: "1", firstname: "Etienne" });
-  db.collections.users.insert({ id: "2", firstname: "Geoffroy" });
-  db.collections.users.insert({ id: "3", firstname: "Marc" });
+  db.collections.users.insert([
+    { id: "1", firstname: "Etienne" },
+    { id: "2", firstname: "Geoffroy" },
+    { id: "3", firstname: "Marc" },
+  ]);
 
   expect(
     db.collections.users.find({ filters: { id: { $in: ["1", "2"] } } })
@@ -44,9 +46,11 @@ test("$in should work", () => {
 test("$ne should work", () => {
   const { db } = getTestDatabase();
 
-  db.collections.users.insert({ id: "1", firstname: "Etienne" });
-  db.collections.users.insert({ id: "2", firstname: "Geoffroy" });
-  db.collections.users.insert({ id: "3", firstname: "Marc" });
+  db.collections.users.insert([
+    { id: "1", firstname: "Etienne" },
+    { id: "2", firstname: "Geoffroy" },
+    { id: "3", firstname: "Marc" },
+  ]);
 
   expect(
     db.collections.users.find({ filters: { id: { $ne: "2" } } })
@@ -56,9 +60,11 @@ test("$ne should work", () => {
 test("$notIn should work", () => {
   const { db } = getTestDatabase();
 
-  db.collections.users.insert({ id: "1", firstname: "Etienne" });
-  db.collections.users.insert({ id: "2", firstname: "Geoffroy" });
-  db.collections.users.insert({ id: "3", firstname: "Marc" });
+  db.collections.users.insert([
+    { id: "1", firstname: "Etienne" },
+    { id: "2", firstname: "Geoffroy" },
+    { id: "3", firstname: "Marc" },
+  ]);
 
   expect(
     db.collections.users.find({ filters: { id: { $notIn: ["1", "3"] } } })

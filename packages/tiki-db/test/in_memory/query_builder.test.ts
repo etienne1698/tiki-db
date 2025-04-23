@@ -4,8 +4,10 @@ import { getTestDatabase } from "./base";
 test("QueryBuilder should return same as direct query", () => {
   const { db } = getTestDatabase();
 
-  db.collections.users.insert({ id: "1", firstname: "Etienne" });
-  db.collections.users.insert({ id: "2", firstname: "Geoffroy" });
+  db.collections.users.insert([
+    { id: "1", firstname: "Etienne" },
+    { id: "2", firstname: "Geoffroy" },
+  ]);
 
   expect(
     db.collections.users.findFirst({
