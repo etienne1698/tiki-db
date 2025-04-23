@@ -1,5 +1,5 @@
 import type { CollectionSchema } from "../collection/collection_schema";
-import { Database, DatabaseFullSchema } from "../database/database";
+import { DatabaseFullSchema } from "../database/database";
 import type {
   DeepPartial,
   InferModelFieldName,
@@ -10,12 +10,14 @@ export enum Filters {
   EQ = "$eq",
   IN = "$in",
   NE = "$ne",
+  NOT_IN = "$notIn",
 }
 
 export type FiltersValueType = {
   [Filters.EQ]: string | number | boolean | null;
   [Filters.IN]: Array<any>;
   [Filters.NE]: any;
+  [Filters.NOT_IN]: Array<any>;
 };
 
 export type QueryFilters<C extends CollectionSchema> = Partial<{

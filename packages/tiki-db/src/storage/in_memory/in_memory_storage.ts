@@ -1,12 +1,6 @@
 import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
-import {
-  FILTER_OR,
-  Filters,
-  Query,
-  QueryFilters,
-  QueryResult,
-} from "../../query/query";
+import { FILTER_OR, Filters, Query, QueryResult } from "../../query/query";
 import { Primary, AnyButMaybeT, MaybeAsArray } from "../../types";
 import { Storage } from "../storage";
 
@@ -39,6 +33,9 @@ export class InMemoryStorage<
         }
         if (filter === Filters.IN) {
           list = list.filter((obj) => value.includes(obj[field]));
+        }
+        if (filter === Filters.NOT_IN) {
+          list = list.filter((obj) => !value.includes(obj[field]));
         }
         if (filter === Filters.NE) {
           list = list.filter((obj) => obj[field] !== value);

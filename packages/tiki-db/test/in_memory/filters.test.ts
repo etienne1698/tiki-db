@@ -52,3 +52,19 @@ test("$ne should work", () => {
     db.collections.users.find({ filters: { id: { $ne: "2" } } })
   ).not.toContainEqual({ id: "2", firstname: "Geoffroy" });
 });
+
+test("$notIn should work", () => {
+  const { db } = getTestDatabase();
+
+  db.collections.users.insert({ id: "1", firstname: "Etienne" });
+  db.collections.users.insert({ id: "2", firstname: "Geoffroy" });
+  db.collections.users.insert({ id: "3", firstname: "Marc" });
+
+  expect(
+    db.collections.users.find({ filters: { id: { $notIn: ["1", "3"] } } })
+  ).toContainEqual({ id: "2", firstname: "Geoffroy" });
+
+  expect(
+    db.collections.users.find({ filters: { id: { $notIn: ["1", "3"] } } })
+  ).length(1);
+});
