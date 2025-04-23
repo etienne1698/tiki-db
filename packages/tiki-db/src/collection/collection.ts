@@ -55,12 +55,12 @@ export class Collection<
     );
   }
 
-  queryBuilder<
+  query<
     Q extends Query<Schema, typeof this.database.schema> = Query<
       Schema,
       typeof this.database.schema
     >
-  >(query: DeepPartial<Q>) {
-    return this.database.queryBuilder(this.schema, query);
+  >(query?: DeepPartial<Q>) {
+    return this.database.query(this.schema, query);
   }
 }
