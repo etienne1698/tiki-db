@@ -41,9 +41,11 @@ export type Query<
     [K in keyof C["relations"]["schema"]]?: C["relations"]["schema"][K]["related"]["dbName"] extends keyof DBFullSchema["schemaDbName"]
       ?
           | boolean
-          | Query<
-              DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
-              DBFullSchema
+          | Partial<
+              Query<
+                DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
+                DBFullSchema
+              >
             >
       : boolean;
   };
@@ -59,6 +61,7 @@ export function createDefaultQuery<
   };
 }
 
+// TODO: query relation with subquery (boolean is done)
 export type QueryResult<
   C extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
