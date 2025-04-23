@@ -43,7 +43,6 @@ export function model<
   schema: S,
   opts?: Partial<{
     primaryKey: PrimaryKey;
-    version: number;
   }>
 ) {
   return new Model(name, schema, opts?.primaryKey || "id");
