@@ -1,7 +1,6 @@
 import type { CollectionSchema } from "../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../database/database";
 import type { Query, QueryResult } from "../query/query";
-import type { Relations } from "../relation/relation";
 import type {
   AnyButMaybeT,
   InferModelNormalizedType,
@@ -63,10 +62,4 @@ export interface Storage<
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
-
-  insertRelations<C extends CollectionSchema>(
-    collection: C,
-    relation: keyof C["relations"],
-    data: Record<string, any>
-  ): IsAsync extends true ? Promise<void> : void;
 }

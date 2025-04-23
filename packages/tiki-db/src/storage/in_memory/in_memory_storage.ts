@@ -1,8 +1,9 @@
 import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
-import { FILTER_OR, Filters, Query, QueryResult } from "../../query/query";
+import { Query, QueryResult } from "../../query/query";
 import { Primary, AnyButMaybeT, MaybeAsArray } from "../../types";
 import { Storage } from "../storage";
+import { InMemoryQueryFilter } from "./in_memory_query_filter";
 
 export class InMemoryStorage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
@@ -14,36 +15,7 @@ export class InMemoryStorage<
     >;
   };
 
-  #applyFilter<
-    C extends CollectionSchema,
-    Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
-  >(
-    list: QueryResult<C, DBFullSchema, Q>,
-    query?: Q | undefined
-  ): QueryResult<C, DBFullSchema, Q> {
-    if (!query) return list;
-
-    if (query.filters[FILTER_OR]) {
-    }
-    for (const [field, filters] of Object.entries(query.filters)) {
-      if (field === FILTER_OR || !filters) continue;
-      for (const [filter, value] of Object.entries(filters)) {
-        if (filter === Filters.EQ) {
-          list = list.filter((obj) => obj[field] === value);
-        }
-        if (filter === Filters.IN) {
-          list = list.filter((obj) => value.includes(obj[field]));
-        }
-        if (filter === Filters.NOT_IN) {
-          list = list.filter((obj) => !value.includes(obj[field]));
-        }
-        if (filter === Filters.NE) {
-          list = list.filter((obj) => obj[field] !== value);
-        }
-      }
-    }
-    return list;
-  }
+  filtersManager = new InMemoryQueryFilter<DBFullSchema>();
 
   async init(database: Database): Promise<void> {
     for (const collection of Object.values(database.schema.schema)) {
@@ -65,7 +37,10 @@ export class InMemoryStorage<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(collection: C, query?: Q | undefined): QueryResult<C, DBFullSchema, Q> {
-    return this.#applyFilter(this.stores[collection.model.dbName], query);
+    return this.filtersManager.apply(
+      this.stores[collection.model.dbName],
+      query
+    );
   }
 
   findFirst<
@@ -88,14 +63,6 @@ export class InMemoryStorage<
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
     query?: Query<C, DBFullSchema> | undefined
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
-    throw new Error("Method not implemented.");
-  }
-
-  insertRelations<C extends CollectionSchema>(
-    collection: C,
-    relation: keyof C["relations"],
-    data: Record<string, any>
-  ): void {
     throw new Error("Method not implemented.");
   }
 }
