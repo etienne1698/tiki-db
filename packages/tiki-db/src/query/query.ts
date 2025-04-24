@@ -35,21 +35,19 @@ export type QueryOrFilters<C extends CollectionSchema> = Partial<{
 export type Query<
   C extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
-> = {
+> = Partial<{
   filters: QueryFilters<C> & QueryOrFilters<C>;
   with: {
     [K in keyof C["relations"]["schema"]]?: C["relations"]["schema"][K]["related"]["dbName"] extends keyof DBFullSchema["schemaDbName"]
       ?
           | boolean
-          | Partial<
-              Query<
-                DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
-                DBFullSchema
-              >
+          | Query<
+              DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
+              DBFullSchema
             >
       : boolean;
   };
-};
+}>;
 
 export function createDefaultQuery<
   C extends CollectionSchema,

@@ -22,17 +22,31 @@ export function getTestDatabase() {
     userId: string("userId", "").notNull(),
   });
 
-  const usersRelations = relations(users, ({ hasMany }) => ({
+  const comments = model("commentsDbName", {
+    id: string("id", ""),
+    title: string("title", ""),
+    content: string("content", ""),
+    postId: string("postId", "").notNull(),
+  });
+
+  const usersRelations = relations(users, ({ hasMany, hasManyThrough }) => ({
     relatedPosts: hasMany(posts, "userId"),
+    relatedComments: hasManyThrough(comments, "postId", posts, "userId"),
   }));
 
-  const postsRelations = relations(posts, ({ belongsTo }) => ({
+  const postsRelations = relations(posts, ({ belongsTo, hasMany }) => ({
     relatedUser: belongsTo(users, "userId"),
+    relatedComments: hasMany(comments, "postId"),
+  }));
+
+  const commentsRelations = relations(comments, ({ belongsTo }) => ({
+    relatedPost: belongsTo(posts, "postId"),
   }));
 
   const collections = {
     users: collection(users, usersRelations),
     posts: collection(posts, postsRelations),
+    comments: collection(comments, commentsRelations),
   };
 
   const storage = new InMemoryStorage();

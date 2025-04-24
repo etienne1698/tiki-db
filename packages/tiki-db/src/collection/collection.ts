@@ -1,11 +1,6 @@
 import { Database, DatabaseFullSchema } from "../database/database";
 import { createDefaultQuery, Query } from "../query/query";
-import {
-  AnyButMaybeT,
-  DeepPartial,
-  InferModelNormalizedType,
-  MaybeAsArray,
-} from "../types";
+import { AnyButMaybeT, InferModelNormalizedType, MaybeAsArray } from "../types";
 import { CollectionSchema } from "./collection_schema";
 
 export class Collection<
@@ -36,7 +31,7 @@ export class Collection<
       Schema,
       typeof this.database.schema
     >
-  >(query: Partial<Q>) {
+  >(query: Q) {
     return this.database.storage.find(
       this.schema,
       Object.assign(createDefaultQuery<Schema, DBFullSchema>(), query)
@@ -48,11 +43,8 @@ export class Collection<
       Schema,
       typeof this.database.schema
     >
-  >(query: Partial<Q>) {
-    return this.database.storage.findFirst(
-      this.schema,
-      Object.assign(createDefaultQuery<Schema, DBFullSchema>(), query)
-    );
+  >(query: Q) {
+    return this.database.storage.findFirst<Schema, Q>(this.schema, query);
   }
 
   query<
@@ -60,7 +52,7 @@ export class Collection<
       Schema,
       typeof this.database.schema
     >
-  >(query?: DeepPartial<Q>) {
+  >(query?: Q) {
     return this.database.query(this.schema, query);
   }
 }
