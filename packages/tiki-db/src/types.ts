@@ -1,8 +1,6 @@
 import type { Model } from "./model/model";
 import type { Field } from "./model/field";
 
-export type Constructor<T> = new (...args: any) => T;
-
 export type MaybeAsArray<T> = T | T[];
 
 export type DeepPartial<T> = Partial<{

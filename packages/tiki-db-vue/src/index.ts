@@ -71,6 +71,10 @@ export class VueDatabaseWrapper<
     >;
   };
 
+  init() {
+    return this.database.init();
+  }
+
   constructor(public database: Database<IsAsync, FullSchema, S, M>) {
     for (const [key, collection] of Object.entries(database.collections)) {
       // @ts-ignore

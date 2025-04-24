@@ -61,7 +61,7 @@ export function createDefaultQuery<
   };
 }
 
-// TODO: query relation with subquery (boolean is done)
+// TODO: query relation with subquery (boolean isdone)
 export type QueryResult<
   C extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,

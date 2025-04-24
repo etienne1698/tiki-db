@@ -6,7 +6,7 @@ export class NumberField extends Field<number> {
   }
 
   check(data: any): data is number {
-    return typeof data === "string";
+    return typeof data === "number";
   }
 }
 
