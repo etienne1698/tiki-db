@@ -19,8 +19,20 @@ test("insert with relation belongsTo should insert relation", () => {
   db.collections.posts.insert({
     id: "1",
     title: "post 1",
-    relatedUser: [{ id: "123" }],
+    relatedUser: { id: "123" },
   });
 
   expect(db.collections.users.findFirst({}).id).toBe("123");
+});
+
+test("insert with relation hasManyThrough should insert relation", () => {
+  const { db } = getTestDatabase();
+
+  db.collections.users.insert({
+    id: "1",
+    firstname: "Etienne",
+    relatedComments: [{ id: "123" }],
+  });
+
+  expect(db.collections.comments.findFirst({}).id).toBe("123");
 });

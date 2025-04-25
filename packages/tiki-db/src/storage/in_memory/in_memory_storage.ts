@@ -98,8 +98,10 @@ export class InMemoryStorage<
       const relationCollection =
         this.database.schema.schemaDbName[relation.related.dbName];
 
-      if (relation.multiple && Array.isArray(data[relationKey])) {
-        this.insert(relationCollection, data[relationKey]);
+      if (Array.isArray(data[relationKey])) {
+        if (relation.multiple) {
+          this.insert(relationCollection, data[relationKey]);
+        }
       } else {
         this.insert(relationCollection, data[relationKey]);
       }
