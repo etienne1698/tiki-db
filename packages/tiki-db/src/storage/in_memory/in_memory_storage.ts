@@ -17,7 +17,10 @@ export class InMemoryStorage<
 
   filtersManager = new InMemoryQueryFilter<DBFullSchema>();
 
+  declare database: Database;
+
   async init(database: Database): Promise<void> {
+    this.database = database;
     for (const collection of Object.values(database.schema.schema)) {
       // @ts-ignore
       this.stores[collection.model.dbName] = [];
@@ -26,7 +29,8 @@ export class InMemoryStorage<
 
   insert<C extends CollectionSchema>(
     collection: C,
-    data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>
+    data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>,
+    saveRelations?: boolean
   ): MaybeAsArray<ReturnType<C["model"]["normalize"]>> {
     if (Array.isArray(data)) {
       const allInserted: ReturnType<C["model"]["normalize"]>[] = [];
@@ -34,12 +38,18 @@ export class InMemoryStorage<
         const inserted = collection.model.normalize(d) as ReturnType<
           C["model"]["normalize"]
         >;
+        if (saveRelations) {
+          this.#saveRelations(collection, d);
+        }
         this.stores[collection.model.dbName].push(inserted);
         allInserted.push(inserted);
       }
       return allInserted;
     } else {
       const inserted = collection.model.normalize(data);
+      if (saveRelations) {
+        this.#saveRelations(collection, data);
+      }
       this.stores[collection.model.dbName].push(inserted);
       return inserted as ReturnType<C["model"]["normalize"]>;
     }
@@ -69,6 +79,7 @@ export class InMemoryStorage<
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
     throw new Error("Method not implemented.");
   }
+
   update<C extends CollectionSchema>(
     collection: C,
     primary: Primary,
@@ -76,5 +87,22 @@ export class InMemoryStorage<
     query?: Query<C, DBFullSchema> | undefined
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
     throw new Error("Method not implemented.");
+  }
+
+  // TODO: upsert (not insert)
+  #saveRelations<C extends CollectionSchema>(collection: C, data: any) {
+    for (const relationKey in collection.relations.schema) {
+      if (!data?.[relationKey]) continue;
+
+      const relation = collection.relations.schema[relationKey];
+      const relationCollection =
+        this.database.schema.schemaDbName[relation.related.dbName];
+
+      if (relation.multiple && Array.isArray(data[relationKey])) {
+        this.insert(relationCollection, data[relationKey]);
+      } else {
+        this.insert(relationCollection, data[relationKey]);
+      }
+    }
   }
 }

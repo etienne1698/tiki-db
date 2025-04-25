@@ -14,9 +14,10 @@ export class Collection<
   ) {}
 
   insert(
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>,
+    saveRelations: boolean = true
   ) {
-    return this.database.storage.insert(this.schema, data);
+    return this.database.storage.insert(this.schema, data, saveRelations);
   }
 
   update(

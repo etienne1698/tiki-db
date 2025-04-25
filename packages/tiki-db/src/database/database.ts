@@ -30,7 +30,7 @@ function extractFullSchema<
       (prev, k) => {
         return {
           ...prev,
-          [k]: schema[k],
+          [schema[k].model.dbName]: schema[k],
         };
       },
       {} as {

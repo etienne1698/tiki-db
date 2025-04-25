@@ -9,7 +9,7 @@ export class InMemoryQueryFilter<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(list: QueryResult<C, DBFullSchema, Q>, query?: Q | undefined) {
-    if (!query) return list;
+    if (!query?.filters) return list;
 
     if (query.filters[FILTER_OR]) {
     }
