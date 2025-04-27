@@ -7,9 +7,7 @@ import {
   InMemoryStorage,
 } from "tiki-db";
 
-import { VueDatabaseWrapper } from "../../src/index";
-
-import "fake-indexeddb/auto";
+import { vueDatabaseWrapper } from "../../src/index";
 
 export function getTestDatabase() {
   const users = model("usersDbName", {
@@ -40,7 +38,7 @@ export function getTestDatabase() {
   };
 
   const storage = new InMemoryStorage();
-  const db = new VueDatabaseWrapper(database(collections, storage));
+  const db = vueDatabaseWrapper(database(collections, storage));
 
   db.init();
 

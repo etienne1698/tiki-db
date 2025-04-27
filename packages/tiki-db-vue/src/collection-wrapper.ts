@@ -30,8 +30,8 @@ export class VueCollectionWrapper<
 > implements IVueCollectionWrapper<false, Schema, DBFullSchema>
 {
   constructor(
-    public collection: Collection<false, Schema, DBFullSchema>,
-    public queriesManager: QueriesManager
+    private collection: Collection<false, Schema, DBFullSchema>,
+    private queriesManager: QueriesManager
   ) {}
 
   findFirst(query: Parameters<typeof this.collection.findFirst>[0]) {

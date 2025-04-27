@@ -17,7 +17,7 @@ export class VueDatabaseWrapper<
 > {
   queriesManager = new QueriesManager();
 
-  declare collections: {
+  collections = {} as {
     [K in keyof FullSchema["schema"]]: VueCollectionWrapper<
       FullSchema["schema"][K],
       FullSchema
@@ -48,4 +48,13 @@ export class VueDatabaseWrapper<
       );
     }
   }
+}
+
+export function vueDatabaseWrapper<
+  IsAsync extends boolean = false,
+  FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
+  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>,
+  M extends Migrations<FullSchema> = Migrations<FullSchema>
+>(database: Database<IsAsync, FullSchema, S, M>) {
+  return new VueDatabaseWrapper(database);
 }

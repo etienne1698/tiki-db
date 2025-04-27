@@ -1,1 +1,1 @@
-export { VueDatabaseWrapper } from "./database-wrapper";
+export { VueDatabaseWrapper, vueDatabaseWrapper } from "./database-wrapper";
