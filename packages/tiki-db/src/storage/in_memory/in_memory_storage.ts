@@ -1,6 +1,9 @@
 import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
+import { Model } from "../../model/model";
 import { Query, QueryResult } from "../../query/query";
+import { HasManyRelation } from "../../relation/has_many";
+import { Relation } from "../../relation/relation";
 import { Primary, AnyButMaybeT, MaybeAsArray } from "../../types";
 import { Storage } from "../storage";
 import { InMemoryQueryFilter } from "./in_memory_query_filter";
@@ -59,10 +62,16 @@ export class InMemoryStorage<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(collection: C, query?: Q | undefined): QueryResult<C, DBFullSchema, Q> {
-    return this.filtersManager.apply(
+    const res = this.filtersManager.apply(
       this.stores[collection.model.dbName],
       query
-    );
+    ) as QueryResult<C, DBFullSchema, Q>;
+    if (query?.with) {
+      return res.map((data) =>
+        this.#getDataWithRelations(collection, query, data)
+      );
+    }
+    return res;
   }
 
   findFirst<
@@ -87,6 +96,50 @@ export class InMemoryStorage<
     query?: Query<C, DBFullSchema> | undefined
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
     throw new Error("Method not implemented.");
+  }
+
+  #getRelationQuery<C extends CollectionSchema>(
+    collection: C,
+    relation: Relation,
+    data: any
+  ): Query<any, any> {
+    if (relation instanceof HasManyRelation) {
+      return {
+        filters: {
+          [relation.field as string]: { $eq: collection.model.primary(data) },
+        },
+      };
+    }
+    return {};
+  }
+
+  #getDataWithRelations<
+    C extends CollectionSchema,
+    Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
+  >(collection: C, query: Q | undefined, data: any) {
+    if (!query?.with) return;
+    for (const [relationKey, relationQueryOrBoolean] of Object.entries(
+      query.with
+    )) {
+      if (!relationQueryOrBoolean) return data;
+      const relation = collection.relations.schema[relationKey];
+
+      const relationCollection =
+        this.database.schema.schemaDbName[relation.related.dbName];
+
+      const relationQuery = this.#getRelationQuery(collection, relation, data);
+      if (typeof relationQueryOrBoolean !== "boolean") {
+        relationQuery.filters = {
+          ...(relationQueryOrBoolean?.filters || {}),
+          ...relationQuery.filters,
+        };
+      }
+      data[relationKey] = this[relation.multiple ? "find" : "findFirst"](
+        relationCollection,
+        relationQuery as Query<typeof relationCollection, DBFullSchema>
+      );
+    }
+    return data;
   }
 
   // TODO: upsert (not insert)
