@@ -32,6 +32,7 @@ export class QueryBuilder<
   }
 
   orWhere(ors: QueryFilters<C>[]) {
+    if (!this.query.filters) this.query.filters = {}
     this.query.filters[FILTER_OR] = ors;
     return this;
   }
@@ -41,6 +42,7 @@ export class QueryBuilder<
     op: T,
     value: FiltersValueType[T]
   ) {
+    if (!this.query.filters) this.query.filters = {}
     if (!this.query.filters[field]) {
       // @ts-ignore
       this.query.filters[field] = {};

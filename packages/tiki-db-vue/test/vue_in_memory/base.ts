@@ -42,7 +42,7 @@ export function getTestDatabase() {
   const storage = new InMemoryStorage();
   const db = new VueDatabaseWrapper(database(collections, storage));
 
-  db.database.init();
+  db.init();
 
   return {
     db,
