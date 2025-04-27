@@ -6,9 +6,25 @@ import path from "path";
 import { toSnakeCase } from "./utils";
 import { downloadFileContent, listFilesRecursively } from "./github";
 
+function updateTestTemplateContent(
+  str: string,
+  storageName: string,
+  isAsyncStorage: boolean
+) {
+  if (isAsyncStorage) {
+    str = str
+      .replaceAll("db.collections", "await db.collections")
+      .replaceAll("() =>", "async () =>")
+      .replaceAll("database", "asyncDatabase");
+  }
+  return str
+    .replaceAll("../../src/index", "tiki-db")
+    .replaceAll("InMemoryStorage", storageName);
+}
+
 async function main() {
   const storageName = await prompts.input({
-    message: "Name of the storage ?",
+    message: "Name of the storage  :",
     validate: (value) => (value ? true : "The name is required."),
   });
 
@@ -21,7 +37,7 @@ async function main() {
     default: "./test/",
   });
 
-  const inRepoTestsPath = "packages/tiki-db/test/in_memory/";
+  const inRepoTestsPath = "packages/tiki-db/test/in_memory";
   const dirPath = path.resolve(outputDir, toSnakeCase(storageName));
 
   const allTemplatesPaths = await listFilesRecursively(
@@ -31,14 +47,17 @@ async function main() {
   );
 
   for (const templatePath of allTemplatesPaths) {
-    const fileName = templatePath.replace(inRepoTestsPath, "");
+    const fileName = templatePath.replace(`${inRepoTestsPath}/`, "");
     const filePath = path.resolve(dirPath, fileName);
     await fs.mkdir(path.dirname(filePath), { recursive: true });
     await fs.writeFile(
       filePath,
-      await downloadFileContent("etienne1698", "tiki-db", templatePath)
+      updateTestTemplateContent(
+        await downloadFileContent("etienne1698", "tiki-db", templatePath),
+        storageName,
+        isAsyncStorage
+      )
     );
-    return
   }
 
   console.log(`✅ Tests generated here : ${dirPath}`);
