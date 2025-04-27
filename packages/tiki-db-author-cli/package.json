@@ -28,6 +28,7 @@
     "library"
   ],
   "dependencies": {
-    "@inquirer/prompts": "^7.5.0"
+    "@inquirer/prompts": "^7.5.0",
+    "@octokit/rest": "^21.1.1"
   }
 }

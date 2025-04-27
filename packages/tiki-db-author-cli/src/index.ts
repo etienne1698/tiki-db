@@ -4,7 +4,7 @@ import * as prompts from "@inquirer/prompts";
 import fs from "fs/promises";
 import path from "path";
 import { toSnakeCase } from "./utils";
-import { testsTemplates } from "./templates_list";
+import { downloadFileContent, listFilesRecursively } from "./github";
 
 async function main() {
   const storageName = await prompts.input({
@@ -21,12 +21,24 @@ async function main() {
     default: "./test/",
   });
 
+  const inRepoTestsPath = "packages/tiki-db/test/in_memory/";
   const dirPath = path.resolve(outputDir, toSnakeCase(storageName));
 
-  for (const template of testsTemplates) {
-    const filePath = path.resolve(dirPath, `${template.path}.ts`);
+  const allTemplatesPaths = await listFilesRecursively(
+    "etienne1698",
+    "tiki-db",
+    inRepoTestsPath
+  );
+
+  for (const templatePath of allTemplatesPaths) {
+    const fileName = templatePath.replace(inRepoTestsPath, "");
+    const filePath = path.resolve(dirPath, fileName);
     await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, template.content(isAsyncStorage, storageName));
+    await fs.writeFile(
+      filePath,
+      await downloadFileContent("etienne1698", "tiki-db", templatePath)
+    );
+    return
   }
 
   console.log(`✅ Tests generated here : ${dirPath}`);
