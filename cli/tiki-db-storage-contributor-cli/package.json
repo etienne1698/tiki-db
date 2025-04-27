@@ -1,10 +1,10 @@
 {
-  "name": "tiki-db-author-cli",
+  "name": "tiki-db-storage-contributor-cli",
   "version": "0.17.0",
   "description": "TikiDB storage contributors CLI",
   "repository": "etienne1698/tiki-db",
   "bin": {
-    "tiki-db-author-cli": "./dist/index.js"
+    "tiki-db-storage-contributor-cli": "./dist/index.js"
   },
   "author": "Etienne ROBERT",
   "license": "MIT",

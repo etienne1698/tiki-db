@@ -26,8 +26,14 @@ Install TikiDB via npm:
 npm install tiki-db
 ```
 
-## Roadmap
+## Contributor
 
+Generate tests for your storage:
+```sh
+npx tiki-db-storage-contributor-cli
+```
+
+## Roadmap
 
 - Storage
     - localStorage

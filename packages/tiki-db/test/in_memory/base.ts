@@ -4,8 +4,8 @@ import {
   relations,
   string,
   database,
-  InMemoryStorage,
 } from "../../src/index";
+import { getTestStorage } from "./base_storage";
 
 export function getTestDatabase() {
   const users = model("usersDbName", {
@@ -49,7 +49,7 @@ export function getTestDatabase() {
     comments: collection(comments, commentsRelations),
   };
 
-  const storage = new InMemoryStorage();
+  const storage = getTestStorage();
   const db = database(collections, storage);
   db.init();
 
