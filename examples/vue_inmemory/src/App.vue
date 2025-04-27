@@ -8,7 +8,7 @@ const users = computed(() =>
 </script>
 
 <template>
-  <div style="margin: auto; max-width: 600px">
+  <div class="m-auto max-w-lg bg-red-50">
     <pre>{{ users }}</pre>
   </div>
 </template>
