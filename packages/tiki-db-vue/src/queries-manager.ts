@@ -17,13 +17,13 @@ export class QueriesManager {
     return Boolean(this.queries[queryHash]);
   }
 
-  get(queryHash: ReturnType<typeof this.hashQuery>) {
-    this.queries[queryHash].refCount += 1;
+  set(queryHash: ReturnType<typeof this.hashQuery>, result: any) {
+    this.queries[queryHash] = { result, refCount: 1 };
     return this.queries[queryHash].result;
   }
 
-  set(queryHash: ReturnType<typeof this.hashQuery>, result: any) {
-    this.queries[queryHash] = { result, refCount: 1 };
+  subscribe(queryHash: ReturnType<typeof this.hashQuery>) {
+    this.queries[queryHash].refCount += 1;
     return this.queries[queryHash].result;
   }
 

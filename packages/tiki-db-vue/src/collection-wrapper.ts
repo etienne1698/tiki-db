@@ -38,18 +38,18 @@ export class VueCollectionWrapper<
     const queryResult = this.collection.findFirst(query);
     const queryHash = this.queriesManager.hashQuery(query, true);
     if (this.queriesManager.has(queryHash)) {
-      return this.queriesManager.get(queryHash);
+      return this.queriesManager.subscribe(queryHash) as Ref<ReturnType<typeof this.collection.findFirst>>;
     }
-    return this.queriesManager.set(queryHash, ref(queryResult));
+    return this.queriesManager.set(queryHash, ref(queryResult)) as Ref<ReturnType<typeof this.collection.findFirst>>;
   }
 
   find(query: Parameters<typeof this.collection.find>[0]) {
     const queryResult = this.collection.find(query);
     const queryHash = this.queriesManager.hashQuery(query, false);
     if (this.queriesManager.has(queryHash)) {
-      return this.queriesManager.get(queryHash);
+      return this.queriesManager.subscribe(queryHash) as Ref<ReturnType<typeof this.collection.find>>;
     }
-    return this.queriesManager.set(queryHash, ref(queryResult));
+    return this.queriesManager.set(queryHash, ref(queryResult)) as Ref<ReturnType<typeof this.collection.find>>;
   }
 
   update(
