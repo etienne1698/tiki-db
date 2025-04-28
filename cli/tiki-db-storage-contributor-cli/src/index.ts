@@ -21,6 +21,7 @@ const updateTestTemplateContent: UpdateTestTemplateContentFn = (
 ) => {
   if (isAsyncStorage) {
     str = str
+      // TODO: this regex do not work on query builder tests
       .replaceAll(
         /db.collections.(.*?)\.(.*?)\)/gs,
         "(await db.collections.$1.$2))"
