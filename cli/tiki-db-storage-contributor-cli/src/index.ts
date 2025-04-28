@@ -21,6 +21,7 @@ const updateTestTemplateContent: UpdateTestTemplateContentFn = (
 ) => {
   if (isAsyncStorage) {
     str = str
+      // TODO: change "await db.collection.[any].[any]().[any]" => "(await db.collection.[any].[any]()).[any]"
       .replaceAll("db.collections", "await db.collections")
       .replaceAll("() =>", "async () =>")
       .replaceAll("database", "asyncDatabase");
@@ -50,10 +51,6 @@ async function writeTest(props: {
   );
 }
 
-/**
- * TODO:
- * - change "await db.collection.[any].[any]().any" => "(await db.collection.[any].[any]()).any"
- */
 async function main() {
   const storageName = await prompts.input({
     message: "Name of the storage  :",
