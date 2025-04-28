@@ -10,7 +10,7 @@ test("insert with relation hasMany should insert relation", async () => {
     relatedPosts: [{ id: "123", title: "post 1" }],
   });
 
-  expect(await db.collections.posts.findFirst({}).id).toBe("123");
+  expect((await db.collections.posts.findFirst({})).id).toBe("123");
 });
 
 test("query with hasMany should return data with related data", async () => {
@@ -23,7 +23,7 @@ test("query with hasMany should return data with related data", async () => {
   });
 
   expect(
-    await db.collections.posts.findFirst({ with: { relatedUser: true } }).relatedUser!
-      .id
+    (await db.collections.posts.findFirst({ with: { relatedUser: true } }))
+      .relatedUser!.id
   ).toBe("1");
 });

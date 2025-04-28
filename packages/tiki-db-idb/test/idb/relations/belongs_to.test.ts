@@ -11,5 +11,5 @@ test("insert with relation belongsTo should insert relation", async () => {
     relatedUser: { id: "123" },
   });
 
-  expect(await db.collections.users.findFirst({}).id).toBe("123");
+  expect((await db.collections.users.findFirst({})).id).toBe("123");
 });

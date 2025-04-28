@@ -11,5 +11,5 @@ test("insert with relation hasManyThrough should insert relation", async () => {
     relatedComments: [{ id: "123" }],
   });
 
-  expect(await db.collections.comments.findFirst({}).id).toBe("123");
+  expect((await db.collections.comments.findFirst({})).id).toBe("123");
 });

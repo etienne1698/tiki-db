@@ -10,12 +10,12 @@ test("QueryBuilder should return same as direct query", async () => {
   ]);
 
   expect(
-    await db.collections.users.findFirst({
+    (await db.collections.users.findFirst({
       filters: {
         id: {
           $eq: "2",
         },
       },
-    }).firstname
-  ).toBe(await db.collections.users.query().whereEq("id", "2").findFirst().firstname);
+    })).firstname
+  ).toBe((await db.collections.users.query().whereEq("id", "2").findFirst()).firstname);
 });

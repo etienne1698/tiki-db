@@ -7,6 +7,6 @@ test("simple insert and retrieve", async () => {
   await db.collections.users.insert({ id: "1", firstname: "Etienne" });
 
   expect(
-    await db.collections.users.find({})[0].firstname
+    (await db.collections.users.find({}))[0].firstname
   ).toBe("Etienne");
 });
