@@ -21,7 +21,7 @@ const updateTestTemplateContent: UpdateTestTemplateContentFn = (
 ) => {
   if (isAsyncStorage) {
     str = str
-      // TODO: change "await db.collection.[any].[any]().[any]" => "(await db.collection.[any].[any]()).[any]"
+      // TODO: change "await db.collection.[any].[any]([any]).[any]" => "(await db.collection.[any].[any]([any])).[any]"
       .replaceAll("db.collections", "await db.collections")
       .replaceAll("() =>", "async () =>")
       .replaceAll("database", "asyncDatabase");
