@@ -21,8 +21,10 @@ const updateTestTemplateContent: UpdateTestTemplateContentFn = (
 ) => {
   if (isAsyncStorage) {
     str = str
-      // TODO: change "await db.collection.[any].[any]([any]).[any]" => "(await db.collection.[any].[any]([any])).[any]"
-      .replaceAll("db.collections", "await db.collections")
+      .replaceAll(
+        /db.collections.(.*?)\.(.*?)\)/gs,
+        "(await db.collections.$1.$2))"
+      )
       .replaceAll("() =>", "async () =>")
       .replaceAll("database", "asyncDatabase");
   }
@@ -73,7 +75,6 @@ async function main() {
     "tiki-db",
     inRepoTestsPath
   );
-
 
   const isBaseStorageTestFileExists = fs.existsSync(
     path.resolve(dirPath, "base_storage.ts")
