@@ -1,6 +1,6 @@
 {
   "name": "tiki-db-storage-contributor-cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "TikiDB storage contributors CLI",
   "repository": "etienne1698/tiki-db",
   "bin": {
