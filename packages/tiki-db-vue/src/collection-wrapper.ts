@@ -3,7 +3,7 @@ import { ref, Ref } from "vue";
 import { QueriesManager } from "./queries-manager";
 
 /**
- * This interface feels pointless — it just forces me to re-implement every method from the wrapped collection. 
+ * This interface feels pointless — it just forces me to re-implement every method from the wrapped collection.
  */
 export type IVueCollectionWrapper<
   IsAsync extends boolean,
@@ -35,21 +35,29 @@ export class VueCollectionWrapper<
   ) {}
 
   findFirst(query: Parameters<typeof this.collection.findFirst>[0]) {
-    const queryResult = this.collection.findFirst(query);
     const queryHash = this.queriesManager.hashQuery(query, true);
     if (this.queriesManager.has(queryHash)) {
-      return this.queriesManager.subscribe(queryHash) as Ref<ReturnType<typeof this.collection.findFirst>>;
+      return this.queriesManager.subscribe(queryHash) as Ref<
+        ReturnType<typeof this.collection.findFirst>
+      >;
     }
-    return this.queriesManager.set(queryHash, ref(queryResult)) as Ref<ReturnType<typeof this.collection.findFirst>>;
+    const queryResult = this.collection.findFirst(query);
+    return this.queriesManager.set(queryHash, ref(queryResult)) as Ref<
+      ReturnType<typeof this.collection.findFirst>
+    >;
   }
 
   find(query: Parameters<typeof this.collection.find>[0]) {
-    const queryResult = this.collection.find(query);
     const queryHash = this.queriesManager.hashQuery(query, false);
     if (this.queriesManager.has(queryHash)) {
-      return this.queriesManager.subscribe(queryHash) as Ref<ReturnType<typeof this.collection.find>>;
+      return this.queriesManager.subscribe(queryHash) as Ref<
+        ReturnType<typeof this.collection.find>
+      >;
     }
-    return this.queriesManager.set(queryHash, ref(queryResult)) as Ref<ReturnType<typeof this.collection.find>>;
+    const queryResult = this.collection.find(query);
+    return this.queriesManager.set(queryHash, ref(queryResult)) as Ref<
+      ReturnType<typeof this.collection.find>
+    >;
   }
 
   update(
