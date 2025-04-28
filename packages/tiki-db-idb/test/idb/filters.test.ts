@@ -7,7 +7,7 @@ test("$eq should work", async () => {
   await db.collections.users.insert({ id: "1", firstname: "Etienne" });
 
   expect(
-    await db.collections.users.findFirst({ filters: { id: { $eq: "1" } } }).firstname
+    (await db.collections.users.findFirst({ filters: { id: { $eq: "1" } } })).firstname
   ).toBe("Etienne");
 });
 
@@ -17,7 +17,7 @@ test("bad $eq request should not retrieve obj", async () => {
   await db.collections.users.insert({ id: "1", firstname: "Etienne" });
 
   expect(
-    await db.collections.users.findFirst({ filters: { id: { $eq: "2" } } })?.firstname
+   ( await db.collections.users.findFirst({ filters: { id: { $eq: "2" } } }))?.firstname
   ).toBe(undefined);
 });
 

@@ -103,6 +103,8 @@ export class InMemoryStorage<
     relation: Relation,
     data: any
   ): Query<any, any> {
+    const relationCollection =
+      this.database.schema.schemaDbName[relation.related.dbName];
     if (relation instanceof HasManyRelation) {
       return {
         filters: {
