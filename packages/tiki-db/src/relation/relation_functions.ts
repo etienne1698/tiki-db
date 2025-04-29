@@ -1,57 +1,45 @@
 import type { Model } from "../model/model";
 import { InferModelFieldName } from "../types";
-import { BelongsToRelation } from "./belongs_to";
-import { HasManyRelation } from "./has_many";
-import { HasManyThrough } from "./has_many_through";
+import { OneRelation } from "./one";
+import { ManyRelation } from "./many";
 import { Relations, type Relation } from "./relation";
 
-export function hasMany<MRelated extends Model = Model>(
+type RelationSetupParams<M extends Model, MRelated extends Model = Model> = {
+  fields: InferModelFieldName<M>[];
+  references: InferModelFieldName<MRelated>[];
+};
+
+export function many<M extends Model, MRelated extends Model = Model>(
   model: MRelated,
-  field: InferModelFieldName<MRelated>
+  params: RelationSetupParams<M, MRelated>
 ) {
-  return new HasManyRelation(model, field);
+  return new ManyRelation(model, params.fields, params.references);
 }
 
-export function belongsTo<M extends Model, MRelated extends Model = Model>(
+export function one<M extends Model, MRelated extends Model = Model>(
   model: MRelated,
-  field: InferModelFieldName<M>
+  params: RelationSetupParams<M, MRelated>
 ) {
-  return new BelongsToRelation(model, field);
+  return new OneRelation(model, params.fields, params.references);
 }
 
-export function hasManyThrough<
-  M extends Model,
-  MRelated extends Model = Model,
-  MThrough extends Model = Model
->(
-  model: MRelated,
-  field: InferModelFieldName<MRelated>,
-  throughModel: MThrough,
-  throughField: InferModelFieldName<MThrough>
-) {
-  return new HasManyThrough(model, field, throughModel, throughField);
-}
-
-export type RelationSetupFn<
+type RelationSetupFn<
   M extends Model = Model,
   R extends Record<string, Relation> = Record<string, Relation>
 > = (relations: {
-  hasMany: typeof hasMany;
-  belongsTo: <MRelated extends Model>(
+  many: <MRelated extends Model>(
     model: MRelated,
-    field: InferModelFieldName<M>
-  ) => ReturnType<typeof belongsTo<M, MRelated>>;
-  hasManyThrough: <MRelated extends Model, MThrough extends Model>(
+    params: RelationSetupParams<M, MRelated>
+  ) => ReturnType<typeof many<M, MRelated>>;
+  one: <MRelated extends Model>(
     model: MRelated,
-    field: InferModelFieldName<MRelated>,
-    throughModel: MThrough,
-    throughField: InferModelFieldName<MThrough>
-  ) => ReturnType<typeof hasManyThrough<M, MRelated, MThrough>>;
+    params: RelationSetupParams<M, MRelated>
+  ) => ReturnType<typeof one<M, MRelated>>;
 }) => R;
 
 export function relations<
   M extends Model,
   R extends Record<string, Relation> = Record<string, Relation>
 >(model: M, setup: RelationSetupFn<M, R>) {
-  return new Relations(model, setup({ hasMany, belongsTo, hasManyThrough }));
+  return new Relations(model, setup({ many, one }));
 }

@@ -1,4 +1,5 @@
 import type { Model } from "../model/model";
+import { InferModelFieldName } from "../types";
 
 export abstract class Relation<
   M extends Model = Model,
@@ -7,7 +8,11 @@ export abstract class Relation<
   abstract multiple: boolean;
 
   declare model: M;
-  constructor(public related: MRelated, public field: unknown) {}
+  constructor(
+    public related: MRelated,
+    public fields: InferModelFieldName<M>[],
+    public references: InferModelFieldName<MRelated>[]
+  ) {}
 }
 
 export class Relations<

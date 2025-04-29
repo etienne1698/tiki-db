@@ -2,7 +2,7 @@ import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
 import { Model } from "../../model/model";
 import { Query, QueryResult } from "../../query/query";
-import { HasManyRelation } from "../../relation/has_many";
+import { HasManyRelation } from "../../relation/many";
 import { Relation } from "../../relation/relation";
 import { Primary, AnyButMaybeT, MaybeAsArray } from "../../types";
 import { Storage } from "../storage";
@@ -103,16 +103,16 @@ export class InMemoryStorage<
     relation: Relation,
     data: any
   ): Query<any, any> {
-    const relationCollection =
-      this.database.schema.schemaDbName[relation.related.dbName];
-    if (relation instanceof HasManyRelation) {
-      return {
-        filters: {
-          [relation.field as string]: { $eq: collection.model.primary(data) },
-        },
+    const filters: Query<any, any>["filters"] = {};
+    for (const fieldIndex in relation.fields) {
+      filters[relation.references[fieldIndex]] = {
+        $eq: data[relation.fields[fieldIndex]],
       };
     }
-    return {};
+
+    return {
+      filters,
+    };
   }
 
   #getDataWithRelations<

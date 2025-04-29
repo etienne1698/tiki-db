@@ -19,7 +19,7 @@ test("query with hasMany should return data with related data", () => {
   db.collections.users.insert({
     id: "1",
     firstname: "Etienne",
-    relatedPosts: [{ id: "123", title: "post 1" }],
+    relatedPosts: [{ id: "123", title: "post 1", userId: "1" }],
   });
 
   expect(

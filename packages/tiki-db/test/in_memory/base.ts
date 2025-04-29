@@ -29,18 +29,29 @@ export function getTestDatabase() {
     postId: string("postId", "").notNull(),
   });
 
-  const usersRelations = relations(users, ({ hasMany, hasManyThrough }) => ({
-    relatedPosts: hasMany(posts, "userId"),
-    relatedComments: hasManyThrough(comments, "postId", posts, "userId"),
+  const usersRelations = relations(users, ({ many }) => ({
+    relatedPosts: many(posts, {
+      fields: ["id"],
+      references: ["userId"],
+    }),
   }));
 
-  const postsRelations = relations(posts, ({ belongsTo, hasMany }) => ({
-    relatedUser: belongsTo(users, "userId"),
-    relatedComments: hasMany(comments, "postId"),
+  const postsRelations = relations(posts, ({ one, many }) => ({
+    relatedUser: one(users, {
+      fields: ["userId"],
+      references: ["id"],
+    }),
+    relatedComments: many(comments, {
+      fields: ["id"],
+      references: ["postId"],
+    }),
   }));
 
-  const commentsRelations = relations(comments, ({ belongsTo }) => ({
-    relatedPost: belongsTo(posts, "postId"),
+  const commentsRelations = relations(comments, ({ one }) => ({
+    relatedPost: one(posts, {
+      fields: ["postId"],
+      references: ["id"],
+    }),
   }));
 
   const collections = {

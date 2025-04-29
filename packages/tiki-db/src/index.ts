@@ -7,8 +7,8 @@ export { array, ArrayField } from "./model/array";
 
 export { Relation, Relations } from "./relation/relation";
 export { relations, hasMany, belongsTo } from "./relation/relation_functions";
-export { HasManyRelation } from "./relation/has_many";
-export { BelongsToRelation } from "./relation/belongs_to";
+export { HasManyRelation } from "./relation/many";
+export { BelongsToRelation } from "./relation/one";
 
 export { collection, CollectionSchema } from "./collection/collection_schema";
 export { Collection } from "./collection/collection";
