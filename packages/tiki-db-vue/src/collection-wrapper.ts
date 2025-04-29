@@ -1,4 +1,10 @@
-import { Collection, CollectionSchema, DatabaseFullSchema } from "tiki-db";
+import {
+  Collection,
+  CollectionSchema,
+  DatabaseFullSchema,
+  Query,
+  QueryBuilder,
+} from "tiki-db";
 import { ref, Ref } from "vue";
 import { QueriesManager } from "./queries-manager";
 
@@ -60,17 +66,15 @@ export class VueCollectionWrapper<
     >;
   }
 
-  update(
-    query: Parameters<typeof this.collection.update>[0],
-    data: Parameters<typeof this.collection.update>[1]
+  update<Q extends Query<Schema, DBFullSchema>>(
+    query: Parameters<typeof this.collection.update<Q>>[0],
+    data: Parameters<typeof this.collection.update<Q>>[1]
   ) {
     const queryResult = this.collection.update(query, data);
     return queryResult;
   }
 
-  remove(
-    query: Parameters<typeof this.collection.update>[0]
-  ) {
+  remove(query: Parameters<typeof this.collection.update>[0]) {
     const queryResult = this.collection.remove(query);
     return queryResult;
   }
