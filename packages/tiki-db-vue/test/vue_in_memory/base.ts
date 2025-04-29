@@ -24,12 +24,18 @@ export function getTestDatabase() {
     userId: string("userId", "").notNull(),
   });
 
-  const usersRelations = relations(users, ({ hasMany }) => ({
-    relatedPosts: hasMany(posts, "userId"),
+  const usersRelations = relations(users, ({ many }) => ({
+    relatedPosts: many(posts, {
+      fields: ["id"],
+      references: ["userId"],
+    }),
   }));
 
-  const postsRelations = relations(posts, ({ belongsTo }) => ({
-    relatedUser: belongsTo(users, "userId"),
+  const postsRelations = relations(posts, ({ one }) => ({
+    relatedUser: one(users, {
+      fields: ["userId"],
+      references: ["id"],
+    }),
   }));
 
   const collections = {

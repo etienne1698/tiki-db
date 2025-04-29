@@ -41,34 +41,50 @@ export class VueCollectionWrapper<
   ) {}
 
   findFirst(query: Parameters<typeof this.collection.findFirst>[0]) {
-    const queryHash = this.queriesManager.hashQuery(query, true);
+    const queryHash = this.queriesManager.hashQuery(
+      this.collection.schema,
+      query,
+      true
+    );
     if (this.queriesManager.has(queryHash)) {
       return this.queriesManager.subscribe(queryHash) as Ref<
         ReturnType<typeof this.collection.findFirst>
       >;
     }
     const queryResult = this.collection.findFirst(query);
-    return this.queriesManager.set(queryHash, ref(queryResult)) as Ref<
-      ReturnType<typeof this.collection.findFirst>
-    >;
+    return this.queriesManager.set(
+      queryHash,
+      this.collection.schema,
+      true,
+      query,
+      ref(queryResult)
+    ) as Ref<ReturnType<typeof this.collection.findFirst>>;
   }
 
   find(query: Parameters<typeof this.collection.find>[0]) {
-    const queryHash = this.queriesManager.hashQuery(query, false);
+    const queryHash = this.queriesManager.hashQuery(
+      this.collection.schema,
+      query,
+      false
+    );
     if (this.queriesManager.has(queryHash)) {
       return this.queriesManager.subscribe(queryHash) as Ref<
         ReturnType<typeof this.collection.find>
       >;
     }
     const queryResult = this.collection.find(query);
-    return this.queriesManager.set(queryHash, ref(queryResult)) as Ref<
-      ReturnType<typeof this.collection.find>
-    >;
+    return this.queriesManager.set(
+      queryHash,
+      this.collection.schema,
+      false,
+      query,
+      ref(queryResult)
+    ) as Ref<ReturnType<typeof this.collection.find>>;
   }
 
   update<Q extends Query<Schema, DBFullSchema>>(
-    query: Parameters<typeof this.collection.update<Q>>[0],
-    data: Parameters<typeof this.collection.update<Q>>[1]
+    query: Parameters<typeof this.collection.update>[0],
+    data: Parameters<typeof this.collection.update>[1]
   ) {
     const queryResult = this.collection.update(query, data);
     return queryResult;
@@ -81,6 +97,23 @@ export class VueCollectionWrapper<
 
   insert(data: Parameters<typeof this.collection.insert>[0]) {
     const queryResult = this.collection.insert(data);
+    this.reRunQueryConcerned(data);
     return queryResult;
+  }
+
+  reRunQueryConcerned(data: any) {
+    const queryCacheDataConcerned = this.queriesManager.getQueryConcerned(
+      this.collection.schema,
+      data
+    );
+    for (const queryCacheData of queryCacheDataConcerned) {
+      queryCacheData.result.value = queryCacheData.isFindFirst
+        ? this.collection.findFirst(
+            queryCacheData.query as Parameters<typeof this.find>[0]
+          )
+        : this.collection.find(
+            queryCacheData.query as Parameters<typeof this.find>[0]
+          );
+    }
   }
 }
