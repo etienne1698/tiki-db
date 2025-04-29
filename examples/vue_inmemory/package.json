@@ -12,7 +12,7 @@
     "@faker-js/faker": "^9.7.0",
     "@tailwindcss/vite": "^4.1.4",
     "tailwindcss": "^4.1.4",
-    "tiki-db": "^0.14.0",
+    "tiki-db": "^0.15.0",
     "tiki-db-vue": "^0.15.0",
     "vue": "^3.5.13"
   },

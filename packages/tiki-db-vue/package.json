@@ -23,7 +23,7 @@
     "vitest": "^3.0.9"
   },
   "peerDependencies": {
-    "tiki-db": "^0.14.0",
+    "tiki-db": "^0.15.0",
     "vue": "^3.5.13"
   },
   "keywords": [

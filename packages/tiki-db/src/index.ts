@@ -6,9 +6,7 @@ export { string, StringField } from "./model/string";
 export { array, ArrayField } from "./model/array";
 
 export { Relation, Relations } from "./relation/relation";
-export { relations, hasMany, belongsTo } from "./relation/relation_functions";
-export { HasManyRelation } from "./relation/many";
-export { BelongsToRelation } from "./relation/one";
+export { relations } from "./relation/relation_functions";
 
 export { collection, CollectionSchema } from "./collection/collection_schema";
 export { Collection } from "./collection/collection";

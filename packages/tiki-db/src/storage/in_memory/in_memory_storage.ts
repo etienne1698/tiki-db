@@ -1,8 +1,6 @@
 import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
-import { Model } from "../../model/model";
 import { Query, QueryResult } from "../../query/query";
-import { HasManyRelation } from "../../relation/many";
 import { Relation } from "../../relation/relation";
 import { Primary, AnyButMaybeT, MaybeAsArray } from "../../types";
 import { Storage } from "../storage";

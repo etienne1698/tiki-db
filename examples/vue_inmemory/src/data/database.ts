@@ -24,12 +24,18 @@ const posts = model("postsDbName", {
   userId: string("userId", "").notNull(),
 });
 
-const usersRelations = relations(users, ({ hasMany }) => ({
-  posts: hasMany(posts, "userId"),
+const usersRelations = relations(users, ({ many }) => ({
+  posts: many(posts, {
+    fields: ["id"],
+    references: ["userId"],
+  }),
 }));
 
-const postsRelations = relations(posts, ({ belongsTo }) => ({
-  user: belongsTo(users, "userId"),
+const postsRelations = relations(posts, ({ one }) => ({
+  user: one(users, {
+    fields: ["userId"],
+    references: ["id"],
+  }),
 }));
 
 const collections = {
