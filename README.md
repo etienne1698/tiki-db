@@ -11,20 +11,23 @@ It supports multiple storage backends and can optionally integrate with any reac
 ---
 
 Inspirations for `TikiDB`: <br />
-[RxDB](https://github.com/pubkey/rxdb) /
-[WatermelonDB](https://github.com/Nozbe/WatermelonDB) /
-[Drizzle ORM](https://github.com/drizzle-team/drizzle-orm) /
-[Pinia Orm](https://github.com/codedredd/pinia-orm) 
+**[RxDB](https://github.com/pubkey/rxdb)** /
+**[WatermelonDB](https://github.com/Nozbe/WatermelonDB)** /
+**[Drizzle ORM](https://github.com/drizzle-team/drizzle-orm)** /
+**[Pinia Orm](https://github.com/codedredd/pinia-orm)**
 
-To provide a better alternative, I created TikiDB after analyzing these technologies. Check out this link [features comparison](https://github.com/etienne1698/tiki-db/blob/main/feature-comparison.md)
+To provide a better alternative, I created TikiDB after analyzing these libraries.
+[Check out this link for a comparison table of them.](https://github.com/etienne1698/tiki-db/blob/main/feature-comparison.md)
 
 ---
 
-Supported storage backends (suggest more if needed!):
+Supported storage backends :
+
 - IndexedDB
 - In-Memory
 
-Reactive framework adapters  (suggest more if needed!):
+Reactive framework adapters (suggest more if needed!):
+
 - Vue
 
 ## 📦 Installation
@@ -38,25 +41,29 @@ npm install tiki-db
 ## 🧑‍💻 Contributors
 
 Generate tests for your storage:
+
 ```sh
 npx tiki-db-storage-contributor-cli
 ```
 
-## 🗺️ Roadmap
+## 🗺️ Roadmap (suggest more if needed!)
 
-| Storage Engine | Status |
-|----------------|--------|
-| `localStorage` | ❌ |
-| `IndexedDB`    | 🚧 |
-| `OPFS`         | ❌ |
-| `sql.js`         | ❌ |
+| Storage Engine | Status | NPM package   |
+| -------------- | ------ | ------------- |
+| `In-Memory`    | ✅     | `tiki-db`     |
+| `localStorage` | ❌     | -             |
+| `IndexedDB`    | 🚧     | `tiki-db-idb` |
+| `OPFS`         | ❌     | -             |
+| `sql.js`       | ❌     | -             |
 
+| Reactive Framework | Status | NPM package   |
+| ------------------ | ------ | ------------- |
+| `Vue`              | 🚧     | `tiki-db-vue` |
+| `React`            | ❌     | -             |
+| `Angular`          | ❌     | -             |
 
-| Extension                    | Type           | Status | Notes                                  |
-|-----------------------------|----------------|--------|----------------------------------------|
-| `syncEngine`                | Client         | ❌     | Core sync logic                        |
-| `httpReplication`           | Client         | ❌     | Sync over HTTP                         |
-| `websocketReplication`      | Client         | ❌     | Real-time sync with WebSocket          |
-| `syncEngineServer`          | Server         | ❌     | Server-side sync logic                 |
-| `httpReplicationServer`     | Server         | ❌     | REST sync API (Hono, Express, Koa...)     |
-| `websocketReplicationServer`| Server         | ❌     | WebSocket sync server                  |
+| Extension              | Status | Notes                         | NPM package |
+| ---------------------- | ------ | ----------------------------- | ----------- |
+| `syncEngine`           | ❌     | Core sync logic               | -           |
+| `httpReplication`      | ❌     | Sync over HTTP                | -           |
+| `websocketReplication` | ❌     | Real-time sync with WebSocket | -           |
