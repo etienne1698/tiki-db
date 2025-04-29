@@ -19,16 +19,6 @@ Inspirations for `TikiDB`: <br />
 To provide a better alternative, I created TikiDB after analyzing these libraries.
 [Check out this link for a comparison table of them.](https://github.com/etienne1698/tiki-db/blob/main/feature-comparison.md)
 
----
-
-Supported storage backends :
-
-- IndexedDB
-- In-Memory
-
-Reactive framework adapters (suggest more if needed!):
-
-- Vue
 
 ## 📦 Installation
 
