@@ -8,11 +8,15 @@
 `TikiDB` is a lightweight and flexible data access abstraction for JavaScript/TypeScript applications, offering strong TypeScript support. <br/>
 It supports multiple storage backends and can optionally integrate with any reactive framework.
 
+---
+
 Inspirations for `TikiDB`: <br />
 [RxDB](https://github.com/pubkey/rxdb) /
 [WatermelonDB](https://github.com/Nozbe/WatermelonDB) /
 [Drizzle ORM](https://github.com/drizzle-team/drizzle-orm) /
 [Pinia Orm](https://github.com/codedredd/pinia-orm) 
+
+To provide a better alternative, I created TikiDB after analyzing these technologies. Check out this link [features comparison](https://github.com/etienne1698/tiki-db/blob/main/feature-comparison.md)
 
 ---
 
