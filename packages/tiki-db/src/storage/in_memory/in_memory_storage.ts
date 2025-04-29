@@ -81,15 +81,13 @@ export class InMemoryStorage<
 
   remove<C extends CollectionSchema>(
     collection: C,
-    primary: Primary,
-    query?: Query<C, DBFullSchema> | undefined
+    query: Query<C, DBFullSchema> | undefined
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
     throw new Error("Method not implemented.");
   }
 
   update<C extends CollectionSchema>(
     collection: C,
-    primary: Primary,
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
     query?: Query<C, DBFullSchema> | undefined
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {

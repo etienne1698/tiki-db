@@ -41,17 +41,15 @@ export interface Storage<
 
   remove<C extends CollectionSchema>(
     collection: C,
-    primary: Primary,
-    query?: Query<C, DBFullSchema>
+    query: Query<C, DBFullSchema>
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
   update<C extends CollectionSchema>(
     collection: C,
-    primary: Primary,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
-    query?: Query<C, DBFullSchema>
+    query: Query<C, DBFullSchema>,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;

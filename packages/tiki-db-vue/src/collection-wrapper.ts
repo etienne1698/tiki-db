@@ -61,10 +61,17 @@ export class VueCollectionWrapper<
   }
 
   update(
-    primary: Parameters<typeof this.collection.update>[0],
+    query: Parameters<typeof this.collection.update>[0],
     data: Parameters<typeof this.collection.update>[1]
   ) {
-    const queryResult = this.collection.update(primary, data);
+    const queryResult = this.collection.update(query, data);
+    return queryResult;
+  }
+
+  remove(
+    query: Parameters<typeof this.collection.update>[0]
+  ) {
+    const queryResult = this.collection.remove(query);
     return queryResult;
   }
 

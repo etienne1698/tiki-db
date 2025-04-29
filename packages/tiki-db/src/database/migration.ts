@@ -60,7 +60,16 @@ export class Migrator<D extends Database = Database> extends Collection<
       for (const m of migrations) {
         if (m.version > currentVersion) {
           await m.up({ schema: this.database.schema });
-          await this.update(modelDbName, { version: m.version });
+          await this.update(
+            {
+              filters: {
+                modelDBName: {
+                  $eq: modelDbName,
+                },
+              },
+            },
+            { version: m.version }
+          );
         }
       }
     }

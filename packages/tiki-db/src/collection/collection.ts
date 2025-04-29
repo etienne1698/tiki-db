@@ -58,11 +58,25 @@ export class Collection<
     );
   }
 
-  update(
-    primary: ReturnType<typeof this.schema.model.primary>,
+  update<
+    Q extends Query<Schema, typeof this.database.schema> = Query<
+      Schema,
+      typeof this.database.schema
+    >
+  >(
+    query: Q,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>
   ) {
-    return this.database.storage.update(this.schema, primary, data);
+    return this.database.storage.update(this.schema, query, data);
+  }
+
+  remove<
+    Q extends Query<Schema, typeof this.database.schema> = Query<
+      Schema,
+      typeof this.database.schema
+    >
+  >(query: Q) {
+    return this.database.storage.remove(this.schema, query);
   }
 
   find<
