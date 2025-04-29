@@ -5,7 +5,14 @@
   A storage-agnostic ORM 
 </h4>
 
-`TikiDB` is a lightweight and flexible data access abstraction for JavaScript/TypeScript applications. It offers strong TypeScript support, supports multiple storage backends, and can optionally integrate with any reactive frameworks.
+`TikiDB` is a lightweight and flexible data access abstraction for JavaScript/TypeScript applications, offering strong TypeScript support. <br/>
+It supports multiple storage backends and can optionally integrate with any reactive framework.
+
+Inspirations for `TikiDB`: <br />
+[RxDB](https://github.com/pubkey/rxdb) /
+[WatermelonDB](https://github.com/Nozbe/WatermelonDB) /
+[Drizzle ORM](https://github.com/drizzle-team/drizzle-orm) /
+[Pinia Orm](https://github.com/codedredd/pinia-orm) 
 
 ---
 
@@ -15,13 +22,6 @@ Supported storage backends (suggest more if needed!):
 
 Reactive framework adapters  (suggest more if needed!):
 - Vue
-
-## ✨ Inspirations:
-- [RxDB](https://github.com/pubkey/rxdb)
-- [WatermelonDB](https://github.com/Nozbe/WatermelonDB)
-- [textDrizzle ORM](https://github.com/drizzle-team/drizzle-orm)
-- [Pinia Orm](https://github.com/codedredd/pinia-orm)
-
 
 ## 📦 Installation
 
@@ -45,6 +45,8 @@ npx tiki-db-storage-contributor-cli
 | `localStorage` | ❌ |
 | `IndexedDB`    | 🚧 |
 | `OPFS`         | ❌ |
+| `sql.js`         | ❌ |
+
 
 | Extension                    | Type           | Status | Notes                                  |
 |-----------------------------|----------------|--------|----------------------------------------|
