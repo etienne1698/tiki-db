@@ -36,7 +36,7 @@ export class QueriesManager {
     return true;
   }
 
-  getQueryConcerned<C extends CollectionSchema>(
+  getQueriesConcerned<C extends CollectionSchema>(
     collectionSchema: C,
     data: any
   ) {

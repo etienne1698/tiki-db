@@ -102,7 +102,7 @@ export class VueCollectionWrapper<
   }
 
   reRunQueryConcerned(data: any) {
-    const queryCacheDataConcerned = this.queriesManager.getQueryConcerned(
+    const queryCacheDataConcerned = this.queriesManager.getQueriesConcerned(
       this.collection.schema,
       data
     );
