@@ -63,4 +63,14 @@ export interface Storage<
         MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined
       >
     : MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined;
+
+  upsert<C extends CollectionSchema>(
+    collection: C,
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
+    saveRelations?: boolean
+  ): IsAsync extends true
+    ? Promise<
+        MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined
+      >
+    : MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined;
 }

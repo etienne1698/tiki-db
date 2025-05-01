@@ -1,8 +1,14 @@
+import { PrimaryKey } from "drizzle-orm/gel-core";
 import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
 import { Query, QueryResult } from "../../query/query";
 import { Relation } from "../../relation/relation";
-import { Primary, AnyButMaybeT, MaybeAsArray } from "../../types";
+import {
+  Primary,
+  AnyButMaybeT,
+  MaybeAsArray,
+  InferModelFieldName,
+} from "../../types";
 import { Storage } from "../storage";
 import { InMemoryQueryFilter } from "./in_memory_query_filter";
 
@@ -56,6 +62,40 @@ export class InMemoryStorage<
     }
   }
 
+  #getQueryByPrimary<C extends CollectionSchema>(
+    collection: C,
+    primary: Primary
+  ) {
+    return {
+      filters: {
+        [collection.model.primaryKey as InferModelFieldName<C["model"]>]: {
+          $eq: primary,
+        },
+      },
+    } as Query<C, DBFullSchema>;
+  }
+
+  // TODO: this function is not completed
+  upsert<C extends CollectionSchema>(
+    collection: C,
+    data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>,
+    saveRelations?: boolean
+  ): MaybeAsArray<ReturnType<C["model"]["normalize"]>> | undefined {
+    if (Array.isArray(data)) {
+      const result: ReturnType<C["model"]["normalize"]>[] = [];
+      return result;
+    } else {
+      const primary = collection.model.primary(data);
+      if (primary) {
+        return this.update(
+          collection,
+          data,
+          this.#getQueryByPrimary(collection, primary)
+        );
+      }
+    }
+  }
+
   find<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
@@ -90,7 +130,7 @@ export class InMemoryStorage<
     collection: C,
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
     query?: Query<C, DBFullSchema> | undefined
-  ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
+  ): ReturnType<C["model"]["normalize"]> | undefined {
     throw new Error("Method not implemented.");
   }
 

@@ -62,6 +62,7 @@ npx tiki-db-storage-contributor-cli
 ---
 
 ⚠️ `TikiDB` is still under development, and some breaking changes may occur in the future. While the general usage shouldn't change much, a few aspects are still being reconsidered:
+
 - "Reactive wrappers" will likely wrap the storage directly, rather than the database and collections.
 - The `asyncDatabase()` function is expected to be removed in favor of a unified `database()` function.
 - The generic TypeScript parameter "IsAsync" (on Database, QueryBuilder, Storage, and Collection) is planned to be removed.
