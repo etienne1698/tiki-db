@@ -1,6 +1,7 @@
 import { CollectionSchema } from "../../collection/collection_schema";
 import { DatabaseFullSchema } from "../../database/database";
 import { FILTER_OR, Filters, Query, QueryResult } from "../../query/query";
+import { InferModelNormalizedType } from "../../types";
 
 export class InMemoryQueryFilter<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
@@ -41,9 +42,9 @@ export class InMemoryQueryFilter<
   }
 
   apply(
-    list: QueryResult<C, DBFullSchema, Q>
+    list: InferModelNormalizedType<C['model']>[]
   ): QueryResult<C, DBFullSchema, Q> {
-    if (!this.query?.filters) return list;
-    return list.filter(this.filter.bind(this));
+    if (!this.query?.filters) return list as QueryResult<C, DBFullSchema, Q>;
+    return list.filter(this.filter.bind(this)) as QueryResult<C, DBFullSchema, Q>;
   }
 }

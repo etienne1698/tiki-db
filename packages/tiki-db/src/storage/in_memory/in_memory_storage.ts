@@ -16,7 +16,11 @@ export class InMemoryStorage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
 > implements Storage<DBFullSchema>
 {
-  stores: { [key in keyof DBFullSchema["schema"]]: any } = {} as {
+  stores: {
+    [key in keyof DBFullSchema["schema"]]: Array<
+      ReturnType<DBFullSchema["schemaDbName"][key]["model"]["normalize"]>
+    >;
+  } = {} as {
     [key in keyof DBFullSchema["schemaDbName"]]: Array<
       ReturnType<DBFullSchema["schemaDbName"][key]["model"]["normalize"]>
     >;
@@ -41,7 +45,9 @@ export class InMemoryStorage<
     if (saveRelations) {
       this.#saveRelations(collectionSchema, data);
     }
-    this.stores[collectionSchema.model.dbName].push(inserted);
+    this.stores[collectionSchema.model.dbName].push(
+      inserted as ReturnType<C["model"]["normalize"]>
+    );
     return inserted as ReturnType<C["model"]["normalize"]>;
   }
 
@@ -141,9 +147,7 @@ export class InMemoryStorage<
     // @ts-ignore
     this.stores[collectionSchema.model.dbName] = this.stores[
       collectionSchema.model.dbName
-    ].filters(
-      (d: InferModelNormalizedType<C["model"]>) => !filtersManager.filter(d)
-    );
+    ].filter((d) => !filtersManager.filter(d));
   }
 
   update<C extends CollectionSchema>(
@@ -151,15 +155,40 @@ export class InMemoryStorage<
     queryFilters: QueryFilters<C>,
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>
   ): ReturnType<C["model"]["normalize"]> | undefined {
-    throw new Error("Method not implemented.");
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
+      filters: queryFilters,
+    });
+    const index = this.stores[collectionSchema.model.dbName].findIndex(
+      filtersManager.filter.bind(filtersManager)
+    );
+    this.stores[collectionSchema.model.dbName][index] = {
+      ...this.stores[collectionSchema.model.dbName][index],
+      ...data,
+    };
+    return this.stores[collectionSchema.model.dbName][index];
   }
 
   updateMany<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: QueryFilters<C>,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>[]
+    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>
   ): ReturnType<C["model"]["normalize"]>[] {
-    throw new Error("Method not implemented.");
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
+      filters: queryFilters,
+    });
+    // @ts-ignore
+    return (this.stores[collectionSchema.model.dbName] = this.stores[
+      collectionSchema.model.dbName
+    ].reduce((prev, current, currentIndex) => {
+      if (!filtersManager.filter(current)) return prev;
+      const updated = {
+        ...this.stores[collectionSchema.model.dbName][currentIndex],
+        ...data,
+      } as InferModelNormalizedType<C["model"]>;
+      this.stores[collectionSchema.model.dbName][currentIndex] = updated;
+      prev.push(updated);
+      return prev;
+    }, [] as InferModelNormalizedType<C["model"]>[]));
   }
 
   #getRelationQuery<C extends CollectionSchema>(
