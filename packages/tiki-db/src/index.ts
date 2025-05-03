@@ -35,3 +35,4 @@ export {
   type Filters as Operator,
 } from "./query/query";
 export { QueryBuilder } from "./query/query_builder";
+export { QueriesManager, QueryCacheData } from "./query/queries_manager";

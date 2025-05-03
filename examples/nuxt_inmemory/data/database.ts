@@ -48,4 +48,6 @@ export const db = nuxtDatabaseWrapper(database(collections, storage));
 
 db.init();
 
-seed(db);
+if (import.meta.server) {
+  seed(db);
+}

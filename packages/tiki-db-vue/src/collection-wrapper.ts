@@ -3,11 +3,11 @@ import {
   Collection,
   CollectionSchema,
   DatabaseFullSchema,
+  QueriesManager,
   Query,
   QueryResult,
 } from "tiki-db";
 import { ref, Ref } from "vue";
-import { QueriesManager } from "./queries-manager";
 
 export type IVueCollectionWrapper<
   IsAsync extends boolean,
@@ -35,7 +35,7 @@ export abstract class AbstractVueCollectionWrapper<
 {
   constructor(
     private collection: Collection<false, Schema, DBFullSchema>,
-    private queriesManager: QueriesManager
+    private queriesManager: QueriesManager<Ref>
   ) {}
 
   abstract createRef(queryHash: string, queryResult: unknown): Ref;

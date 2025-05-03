@@ -1,95 +1,36 @@
-import { CollectionSchema, Query } from "tiki-db";
+import {
+  CollectionSchema,
+  QueriesManager,
+  Query,
+  QueryCacheData,
+} from "tiki-db";
+import { Ref } from "vue";
 
-type QueryCacheData = {
-  refCount: number;
-  result: any;
-  schema: CollectionSchema;
-  isFindFirst: boolean;
-  query: Query<any, any>;
-};
+export class VueQueryManager extends QueriesManager<Ref> {
+  queries: {
+    [queryHash: string]: QueryCacheData<Ref>;
+  } = {};
 
-export class QueriesManager {
-  queries: { [queryHash: string]: QueryCacheData } = {};
-
-  hashQuery<C extends CollectionSchema>(
-    collectionSchema: C,
-    query: Query<C, any>,
-    isFindFirst: boolean
-  ): string {
-    // TODO: better hash, JSON.stringify is heavy
-    return (
-      JSON.stringify(collectionSchema) +
-      JSON.stringify(query) +
-      isFindFirst.toString()
-    );
+  getQueryCache(queryHash: string): QueryCacheData<Ref> {
+    return this.queries[queryHash];
   }
-
-  has(queryHash: ReturnType<typeof this.hashQuery>) {
-    return Boolean(this.queries[queryHash]);
+  getAllQueryCache(): QueryCacheData<Ref>[] {
+    return Object.values(this.queries);
   }
-
-  isQueryConcerned<C extends CollectionSchema>(
-    collectionSchema: C,
-    queryCacheData: QueryCacheData,
-    data: any
-  ): boolean {
-    return true;
-  }
-
-  getQueriesConcernedByRemove<C extends CollectionSchema>(
-    collectionSchema: C,
-    queryFilters: any
-  ) {
-    const result: QueryCacheData[] = [];
-    for (const queryCacheData of Object.values(
-      this.queries
-    ) as QueryCacheData[]) {
-      result.push(queryCacheData);
-    }
-    return result;
-  }
-
-  getQueriesConcerned<C extends CollectionSchema>(
-    collectionSchema: C,
-    data: any
-  ) {
-    const result: QueryCacheData[] = [];
-    for (const queryCacheData of Object.values(
-      this.queries
-    ) as QueryCacheData[]) {
-      if (this.isQueryConcerned(collectionSchema, queryCacheData, data)) {
-        result.push(queryCacheData);
-      }
-    }
-    return result;
-  }
-
-  set<C extends CollectionSchema>(
-    queryHash: ReturnType<typeof this.hashQuery>,
-    collectionSchema: C,
-    isFindFirst: boolean,
-    query: Query<any, any>,
-    result: any
-  ) {
+  setQueryCache(
+    queryHash: string,
+    queryCacheData: Partial<{
+      refCount: number;
+      result: Ref<any, any>;
+      schema: CollectionSchema;
+      isFindFirst: boolean;
+      query: Query<any, any>;
+    }>
+  ): QueryCacheData<Ref> {
     this.queries[queryHash] = {
-      result,
-      refCount: 1,
-      schema: collectionSchema,
-      isFindFirst,
-      query,
+      ...this.queries[queryHash],
+      ...queryCacheData,
     };
-    return this.queries[queryHash].result;
-  }
-
-  subscribe(queryHash: ReturnType<typeof this.hashQuery>) {
-    this.queries[queryHash].refCount += 1;
-    return this.queries[queryHash].result;
-  }
-
-  unsubscribe(queryHash: ReturnType<typeof this.hashQuery>) {
-    this.queries[queryHash].refCount -= 1;
-    if (this.queries[queryHash].refCount === 0) {
-      delete this.queries[queryHash];
-    }
+    return this.queries[queryHash];
   }
 }
