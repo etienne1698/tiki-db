@@ -30,7 +30,7 @@ export type IVueCollectionWrapper<
     : never;
 };
 
-export class VueCollectionWrapper<
+export abstract class AbstractVueCollectionWrapper<
   Schema extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
 > implements IVueCollectionWrapper<false, Schema, DBFullSchema>
@@ -39,6 +39,8 @@ export class VueCollectionWrapper<
     private collection: Collection<false, Schema, DBFullSchema>,
     private queriesManager: QueriesManager
   ) {}
+
+  abstract createRef(queryHash: string, queryResult: unknown): Ref;
 
   findFirst(query: Parameters<typeof this.collection.findFirst>[0]) {
     const queryHash = this.queriesManager.hashQuery(
@@ -57,7 +59,7 @@ export class VueCollectionWrapper<
       this.collection.schema,
       true,
       query,
-      ref(queryResult)
+      this.createRef(queryHash, queryResult)
     ) as Ref<ReturnType<typeof this.collection.findFirst>>;
   }
 
@@ -78,7 +80,7 @@ export class VueCollectionWrapper<
       this.collection.schema,
       false,
       query,
-      ref(queryResult)
+      this.createRef(queryHash, queryResult)
     ) as Ref<ReturnType<typeof this.collection.find>>;
   }
 
@@ -95,8 +97,20 @@ export class VueCollectionWrapper<
     return queryResult;
   }
 
-  insert(data: Parameters<typeof this.collection.insert>[0]) {
-    const queryResult = this.collection.insert(data);
+  insert(
+    data: Parameters<typeof this.collection.insert>[0],
+    opts?: Parameters<typeof this.collection.insert>[1]
+  ) {
+    const queryResult = this.collection.insert(data, opts);
+    this.reRunQueryConcerned(data);
+    return queryResult;
+  }
+
+  upsert(
+    data: Parameters<typeof this.collection.upsert>[0],
+    opts?: Parameters<typeof this.collection.upsert>[1]
+  ) {
+    const queryResult = this.collection.upsert(data, opts);
     this.reRunQueryConcerned(data);
     return queryResult;
   }
@@ -115,5 +129,14 @@ export class VueCollectionWrapper<
             queryCacheData.query as Parameters<typeof this.find>[0]
           );
     }
+  }
+}
+
+export class VueCollectionWrapper<
+  Schema extends CollectionSchema,
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
+> extends AbstractVueCollectionWrapper<Schema, DBFullSchema> {
+  createRef(_queryHash: string, queryResult: unknown) {
+    return ref(queryResult);
   }
 }

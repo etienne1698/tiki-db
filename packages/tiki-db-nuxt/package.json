@@ -1,7 +1,7 @@
 {
-  "name": "tiki-db",
-  "version": "0.17.1",
-  "description": "TikiDB provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
+  "name": "tiki-db-nuxt",
+  "version": "0.17.0",
+  "description": "TikiDB nuxt adapter",
   "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -21,6 +21,12 @@
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
+  },
+  "peerDependencies": {
+    "tiki-db": "^0.17.1",
+    "tiki-db-vue": "^0.17.1",
+    "vue": "^3.5.13",
+    "nuxt": "^3.15.4"
   },
   "keywords": [
     "typescript",

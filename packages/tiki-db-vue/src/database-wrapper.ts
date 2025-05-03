@@ -1,4 +1,5 @@
 import {
+  Collection,
   CollectionSchema,
   Database,
   DatabaseFullSchema,
@@ -6,7 +7,10 @@ import {
   Query,
   Storage,
 } from "tiki-db";
-import { VueCollectionWrapper } from "./collection-wrapper";
+import {
+  IVueCollectionWrapper,
+  VueCollectionWrapper,
+} from "./collection-wrapper";
 import { QueriesManager } from "./queries-manager";
 
 export class VueDatabaseWrapper<
@@ -18,7 +22,8 @@ export class VueDatabaseWrapper<
   queriesManager = new QueriesManager();
 
   collections = {} as {
-    [K in keyof FullSchema["schema"]]: VueCollectionWrapper<
+    [K in keyof FullSchema["schema"]]: IVueCollectionWrapper<
+      false,
       FullSchema["schema"][K],
       FullSchema
     >;
@@ -39,10 +44,17 @@ export class VueDatabaseWrapper<
     return this.database.storage;
   }
 
-  constructor(public database: Database<IsAsync, FullSchema, S, M>) {
+  constructor(
+    public database: Database<IsAsync, FullSchema, S, M>,
+    collectionConstructor: new (schema: Collection<false, CollectionSchema, FullSchema>, qm: QueriesManager) => IVueCollectionWrapper<
+      false,
+      CollectionSchema,
+      FullSchema
+    >
+  ) {
     for (const [key, collection] of Object.entries(database.collections)) {
       // @ts-ignore
-      this.collections[key] = new VueCollectionWrapper(
+      this.collections[key] = new collectionConstructor(
         collection,
         this.queriesManager
       );
@@ -56,5 +68,5 @@ export function vueDatabaseWrapper<
   S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>,
   M extends Migrations<FullSchema> = Migrations<FullSchema>
 >(database: Database<IsAsync, FullSchema, S, M>) {
-  return new VueDatabaseWrapper(database);
+  return new VueDatabaseWrapper<IsAsync, FullSchema, S, M>(database, VueCollectionWrapper);
 }

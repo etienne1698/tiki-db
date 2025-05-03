@@ -48,14 +48,12 @@ export class Collection<
       createMissingRelatedFields: boolean;
     }>
   ) {
+    const saveRelations =
+      typeof opts?.saveRelations === "boolean" ? opts.saveRelations : true;
     if (opts?.createMissingRelatedFields) {
       this.createMissingRelatedFields(data);
     }
-    return this.database.storage.insert(
-      this.schema,
-      data,
-      opts?.saveRelations || true
-    );
+    return this.database.storage.insert(this.schema, data, saveRelations);
   }
 
   update<
@@ -68,6 +66,21 @@ export class Collection<
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>
   ) {
     return this.database.storage.update(this.schema, query, data);
+  }
+
+  upsert(
+    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>,
+    opts?: Partial<{
+      saveRelations: boolean;
+      createMissingRelatedFields: boolean;
+    }>
+  ) {
+    const saveRelations =
+      typeof opts?.saveRelations === "boolean" ? opts.saveRelations : true;
+    if (opts?.createMissingRelatedFields) {
+      this.createMissingRelatedFields(data);
+    }
+    return this.database.storage.upsert(this.schema, data, saveRelations);
   }
 
   remove<

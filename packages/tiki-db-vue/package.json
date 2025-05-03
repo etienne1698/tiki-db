@@ -1,7 +1,7 @@
 {
   "name": "tiki-db-vue",
-  "version": "0.15.0",
-  "description": "TikiDB vue QueryWrapper",
+  "version": "0.17.1",
+  "description": "TikiDB vue adapter",
   "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -23,7 +23,7 @@
     "vitest": "^3.0.9"
   },
   "peerDependencies": {
-    "tiki-db": "^0.16.0",
+    "tiki-db": "^0.17.1",
     "vue": "^3.5.13"
   },
   "keywords": [
