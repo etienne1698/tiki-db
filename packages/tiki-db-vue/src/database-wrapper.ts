@@ -12,7 +12,7 @@ import {
   IVueCollectionWrapper,
   VueCollectionWrapper,
 } from "./collection-wrapper";
-import { VueQueryManager } from "./queries-manager";
+import { VueQueriesManager } from "./queries-manager";
 import { Ref } from "vue";
 
 export class VueDatabaseWrapper<
@@ -71,6 +71,6 @@ export function vueDatabaseWrapper<
   return new VueDatabaseWrapper<IsAsync, FullSchema, S, M>(
     database,
     VueCollectionWrapper,
-    new VueQueryManager()
+    new VueQueriesManager()
   );
 }

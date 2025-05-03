@@ -1,13 +1,14 @@
+import { useState } from "nuxt/app";
 import { QueriesManager, QueryCacheData } from "tiki-db";
-import { Ref } from "vue";
+import { Ref, shallowRef, ShallowRef } from "vue";
 
-export class VueQueriesManager extends QueriesManager<Ref> {
-  queries: {
+export class NuxtQueriesManager extends QueriesManager<Ref> {
+  queries: ShallowRef<{
     [queryHash: string]: QueryCacheData<Ref>;
-  } = {};
+  }> = useState("_queries_cache", () => shallowRef({}));
 
   getQueryCache(queryHash: string): QueryCacheData<Ref> {
-    return this.queries[queryHash];
+    return this.queries.value[queryHash];
   }
   getAllQueryCache(): QueryCacheData<Ref>[] {
     return Object.values(this.queries);
@@ -16,10 +17,10 @@ export class VueQueriesManager extends QueriesManager<Ref> {
     queryHash: string,
     queryCacheData: Partial<QueryCacheData<Ref>>
   ): QueryCacheData<Ref> {
-    this.queries[queryHash] = {
-      ...this.queries[queryHash],
+    this.queries.value[queryHash] = {
+      ...this.queries.value[queryHash],
       ...queryCacheData,
     };
-    return this.queries[queryHash];
+    return this.queries.value[queryHash];
   }
 }
