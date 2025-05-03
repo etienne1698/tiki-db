@@ -50,7 +50,7 @@ export interface Storage<
   updateMany<C extends CollectionSchema>(
     collection: C,
     queryFilters: QueryFilters<C>,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[]
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
     : Partial<InferModelNormalizedType<C["model"]>>[];

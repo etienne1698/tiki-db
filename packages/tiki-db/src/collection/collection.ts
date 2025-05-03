@@ -80,7 +80,7 @@ export class Collection<
 
   updateMany<QF extends QueryFilters<Schema>>(
     queryFilters: QF,
-    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>[]
+    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>
   ) {
     return this.database.storage.updateMany(this.schema, queryFilters, data);
   }
