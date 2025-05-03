@@ -42,19 +42,13 @@ export interface Storage<
   remove<C extends CollectionSchema>(
     collection: C,
     queryFilters: QueryFilters<C>
-  ): IsAsync extends true
-    ? Promise<void>
-    : void | IsAsync extends true
-    ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
-    : Partial<InferModelNormalizedType<C["model"]>> | undefined;
+  ): IsAsync extends true ? Promise<void> : void;
 
   update<C extends CollectionSchema>(
     collection: C,
     queryFilters: QueryFilters<C>,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
   ): IsAsync extends true
-    ? Promise<void>
-    : void | IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
@@ -63,8 +57,6 @@ export interface Storage<
     queryFilters: QueryFilters<C>,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[]
   ): IsAsync extends true
-    ? Promise<void>
-    : void | IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
     : Partial<InferModelNormalizedType<C["model"]>>[];
 
@@ -73,8 +65,6 @@ export interface Storage<
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
   ): IsAsync extends true
-    ? Promise<void>
-    : void | IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
@@ -83,8 +73,6 @@ export interface Storage<
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
     saveRelations?: boolean
   ): IsAsync extends true
-    ? Promise<void>
-    : void | IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
     : Partial<InferModelNormalizedType<C["model"]>>[];
 
@@ -93,8 +81,6 @@ export interface Storage<
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
   ): IsAsync extends true
-    ? Promise<void>
-    : void | IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
@@ -103,8 +89,6 @@ export interface Storage<
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
     saveRelations?: boolean
   ): IsAsync extends true
-    ? Promise<void>
-    : void | IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
     : Partial<InferModelNormalizedType<C["model"]>>[];
 }

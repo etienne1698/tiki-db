@@ -133,7 +133,7 @@ export class InMemoryStorage<
   remove<C extends CollectionSchema>(
     collection: C,
     queryFilters: QueryFilters<C>
-  ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
+  ): void {
     throw new Error("Method not implemented.");
   }
 
