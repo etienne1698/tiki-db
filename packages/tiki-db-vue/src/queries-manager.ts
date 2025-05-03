@@ -36,6 +36,19 @@ export class QueriesManager {
     return true;
   }
 
+  getQueriesConcernedByRemove<C extends CollectionSchema>(
+    collectionSchema: C,
+    queryFilters: any
+  ) {
+    const result: QueryCacheData[] = [];
+    for (const queryCacheData of Object.values(
+      this.queries
+    ) as QueryCacheData[]) {
+      result.push(queryCacheData);
+    }
+    return result;
+  }
+
   getQueriesConcerned<C extends CollectionSchema>(
     collectionSchema: C,
     data: any

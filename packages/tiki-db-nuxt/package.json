@@ -1,6 +1,6 @@
 {
   "name": "tiki-db-nuxt",
-  "version": "0.17.0",
+  "version": "0.18.2",
   "description": "TikiDB nuxt adapter",
   "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
@@ -23,8 +23,8 @@
     "vitest": "^3.0.9"
   },
   "peerDependencies": {
-    "tiki-db": "^0.17.1",
-    "tiki-db-vue": "^0.17.1",
+    "tiki-db": "^0.18.2",
+    "tiki-db-vue": "^0.18.2",
     "vue": "^3.5.13",
     "nuxt": "^3.15.4"
   },

@@ -1,6 +1,6 @@
 {
   "name": "tiki-db-vue",
-  "version": "0.18.0",
+  "version": "0.18.3",
   "description": "TikiDB vue adapter",
   "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
@@ -23,7 +23,7 @@
     "vitest": "^3.0.9"
   },
   "peerDependencies": {
-    "tiki-db": "^0.18.1",
+    "tiki-db": "^0.18.2",
     "vue": "^3.5.13"
   },
   "keywords": [

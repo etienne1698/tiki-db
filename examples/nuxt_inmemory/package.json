@@ -14,9 +14,9 @@
     "@tailwindcss/vite": "^4.1.5",
     "nuxt": "^3.17.1",
     "tailwindcss": "^4.1.5",
-    "tiki-db": "^0.18.1",
-    "tiki-db-nuxt": "^0.17.0",
-    "tiki-db-vue": "^0.18.0",
+    "tiki-db": "^0.18.2",
+    "tiki-db-nuxt": "^0.18.2",
+    "tiki-db-vue": "^0.18.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1"
   }

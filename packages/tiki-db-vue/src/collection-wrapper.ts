@@ -90,16 +90,17 @@ export abstract class AbstractVueCollectionWrapper<
     ) as Ref<QueryResult<Schema, DBFullSchema, Q>>;
   }
 
-  update<Q extends Query<Schema, DBFullSchema>>(
-    query: Parameters<typeof this.collection.update>[0],
+  update(
+    queryFilters: Parameters<typeof this.collection.update>[0],
     data: Parameters<typeof this.collection.update>[1]
   ) {
-    const queryResult = this.collection.update(query, data);
+    const queryResult = this.collection.update(queryFilters, data);
     return queryResult;
   }
 
-  remove(query: Parameters<typeof this.collection.update>[0]) {
-    const queryResult = this.collection.remove(query);
+  remove(queryFilters: Parameters<typeof this.collection.remove>[0]) {
+    const queryResult = this.collection.remove(queryFilters);
+    this.reRunQueryConcernedByRemove(queryFilters);
     return queryResult;
   }
 
@@ -144,6 +145,27 @@ export abstract class AbstractVueCollectionWrapper<
     const queryResult = this.collection.upsertMany(data, opts);
     this.reRunQueryConcerned(data);
     return queryResult;
+  }
+
+  reRunQueryConcernedByRemove(queryFilters: any) {
+    const queryCacheDataConcerned =
+      this.queriesManager.getQueriesConcernedByRemove(
+        this.collection.schema,
+        queryFilters
+      );
+    for (const queryCacheData of queryCacheDataConcerned) {
+      queryCacheData.result.value = queryCacheData.isFindFirst
+        ? this.collection.findFirst(
+            queryCacheData.query as Parameters<
+              typeof this.collection.findFirst
+            >[0]
+          )
+        : this.collection.findMany(
+            queryCacheData.query as Parameters<
+              typeof this.collection.findMany
+            >[0]
+          );
+    }
   }
 
   reRunQueryConcerned(data: any) {
