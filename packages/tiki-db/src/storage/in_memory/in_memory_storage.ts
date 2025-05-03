@@ -72,11 +72,28 @@ export class InMemoryStorage<
 
   #getQueryFiltersByPrimary<C extends CollectionSchema>(
     collectionSchema: C,
-    primary: Primary
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
   ) {
+    const primary = collectionSchema.model.primary(data);
     return {
       [collectionSchema.model.primaryKey as InferModelFieldName<C["model"]>]: {
         $eq: primary,
+      },
+    } as QueryFilters<C>;
+  }
+
+  #getQueryFiltersByPrimaries<C extends CollectionSchema>(
+    collectionSchema: C,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[]
+  ) {
+    const primaries = data.reduce((prev, current) => {
+      const primary = collectionSchema.model.primary(current);
+      prev.push(primary);
+      return prev;
+    }, [] as Primary[]);
+    return {
+      [collectionSchema.model.primaryKey as InferModelFieldName<C["model"]>]: {
+        $in: primaries,
       },
     } as QueryFilters<C>;
   }
@@ -86,17 +103,14 @@ export class InMemoryStorage<
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
     saveRelations?: boolean
   ): ReturnType<C["model"]["normalize"]> | undefined {
-    const primary = collectionSchema.model.primary(data);
-    if (primary) {
-      return this.update(
-        collectionSchema,
-        this.#getQueryFiltersByPrimary(collectionSchema, primary),
-        data
-      );
+    const queryFilters = this.#getQueryFiltersByPrimary(collectionSchema, data);
+    const found = this.findFirst(collectionSchema, {
+      filters: queryFilters,
+    });
+    if (found) {
+      return this.update(collectionSchema, queryFilters, data);
     }
-    return this.insert(collectionSchema, data, saveRelations) as ReturnType<
-      C["model"]["normalize"]
-    >;
+    return this.insert(collectionSchema, data, saveRelations);
   }
 
   upsertMany<C extends CollectionSchema>(
@@ -241,7 +255,6 @@ export class InMemoryStorage<
     return data;
   }
 
-  // TODO: upsert no insert
   #saveRelations<C extends CollectionSchema>(collectionSchema: C, data: any) {
     for (const relationKey in collectionSchema.relations.schema) {
       if (!data?.[relationKey]) continue;
@@ -252,10 +265,10 @@ export class InMemoryStorage<
 
       if (Array.isArray(data[relationKey])) {
         if (relation.multiple) {
-          this.insertMany(relationCollectionSchemaSchema, data[relationKey]);
+          this.upsertMany(relationCollectionSchemaSchema, data[relationKey]);
         }
       } else {
-        this.insert(relationCollectionSchemaSchema, data[relationKey]);
+        this.upsert(relationCollectionSchemaSchema, data[relationKey]);
       }
     }
   }
