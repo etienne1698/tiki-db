@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { db } from "./data/database";
+
+const { $db } = useNuxtApp();
 
 const users = computed(
-  () => db.collections.users.findMany({ with: { posts: true } }).value
+  () => $db.collections.users.findMany({ with: { posts: true } }).value
 );
 </script>
 
@@ -14,7 +15,7 @@ const users = computed(
         <span>{{ user.firstname }}</span>
         <Button
           class="bg-red-600"
-          @click="db.collections.users.remove({ id: { $eq: user.id! } })"
+          @click="$db.collections.users.remove({ id: { $eq: user.id! } })"
         >
           delete user
         </Button>

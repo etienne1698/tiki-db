@@ -1,14 +1,4 @@
-import {
-  collection,
-  model,
-  relations,
-  string,
-  database,
-  InMemoryStorage,
-} from "tiki-db";
-
-import { nuxtDatabaseWrapper } from "tiki-db-nuxt";
-import { seed } from "./seed";
+import { collection, model, relations, string } from "tiki-db";
 
 const users = model("usersDbName", {
   id: string("id", ""),
@@ -38,16 +28,7 @@ const postsRelations = relations(posts, ({ one }) => ({
   }),
 }));
 
-const collections = {
+export const collections = {
   users: collection(users, usersRelations),
   posts: collection(posts, postsRelations),
 };
-
-const storage = new InMemoryStorage();
-export const db = nuxtDatabaseWrapper(database(collections, storage));
-
-db.init();
-
-if (import.meta.server) {
-  seed(db);
-}

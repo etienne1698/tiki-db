@@ -34,6 +34,7 @@ export abstract class QueriesManager<T> {
     return Boolean(this.getQueryCache(queryHash));
   }
 
+  // TODO: check if is concerned
   isQueryConcerned<C extends CollectionSchema>(
     collectionSchema: C,
     queryCacheData: QueryCacheData<T>,
@@ -42,6 +43,7 @@ export abstract class QueriesManager<T> {
     return true;
   }
 
+  // TODO: check if is concerned
   getQueriesConcernedByRemove<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: any

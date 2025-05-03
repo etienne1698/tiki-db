@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { db } from "./database";
+import type { Database } from "tiki-db";
 
-export function seed(database: typeof db) {
+export function seed(database: Database) {
   const users = [];
   const posts = [];
 
