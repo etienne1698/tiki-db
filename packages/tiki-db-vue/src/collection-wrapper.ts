@@ -3,31 +3,28 @@ import {
   CollectionSchema,
   DatabaseFullSchema,
   Query,
-  QueryBuilder,
+  QueryResult,
 } from "tiki-db";
 import { ref, Ref } from "vue";
 import { QueriesManager } from "./queries-manager";
 
-/**
- * This interface feels pointless — it just forces me to re-implement every method from the wrapped collection.
- */
 export type IVueCollectionWrapper<
   IsAsync extends boolean,
   Schema extends CollectionSchema,
-  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
-  C extends Collection<IsAsync, Schema, DBFullSchema> = Collection<
-    IsAsync,
-    Schema,
-    DBFullSchema
-  >
-> = {
-  [K in keyof Omit<C, "database" | "schema" | "query">]: C[K] extends (
-    ...args: any
-  ) => any
-    ? K extends "find" | "findFirst"
-      ? (...args: Parameters<C[K]>) => Ref<ReturnType<C[K]>>
-      : (...args: Parameters<C[K]>) => ReturnType<C[K]>
-    : never;
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
+> = Omit<
+  Collection<IsAsync, Schema, DBFullSchema>,
+  "find" | "findFirst" | "schema" | "database" | "query"
+> & {
+  find<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
+    query: Q
+  ): Ref<QueryResult<Schema, DBFullSchema, Q>>;
+
+  findFirst<
+    Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>
+  >(
+    query: Q
+  ): Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
 };
 
 export abstract class AbstractVueCollectionWrapper<
@@ -42,46 +39,54 @@ export abstract class AbstractVueCollectionWrapper<
 
   abstract createRef(queryHash: string, queryResult: unknown): Ref;
 
-  findFirst(query: Parameters<typeof this.collection.findFirst>[0]) {
+  findFirst<
+    Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>
+  >(query: Q) {
     const queryHash = this.queriesManager.hashQuery(
       this.collection.schema,
-      query,
+      query as Parameters<typeof this.collection.findFirst>[0],
       true
     );
     if (this.queriesManager.has(queryHash)) {
       return this.queriesManager.subscribe(queryHash) as Ref<
-        ReturnType<typeof this.collection.findFirst>
+        QueryResult<Schema, DBFullSchema, Q>[0]
       >;
     }
-    const queryResult = this.collection.findFirst(query);
+    const queryResult = this.collection.findFirst(
+      query as Parameters<typeof this.collection.findFirst>[0]
+    );
     return this.queriesManager.set(
       queryHash,
       this.collection.schema,
       true,
       query,
       this.createRef(queryHash, queryResult)
-    ) as Ref<ReturnType<typeof this.collection.findFirst>>;
+    ) as Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
   }
 
-  find(query: Parameters<typeof this.collection.find>[0]) {
+  find<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
+    query: Q
+  ) {
     const queryHash = this.queriesManager.hashQuery(
       this.collection.schema,
-      query,
+      query as Parameters<typeof this.collection.find>[0],
       false
     );
     if (this.queriesManager.has(queryHash)) {
       return this.queriesManager.subscribe(queryHash) as Ref<
-        ReturnType<typeof this.collection.find>
+        QueryResult<Schema, DBFullSchema, Q>
       >;
     }
-    const queryResult = this.collection.find(query);
+    const queryResult = this.collection.find(
+      query as Parameters<typeof this.collection.find>[0]
+    );
     return this.queriesManager.set(
       queryHash,
       this.collection.schema,
       false,
       query,
       this.createRef(queryHash, queryResult)
-    ) as Ref<ReturnType<typeof this.collection.find>>;
+    ) as Ref<QueryResult<Schema, DBFullSchema, Q>>;
   }
 
   update<Q extends Query<Schema, DBFullSchema>>(
@@ -123,10 +128,12 @@ export abstract class AbstractVueCollectionWrapper<
     for (const queryCacheData of queryCacheDataConcerned) {
       queryCacheData.result.value = queryCacheData.isFindFirst
         ? this.collection.findFirst(
-            queryCacheData.query as Parameters<typeof this.find>[0]
+            queryCacheData.query as Parameters<
+              typeof this.collection.findFirst
+            >[0]
           )
         : this.collection.find(
-            queryCacheData.query as Parameters<typeof this.find>[0]
+            queryCacheData.query as Parameters<typeof this.collection.find>[0]
           );
     }
   }

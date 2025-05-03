@@ -10,6 +10,7 @@ import {
 import {
   IVueCollectionWrapper,
   VueCollectionWrapper,
+  AbstractVueCollectionWrapper,
 } from "./collection-wrapper";
 import { QueriesManager } from "./queries-manager";
 
