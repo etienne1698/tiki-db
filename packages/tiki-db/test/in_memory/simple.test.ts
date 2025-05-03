@@ -7,6 +7,6 @@ test("simple insert and retrieve", () => {
   db.collections.users.insert({ id: "1", firstname: "Etienne" });
 
   expect(
-    db.collections.users.find({})[0].firstname
+    db.collections.users.findMany({})[0].firstname
   ).toBe("Etienne");
 });

@@ -42,7 +42,7 @@ export class Collection<
   }
 
   insert(
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>,
+    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>,
     opts?: Partial<{
       saveRelations: boolean;
       createMissingRelatedFields: boolean;
@@ -56,15 +56,37 @@ export class Collection<
     return this.database.storage.insert(this.schema, data, saveRelations);
   }
 
+  insertMany(
+    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>[],
+    opts?: Partial<{
+      saveRelations: boolean;
+      createMissingRelatedFields: boolean;
+    }>
+  ) {
+    const saveRelations =
+      typeof opts?.saveRelations === "boolean" ? opts.saveRelations : true;
+    /* if (opts?.createMissingRelatedFields) {
+      this.createMissingRelatedFields(data);
+    } */
+    return this.database.storage.insertMany(this.schema, data, saveRelations);
+  }
+
   update<QF extends QueryFilters<Schema>>(
     queryFilters: QF,
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>
+    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>
   ) {
     return this.database.storage.update(this.schema, queryFilters, data);
   }
 
+  updateMany<QF extends QueryFilters<Schema>>(
+    queryFilters: QF,
+    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>[]
+  ) {
+    return this.database.storage.updateMany(this.schema, queryFilters, data);
+  }
+
   upsert(
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>,
+    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>,
     opts?: Partial<{
       saveRelations: boolean;
       createMissingRelatedFields: boolean;
@@ -76,6 +98,21 @@ export class Collection<
       this.createMissingRelatedFields(data);
     }
     return this.database.storage.upsert(this.schema, data, saveRelations);
+  }
+
+  upsertMany(
+    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>[],
+    opts?: Partial<{
+      saveRelations: boolean;
+      createMissingRelatedFields: boolean;
+    }>
+  ) {
+    const saveRelations =
+      typeof opts?.saveRelations === "boolean" ? opts.saveRelations : true;
+    /* if (opts?.createMissingRelatedFields) {
+      this.createMissingRelatedFields(data);
+    } */
+    return this.database.storage.upsertMany(this.schema, data, saveRelations);
   }
 
   remove<QF extends QueryFilters<Schema>>(queryFilters: QF) {

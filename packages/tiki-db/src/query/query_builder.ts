@@ -76,8 +76,8 @@ export class QueryBuilder<
     return this.where(field, Filters.IN, value);
   }
 
-  find() {
-    return this.database.storage.find(this.collection, this.query);
+  findMany() {
+    return this.database.storage.findMany(this.collection, this.query);
   }
 
   findFirst() {

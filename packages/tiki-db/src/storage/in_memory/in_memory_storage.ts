@@ -22,8 +22,6 @@ export class InMemoryStorage<
     >;
   };
 
-  filtersManager = new InMemoryQueryFilter<DBFullSchema>();
-
   declare database: Database;
 
   async init(database: Database): Promise<void> {
@@ -111,10 +109,8 @@ export class InMemoryStorage<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(collection: C, query?: Q | undefined): QueryResult<C, DBFullSchema, Q> {
-    const res = this.filtersManager.apply(
-      this.stores[collection.model.dbName],
-      query
-    ) as QueryResult<C, DBFullSchema, Q>;
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(query);
+    const res = filtersManager.apply(this.stores[collection.model.dbName]);
     if (query?.with) {
       return res.map((data) =>
         this.#getDataWithRelations(collection, query, data)

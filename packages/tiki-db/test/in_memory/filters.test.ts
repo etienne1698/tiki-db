@@ -24,53 +24,53 @@ test("bad $eq request should not retrieve obj", () => {
 test("$in should work", () => {
   const { db } = getTestDatabase();
 
-  db.collections.users.insert([
+  db.collections.users.insertMany([
     { id: "1", firstname: "Etienne" },
     { id: "2", firstname: "Geoffroy" },
     { id: "3", firstname: "Marc" },
   ]);
 
   expect(
-    db.collections.users.find({ filters: { id: { $in: ["1", "2"] } } })
+    db.collections.users.findMany({ filters: { id: { $in: ["1", "2"] } } })
   ).toContainEqual({ id: "2", firstname: "Geoffroy" });
 
   expect(
-    db.collections.users.find({ filters: { id: { $in: ["1", "2"] } } })
+    db.collections.users.findMany({ filters: { id: { $in: ["1", "2"] } } })
   ).toContainEqual({ id: "1", firstname: "Etienne" });
 
   expect(
-    db.collections.users.find({ filters: { id: { $in: ["1", "2"] } } })
+    db.collections.users.findMany({ filters: { id: { $in: ["1", "2"] } } })
   ).length(2);
 });
 
 test("$ne should work", () => {
   const { db } = getTestDatabase();
 
-  db.collections.users.insert([
+  db.collections.users.insertMany([
     { id: "1", firstname: "Etienne" },
     { id: "2", firstname: "Geoffroy" },
     { id: "3", firstname: "Marc" },
   ]);
 
   expect(
-    db.collections.users.find({ filters: { id: { $ne: "2" } } })
+    db.collections.users.findMany({ filters: { id: { $ne: "2" } } })
   ).not.toContainEqual({ id: "2", firstname: "Geoffroy" });
 });
 
 test("$notIn should work", () => {
   const { db } = getTestDatabase();
 
-  db.collections.users.insert([
+  db.collections.users.insertMany([
     { id: "1", firstname: "Etienne" },
     { id: "2", firstname: "Geoffroy" },
     { id: "3", firstname: "Marc" },
   ]);
 
   expect(
-    db.collections.users.find({ filters: { id: { $notIn: ["1", "3"] } } })
+    db.collections.users.findMany({ filters: { id: { $notIn: ["1", "3"] } } })
   ).toContainEqual({ id: "2", firstname: "Geoffroy" });
 
   expect(
-    db.collections.users.find({ filters: { id: { $notIn: ["1", "3"] } } })
+    db.collections.users.findMany({ filters: { id: { $notIn: ["1", "3"] } } })
   ).length(1);
 });

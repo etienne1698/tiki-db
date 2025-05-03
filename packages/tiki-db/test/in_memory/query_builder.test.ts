@@ -4,7 +4,7 @@ import { getTestDatabase } from "./base";
 test("QueryBuilder should return same as direct query", () => {
   const { db } = getTestDatabase();
 
-  db.collections.users.insert([
+  db.collections.users.insertMany([
     { id: "1", firstname: "Etienne" },
     { id: "2", firstname: "Geoffroy" },
   ]);
