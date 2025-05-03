@@ -35,6 +35,6 @@ export function seed(database: typeof db) {
     }
   }
 
-  database.collections.posts.insert(posts);
-  database.collections.users.insert(users);
+  database.collections.posts.insertMany(posts);
+  database.collections.users.insertMany(users);
 }

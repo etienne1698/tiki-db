@@ -1,7 +1,7 @@
 import { Database, DatabaseFullSchema } from "../database/database";
 import { createDefaultQuery, Query, QueryFilters } from "../query/query";
 import { Relation } from "../relation/relation";
-import { AnyButMaybeT, InferModelNormalizedType, MaybeAsArray } from "../types";
+import { AnyButMaybeT, InferModelNormalizedType } from "../types";
 import { CollectionSchema } from "./collection_schema";
 
 export class Collection<

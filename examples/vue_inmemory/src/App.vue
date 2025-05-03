@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { db } from "./data/database";
 
 const users = computed(() =>
-  db.collections.users.find({ with: { posts: true } })
+  db.collections.users.findMany({ with: { posts: true } }).value
 );
 </script>
 

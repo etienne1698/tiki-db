@@ -62,10 +62,8 @@ export class Migrator<D extends Database = Database> extends Collection<
           await m.up({ schema: this.database.schema });
           await this.update(
             {
-              filters: {
-                modelDBName: {
-                  $eq: modelDbName,
-                },
+              modelDBName: {
+                $eq: modelDbName,
               },
             },
             { version: m.version }

@@ -1,4 +1,5 @@
 import {
+  AnyButMaybeT,
   Collection,
   CollectionSchema,
   DatabaseFullSchema,
@@ -14,9 +15,9 @@ export type IVueCollectionWrapper<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
 > = Omit<
   Collection<IsAsync, Schema, DBFullSchema>,
-  "find" | "findFirst" | "schema" | "database" | "query"
+  "findMany" | "findFirst" | "schema" | "database" | "query"
 > & {
-  find<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
+  findMany<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
     query: Q
   ): Ref<QueryResult<Schema, DBFullSchema, Q>>;
 
@@ -64,12 +65,12 @@ export abstract class AbstractVueCollectionWrapper<
     ) as Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
   }
 
-  find<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
+  findMany<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
     query: Q
   ) {
     const queryHash = this.queriesManager.hashQuery(
       this.collection.schema,
-      query as Parameters<typeof this.collection.find>[0],
+      query as Parameters<typeof this.collection.findMany>[0],
       false
     );
     if (this.queriesManager.has(queryHash)) {
@@ -77,8 +78,8 @@ export abstract class AbstractVueCollectionWrapper<
         QueryResult<Schema, DBFullSchema, Q>
       >;
     }
-    const queryResult = this.collection.find(
-      query as Parameters<typeof this.collection.find>[0]
+    const queryResult = this.collection.findMany(
+      query as Parameters<typeof this.collection.findMany>[0]
     );
     return this.queriesManager.set(
       queryHash,
@@ -120,6 +121,31 @@ export abstract class AbstractVueCollectionWrapper<
     return queryResult;
   }
 
+  insertMany(
+    data: Parameters<typeof this.collection.insertMany>[0],
+    opts?: Parameters<typeof this.collection.insertMany>[1]
+  ): Partial<ReturnType<Schema["model"]["normalize"]>>[] {
+    const queryResult = this.collection.insertMany(data, opts);
+    this.reRunQueryConcerned(data);
+    return queryResult;
+  }
+  updateMany(
+    queryFilters: Parameters<typeof this.collection.updateMany>[0],
+    data: Parameters<typeof this.collection.updateMany>[1]
+  ): Partial<ReturnType<Schema["model"]["normalize"]>>[] {
+    const queryResult = this.collection.updateMany(queryFilters, data);
+    this.reRunQueryConcerned(data);
+    return queryResult;
+  }
+  upsertMany(
+    data: Parameters<typeof this.collection.upsertMany>[0],
+    opts?: Parameters<typeof this.collection.upsertMany>[1]
+  ): Partial<ReturnType<Schema["model"]["normalize"]>>[] {
+    const queryResult = this.collection.upsertMany(data, opts);
+    this.reRunQueryConcerned(data);
+    return queryResult;
+  }
+
   reRunQueryConcerned(data: any) {
     const queryCacheDataConcerned = this.queriesManager.getQueriesConcerned(
       this.collection.schema,
@@ -132,8 +158,10 @@ export abstract class AbstractVueCollectionWrapper<
               typeof this.collection.findFirst
             >[0]
           )
-        : this.collection.find(
-            queryCacheData.query as Parameters<typeof this.collection.find>[0]
+        : this.collection.findMany(
+            queryCacheData.query as Parameters<
+              typeof this.collection.findMany
+            >[0]
           );
     }
   }

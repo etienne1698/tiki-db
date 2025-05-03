@@ -3,12 +3,7 @@ import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
 import { Query, QueryFilters, QueryResult } from "../../query/query";
 import { Relation } from "../../relation/relation";
-import {
-  Primary,
-  AnyButMaybeT,
-  MaybeAsArray,
-  InferModelFieldName,
-} from "../../types";
+import { Primary, AnyButMaybeT, InferModelFieldName } from "../../types";
 import { Storage } from "../storage";
 import { InMemoryQueryFilter } from "./in_memory_query_filter";
 

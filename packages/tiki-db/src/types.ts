@@ -1,8 +1,6 @@
 import type { Model } from "./model/model";
 import type { Field } from "./model/field";
 
-export type MaybeAsArray<T> = T | T[];
-
 export type DeepPartial<T> = Partial<{
   [P in keyof T]?: DeepPartial<T[P]>;
 }>;
