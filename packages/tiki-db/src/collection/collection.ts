@@ -1,5 +1,5 @@
 import { Database, DatabaseFullSchema } from "../database/database";
-import { createDefaultQuery, Query } from "../query/query";
+import { createDefaultQuery, Query, QueryFilters } from "../query/query";
 import { Relation } from "../relation/relation";
 import { AnyButMaybeT, InferModelNormalizedType, MaybeAsArray } from "../types";
 import { CollectionSchema } from "./collection_schema";
@@ -56,16 +56,11 @@ export class Collection<
     return this.database.storage.insert(this.schema, data, saveRelations);
   }
 
-  update<
-    Q extends Query<Schema, typeof this.database.schema> = Query<
-      Schema,
-      typeof this.database.schema
-    >
-  >(
-    query: Q,
+  update<QF extends QueryFilters<Schema>>(
+    queryFilters: QF,
     data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>>
   ) {
-    return this.database.storage.update(this.schema, query, data);
+    return this.database.storage.update(this.schema, queryFilters, data);
   }
 
   upsert(
@@ -83,22 +78,17 @@ export class Collection<
     return this.database.storage.upsert(this.schema, data, saveRelations);
   }
 
-  remove<
-    Q extends Query<Schema, typeof this.database.schema> = Query<
-      Schema,
-      typeof this.database.schema
-    >
-  >(query: Q) {
-    return this.database.storage.remove(this.schema, query);
+  remove<QF extends QueryFilters<Schema>>(queryFilters: QF) {
+    return this.database.storage.remove(this.schema, queryFilters);
   }
 
-  find<
+  findMany<
     Q extends Query<Schema, typeof this.database.schema> = Query<
       Schema,
       typeof this.database.schema
     >
   >(query: Q) {
-    return this.database.storage.find(
+    return this.database.storage.findMany(
       this.schema,
       Object.assign(createDefaultQuery<Schema, DBFullSchema>(), query)
     );

@@ -1,6 +1,6 @@
 import type { CollectionSchema } from "../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../database/database";
-import type { Query, QueryResult } from "../query/query";
+import type { Query, QueryFilters, QueryResult } from "../query/query";
 import type {
   AnyButMaybeT,
   InferModelNormalizedType,
@@ -19,7 +19,7 @@ export interface Storage<
    */
   init(database: Database): Promise<void>;
 
-  find<
+  findMany<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(
@@ -41,36 +41,70 @@ export interface Storage<
 
   remove<C extends CollectionSchema>(
     collection: C,
-    query: Query<C, DBFullSchema>
+    queryFilters: QueryFilters<C>
   ): IsAsync extends true
+    ? Promise<void>
+    : void | IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
   update<C extends CollectionSchema>(
     collection: C,
-    query: Query<C, DBFullSchema>,
+    queryFilters: QueryFilters<C>,
     data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
   ): IsAsync extends true
+    ? Promise<void>
+    : void | IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
 
+  updateMany<C extends CollectionSchema>(
+    collection: C,
+    queryFilters: QueryFilters<C>,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[]
+  ): IsAsync extends true
+    ? Promise<void>
+    : void | IsAsync extends true
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
+    : Partial<InferModelNormalizedType<C["model"]>>[];
+
   insert<C extends CollectionSchema>(
     collection: C,
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
   ): IsAsync extends true
-    ? Promise<
-        MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined
-      >
-    : MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined;
+    ? Promise<void>
+    : void | IsAsync extends true
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
+    : Partial<InferModelNormalizedType<C["model"]>> | undefined;
+
+  insertMany<C extends CollectionSchema>(
+    collection: C,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
+    saveRelations?: boolean
+  ): IsAsync extends true
+    ? Promise<void>
+    : void | IsAsync extends true
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
+    : Partial<InferModelNormalizedType<C["model"]>>[];
 
   upsert<C extends CollectionSchema>(
     collection: C,
-    data: MaybeAsArray<AnyButMaybeT<InferModelNormalizedType<C["model"]>>>,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
   ): IsAsync extends true
-    ? Promise<
-        MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined
-      >
-    : MaybeAsArray<Partial<InferModelNormalizedType<C["model"]>>> | undefined;
+    ? Promise<void>
+    : void | IsAsync extends true
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
+    : Partial<InferModelNormalizedType<C["model"]>> | undefined;
+
+  upsertMany<C extends CollectionSchema>(
+    collection: C,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
+    saveRelations?: boolean
+  ): IsAsync extends true
+    ? Promise<void>
+    : void | IsAsync extends true
+    ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
+    : Partial<InferModelNormalizedType<C["model"]>>[];
 }

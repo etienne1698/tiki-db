@@ -1,7 +1,7 @@
 import { PrimaryKey } from "drizzle-orm/gel-core";
 import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
-import { Query, QueryResult } from "../../query/query";
+import { Query, QueryFilters, QueryResult } from "../../query/query";
 import { Relation } from "../../relation/relation";
 import {
   Primary,
@@ -36,67 +36,78 @@ export class InMemoryStorage<
 
   insert<C extends CollectionSchema>(
     collection: C,
-    data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>,
+    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
     saveRelations?: boolean
-  ): MaybeAsArray<ReturnType<C["model"]["normalize"]>> {
-    if (Array.isArray(data)) {
-      const allInserted: ReturnType<C["model"]["normalize"]>[] = [];
-      for (const d of data) {
-        const inserted = collection.model.normalize(d) as ReturnType<
-          C["model"]["normalize"]
-        >;
-        if (saveRelations) {
-          this.#saveRelations(collection, d);
-        }
-        this.stores[collection.model.dbName].push(inserted);
-        allInserted.push(inserted);
-      }
-      return allInserted;
-    } else {
-      const inserted = collection.model.normalize(data);
-      if (saveRelations) {
-        this.#saveRelations(collection, data);
-      }
-      this.stores[collection.model.dbName].push(inserted);
-      return inserted as ReturnType<C["model"]["normalize"]>;
+  ): ReturnType<C["model"]["normalize"]> {
+    const inserted = collection.model.normalize(data);
+    if (saveRelations) {
+      this.#saveRelations(collection, data);
     }
+    this.stores[collection.model.dbName].push(inserted);
+    return inserted as ReturnType<C["model"]["normalize"]>;
   }
 
-  #getQueryByPrimary<C extends CollectionSchema>(
+  insertMany<C extends CollectionSchema>(
+    collection: C,
+    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>[],
+    saveRelations?: boolean
+  ): ReturnType<C["model"]["normalize"]>[] {
+    const allInserted: ReturnType<C["model"]["normalize"]>[] = [];
+    for (const d of data) {
+      const inserted = collection.model.normalize(d) as ReturnType<
+        C["model"]["normalize"]
+      >;
+      if (saveRelations) {
+        this.#saveRelations(collection, d);
+      }
+      this.stores[collection.model.dbName].push(inserted);
+      allInserted.push(inserted);
+    }
+    return allInserted;
+  }
+
+  #getQueryFiltersByPrimary<C extends CollectionSchema>(
     collection: C,
     primary: Primary
   ) {
     return {
-      filters: {
-        [collection.model.primaryKey as InferModelFieldName<C["model"]>]: {
-          $eq: primary,
-        },
+      [collection.model.primaryKey as InferModelFieldName<C["model"]>]: {
+        $eq: primary,
       },
-    } as Query<C, DBFullSchema>;
+    } as QueryFilters<C>;
   }
 
-  // TODO: this function is not completed
   upsert<C extends CollectionSchema>(
     collection: C,
-    data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>,
+    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
     saveRelations?: boolean
-  ): MaybeAsArray<ReturnType<C["model"]["normalize"]>> | undefined {
-    if (Array.isArray(data)) {
-      const result: ReturnType<C["model"]["normalize"]>[] = [];
-      return result;
-    } else {
-      const primary = collection.model.primary(data);
-      if (primary) {
-        return this.update(
-          collection,
-          data,
-          this.#getQueryByPrimary(collection, primary)
-        );
-      }
+  ): ReturnType<C["model"]["normalize"]> | undefined {
+    const primary = collection.model.primary(data);
+    if (primary) {
+      return this.update(
+        collection,
+        this.#getQueryFiltersByPrimary(collection, primary),
+        data
+      );
     }
+    return this.insert(collection, data, saveRelations) as ReturnType<
+      C["model"]["normalize"]
+    >;
   }
 
-  find<
+  upsertMany<C extends CollectionSchema>(
+    collection: C,
+    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>[],
+    saveRelations?: boolean
+  ): ReturnType<C["model"]["normalize"]>[] {
+    return data.reduce((prev, current) => {
+      const res = this.upsert(collection, current, saveRelations);
+      if (res) prev.push(res);
+      return prev;
+    }, []) as ReturnType<C["model"]["normalize"]>[];
+  }
+
+  findMany<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(collection: C, query?: Q | undefined): QueryResult<C, DBFullSchema, Q> {
@@ -116,21 +127,29 @@ export class InMemoryStorage<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(collection: C, query?: Q | undefined) {
-    return this.find(collection, query)?.[0];
+    return this.findMany(collection, query)?.[0];
   }
 
   remove<C extends CollectionSchema>(
     collection: C,
-    query: Query<C, DBFullSchema> | undefined
+    queryFilters: QueryFilters<C>
   ): Partial<ReturnType<C["model"]["normalize"]>> | undefined {
     throw new Error("Method not implemented.");
   }
 
   update<C extends CollectionSchema>(
     collection: C,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
-    query?: Query<C, DBFullSchema> | undefined
+    queryFilters: QueryFilters<C>,
+    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>
   ): ReturnType<C["model"]["normalize"]> | undefined {
+    throw new Error("Method not implemented.");
+  }
+
+  updateMany<C extends CollectionSchema>(
+    collection: C,
+    queryFilters: QueryFilters<C>,
+    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>[]
+  ): ReturnType<C["model"]["normalize"]>[] {
     throw new Error("Method not implemented.");
   }
 
@@ -172,7 +191,7 @@ export class InMemoryStorage<
           ...relationQuery.filters,
         };
       }
-      data[relationKey] = this[relation.multiple ? "find" : "findFirst"](
+      data[relationKey] = this[relation.multiple ? "findMany" : "findFirst"](
         relationCollection,
         relationQuery as Query<typeof relationCollection, DBFullSchema>
       );
@@ -191,7 +210,7 @@ export class InMemoryStorage<
 
       if (Array.isArray(data[relationKey])) {
         if (relation.multiple) {
-          this.insert(relationCollection, data[relationKey]);
+          this.insertMany(relationCollection, data[relationKey]);
         }
       } else {
         this.insert(relationCollection, data[relationKey]);
