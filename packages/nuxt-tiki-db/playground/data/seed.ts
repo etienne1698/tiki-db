@@ -41,6 +41,8 @@ export function seed<
     }
   }
 
+  console.error(database)
+
   database.collections.posts.insertMany(posts);
   database.collections.users.insertMany(users);
 }

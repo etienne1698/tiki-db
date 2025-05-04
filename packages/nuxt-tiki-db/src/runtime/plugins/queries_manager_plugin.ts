@@ -1,11 +1,11 @@
-import { QueriesManager, type QueryCacheData } from "tiki-db";
+import { collection, QueriesManager, type QueryCacheData } from "tiki-db";
 import {
   definePayloadPlugin,
   definePayloadReducer,
   definePayloadReviver,
 } from "#app";
 
-const PAYLOAD_TYPE = "Model";
+const PAYLOAD_TYPE = "QueriesManager";
 
 export default definePayloadPlugin((_nuxtApp) => {
   definePayloadReducer(PAYLOAD_TYPE, (data) => {
