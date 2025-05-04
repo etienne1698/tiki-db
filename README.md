@@ -19,7 +19,6 @@ Inspirations for `TikiDB`: <br />
 To provide a better alternative, I created TikiDB after analyzing these libraries.
 [Check out this link for a comparison table of them.](https://github.com/etienne1698/tiki-db/blob/main/feature-comparison.md)
 
-
 ## 📦 Installation
 
 Install `TikiDB` via npm:
@@ -46,18 +45,18 @@ npx tiki-db-storage-contributor-cli
 | `OPFS`         | ❌     | -             |
 | `sql.js`       | ❌     | -             |
 
-| Reactive Framework | Status | NPM package   |
-| ------------------ | ------ | ------------- |
-| `Vue`              | 🚧     | `tiki-db-vue` |
-| `React`            | ❌     | -             |
-| `Angular`          | ❌     | -             |
+| Reactive Framework | Status | NPM package    |
+| ------------------ | ------ | -------------- |
+| `Vue`              | ✅     | `tiki-db-vue`  |
+| `Nuxt`             | 🚧     | `nuxt-tiki-db` |
+| `React`            | ❌     | -              |
+| `Angular`          | ❌     | -              |
 
 | Extension              | Status | Notes                         | NPM package |
 | ---------------------- | ------ | ----------------------------- | ----------- |
 | `syncEngine`           | ❌     | Core sync logic               | -           |
 | `httpReplication`      | ❌     | Sync over HTTP                | -           |
 | `websocketReplication` | ❌     | Real-time sync with WebSocket | -           |
-
 
 ---
 
