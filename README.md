@@ -16,9 +16,6 @@ Inspirations for `TikiDB`: <br />
 **[Drizzle ORM](https://github.com/drizzle-team/drizzle-orm)** /
 **[Pinia Orm](https://github.com/codedredd/pinia-orm)**
 
-To provide a better alternative, I created TikiDB after analyzing these libraries.
-[Check out this link for a comparison table of them.](https://github.com/etienne1698/tiki-db/blob/main/feature-comparison.md)
-
 ## 📦 Installation
 
 Install `TikiDB` via npm:
