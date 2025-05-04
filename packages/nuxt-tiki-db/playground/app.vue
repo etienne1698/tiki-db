@@ -1,14 +1,16 @@
 <template>
-  <div>Nuxt module playground!</div>
+  <div>
+    <div>{{ users }}</div>
+  </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { db } from "./data/database";
+import { seed } from "./data/seed";
 
 const database = useDB(db);
+database.init();
+seed(database);
 
-console.error(database);
-
-database.collections
-
+const users = computed(() => database.collections.users.findMany({}).value);
 </script>

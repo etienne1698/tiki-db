@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.7.0",
-    "nuxt": "^3.17.1",
-    "tiki-db": "^0.18.7"
+    "nuxt": "^3.17.1"
   }
 }

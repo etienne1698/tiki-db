@@ -1,7 +1,13 @@
 import { faker } from "@faker-js/faker";
-import type { Database } from "tiki-db";
+import type { VueDatabaseWrapper } from "tiki-db-vue";
+import type { DatabaseFullSchema, Storage, Migrations } from "tiki-db";
 
-export function seed(database: Database) {
+export function seed<
+  IsAsync extends boolean = false,
+  FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
+  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>,
+  M extends Migrations<FullSchema> = Migrations<FullSchema>
+>(database: VueDatabaseWrapper<IsAsync, FullSchema, S, M>) {
   const users = [];
   const posts = [];
 
