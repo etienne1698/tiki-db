@@ -8,4 +8,7 @@ import { db } from "./data/database";
 const database = useDB(db);
 
 console.error(database);
+
+database.collections
+
 </script>

@@ -1,33 +1,24 @@
 import {
-  type CollectionSchema,
   type DatabaseFullSchema,
   type Migrations,
   type Database,
   type Storage,
   QueriesManager,
 } from "tiki-db";
-import { nuxtDatabaseWrapper } from "../database-wrapper";
+import { VueCollectionWrapper, VueDatabaseWrapper } from "tiki-db-vue";
 
 export function useDB<
-  IsAsync extends boolean = boolean,
-  Collections extends Record<string, CollectionSchema> = Record<
-    string,
-    CollectionSchema
-  >,
-  DBFullSchema extends DatabaseFullSchema<Collections> = DatabaseFullSchema<Collections>,
+  IsAsync extends boolean = false,
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   S extends Storage<DBFullSchema, IsAsync> = Storage<DBFullSchema, IsAsync>,
-  M extends Migrations<DatabaseFullSchema<Collections>> = Migrations<
-    DatabaseFullSchema<Collections>
-  >,
-  D extends Database<IsAsync, DBFullSchema, S, M> = Database<
-    IsAsync,
-    DBFullSchema,
-    S,
-    M
-  >
->(database: D) {
+  M extends Migrations<DBFullSchema> = Migrations<DBFullSchema>
+>(database: Database<IsAsync, DBFullSchema, S, M>) {
   const queriesManager = useState("_tiki-db-queries-manager", () =>
     shallowRef(new QueriesManager<Ref>())
   );
-  return nuxtDatabaseWrapper(database, queriesManager.value);
+  return new VueDatabaseWrapper<IsAsync, DBFullSchema, S, M>(
+    database,
+    VueCollectionWrapper,
+    queriesManager.value
+  );
 }
