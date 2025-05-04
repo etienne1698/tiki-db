@@ -7,7 +7,14 @@ import {
 } from "tiki-db";
 import { VueCollectionWrapper, VueDatabaseWrapper } from "tiki-db-vue";
 
-const databases: { [key: string]: VueDatabaseWrapper } = {};
+declare global {
+  interface Window {
+    tikiDatabases: { [key: string]: VueDatabaseWrapper };
+  }
+}
+if (import.meta.client) {
+  window.tikiDatabases = {};
+}
 
 /**
  *
@@ -20,10 +27,16 @@ export async function useDB<
   S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>,
   M extends Migrations<FullSchema> = Migrations<FullSchema>
 >(database: Database<IsAsync, FullSchema, S, M>, dbName: string = "_dbName") {
-  // TODO: this cause bugs
-  /* if (databases[dbName]) {
-    return databases[dbName] as VueDatabaseWrapper<IsAsync, FullSchema, S, M>;
-  } */
+  // TODO: do the same on server (⚠ no gloabal state, otherwise data will leak between session)
+  if (import.meta.client && window.tikiDatabases[dbName]) {
+    console.error("qsdqs");
+    return window.tikiDatabases[dbName] as VueDatabaseWrapper<
+      IsAsync,
+      FullSchema,
+      S,
+      M
+    >;
+  }
 
   const queriesManager = useState(dbName, () =>
     shallowRef(new QueriesManager<Ref>())
@@ -47,9 +60,10 @@ export async function useDB<
         await db.database.storage.upsertMany(qc.schema, qc.result.value, true);
       }
     }
+
+    // @ts-ignore
+    window.tikiDatabases[dbName] = db;
   }
 
-  databases[dbName] = db as VueDatabaseWrapper;
-
-  return databases[dbName] as VueDatabaseWrapper<IsAsync, FullSchema, S, M>;
+  return db;
 }
