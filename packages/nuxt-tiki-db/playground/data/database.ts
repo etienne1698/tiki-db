@@ -1,4 +1,11 @@
-import { collection, model, relations, string } from "tiki-db";
+import {
+  collection,
+  database,
+  InMemoryStorage,
+  model,
+  relations,
+  string,
+} from "tiki-db";
 
 const users = model("usersDbName", {
   id: string("id", ""),
@@ -32,3 +39,6 @@ export const collections = {
   users: collection(users, usersRelations),
   posts: collection(posts, postsRelations),
 };
+
+const storage = new InMemoryStorage();
+export const db = database(collections, storage);
