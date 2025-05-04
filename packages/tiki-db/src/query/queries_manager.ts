@@ -9,13 +9,14 @@ export type QueryCacheData<T = unknown> = {
   query: Query<any, any>;
 };
 
-export abstract class QueriesManager<T> {
-  abstract getQueryCache(queryHash: string): QueryCacheData<T>;
-  abstract getAllQueryCache(): QueryCacheData<T>[];
-  abstract setQueryCache(
-    queryHash: string,
-    queryCacheData: Partial<QueryCacheData<T>>
-  ): QueryCacheData<T>;
+export class QueriesManager<T> {
+  queries: {
+    [queryHash: string]: QueryCacheData<T>;
+  } = {};
+
+  getAllQueryCache() {
+    return Object.values(this.queries);
+  }
 
   hashQuery<C extends CollectionSchema>(
     collectionSchema: C,
@@ -31,7 +32,7 @@ export abstract class QueriesManager<T> {
   }
 
   has(queryHash: ReturnType<typeof this.hashQuery>) {
-    return Boolean(this.getQueryCache(queryHash));
+    return Boolean(this.queries[queryHash]);
   }
 
   // TODO: check if is concerned
@@ -83,24 +84,22 @@ export abstract class QueriesManager<T> {
     query: Query<any, any>,
     result: any
   ) {
-    this.setQueryCache(queryHash, {
+    this.queries[queryHash] = {
       result,
       refCount: 1,
       schema: collectionSchema,
       isFindFirst,
       query,
-    });
-    return this.getQueryCache(queryHash).result;
+    };
+    return this.queries[queryHash].result;
   }
 
   subscribe(queryHash: ReturnType<typeof this.hashQuery>) {
-    const queryCacheData = this.getQueryCache(queryHash);
-    this.setQueryCache(queryHash, { refCount: queryCacheData.refCount + 1 });
-    return queryCacheData.result;
+    this.queries[queryHash].refCount += 1;
+    return this.queries[queryHash].result;
   }
 
   unsubscribe(queryHash: ReturnType<typeof this.hashQuery>) {
-    const queryCacheData = this.getQueryCache(queryHash);
-    this.setQueryCache(queryHash, { refCount: queryCacheData.refCount - 1 });
+    this.queries[queryHash].refCount -= 1;
   }
 }

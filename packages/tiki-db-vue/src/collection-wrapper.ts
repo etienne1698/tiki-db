@@ -28,7 +28,7 @@ export type IVueCollectionWrapper<
   ): Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
 };
 
-export abstract class AbstractVueCollectionWrapper<
+export class VueCollectionWrapper<
   Schema extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
 > implements IVueCollectionWrapper<false, Schema, DBFullSchema>
@@ -37,8 +37,6 @@ export abstract class AbstractVueCollectionWrapper<
     private collection: Collection<false, Schema, DBFullSchema>,
     private queriesManager: QueriesManager<Ref>
   ) {}
-
-  abstract createRef(queryHash: string, queryResult: unknown): Ref;
 
   findFirst<
     Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>
@@ -61,7 +59,7 @@ export abstract class AbstractVueCollectionWrapper<
       this.collection.schema,
       true,
       query,
-      this.createRef(queryHash, queryResult)
+      ref(queryResult)
     ) as Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
   }
 
@@ -86,7 +84,7 @@ export abstract class AbstractVueCollectionWrapper<
       this.collection.schema,
       false,
       query,
-      this.createRef(queryHash, queryResult)
+      ref(queryResult)
     ) as Ref<QueryResult<Schema, DBFullSchema, Q>>;
   }
 
@@ -186,14 +184,5 @@ export abstract class AbstractVueCollectionWrapper<
             >[0]
           );
     }
-  }
-}
-
-export class VueCollectionWrapper<
-  Schema extends CollectionSchema,
-  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
-> extends AbstractVueCollectionWrapper<Schema, DBFullSchema> {
-  createRef(_queryHash: string, queryResult: unknown) {
-    return ref(queryResult);
   }
 }

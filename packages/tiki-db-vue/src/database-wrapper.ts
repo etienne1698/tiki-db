@@ -12,7 +12,6 @@ import {
   IVueCollectionWrapper,
   VueCollectionWrapper,
 } from "./collection-wrapper";
-import { VueQueriesManager } from "./queries-manager";
 import { Ref } from "vue";
 
 export class VueDatabaseWrapper<
@@ -21,6 +20,8 @@ export class VueDatabaseWrapper<
   S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>,
   M extends Migrations<FullSchema> = Migrations<FullSchema>
 > {
+  queriesManager = new QueriesManager<Ref>();
+  
   collections = {} as {
     [K in keyof FullSchema["schema"]]: IVueCollectionWrapper<
       false,
@@ -49,8 +50,7 @@ export class VueDatabaseWrapper<
     collectionConstructor: new (
       schema: Collection<false, CollectionSchema, FullSchema>,
       qm: QueriesManager<Ref>
-    ) => IVueCollectionWrapper<false, CollectionSchema, FullSchema>,
-    public queriesManager: QueriesManager<Ref>
+    ) => IVueCollectionWrapper<false, CollectionSchema, FullSchema>
   ) {
     for (const [key, collection] of Object.entries(database.collections)) {
       // @ts-ignore
@@ -70,7 +70,6 @@ export function vueDatabaseWrapper<
 >(database: Database<IsAsync, FullSchema, S, M>) {
   return new VueDatabaseWrapper<IsAsync, FullSchema, S, M>(
     database,
-    VueCollectionWrapper,
-    new VueQueriesManager()
+    VueCollectionWrapper
   );
 }
