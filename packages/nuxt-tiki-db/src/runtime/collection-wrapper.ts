@@ -1,5 +1,5 @@
 import { useState } from "nuxt/app";
-import { CollectionSchema, DatabaseFullSchema } from "tiki-db";
+import type { CollectionSchema, DatabaseFullSchema } from "tiki-db";
 import { AbstractVueCollectionWrapper } from "tiki-db-vue";
 
 export class NuxtCollectionWrapper<

@@ -38,7 +38,7 @@ export abstract class QueriesManager<T> {
   isQueryConcerned<C extends CollectionSchema>(
     collectionSchema: C,
     queryCacheData: QueryCacheData<T>,
-    data: any
+    data: unknown
   ): boolean {
     return true;
   }
@@ -57,12 +57,20 @@ export abstract class QueriesManager<T> {
 
   getQueriesConcerned<C extends CollectionSchema>(
     collectionSchema: C,
-    data: any
+    data: unknown | unknown[]
   ) {
-    const result: QueryCacheData<T>[] = [];
+    const result: Set<QueryCacheData<T>> = new Set([]);
     for (const queryCacheData of this.getAllQueryCache()) {
-      if (this.isQueryConcerned(collectionSchema, queryCacheData, data)) {
-        result.push(queryCacheData);
+      if (Array.isArray(data)) {
+        for (const d of data) {
+          if (this.isQueryConcerned(collectionSchema, queryCacheData, d)) {
+            result.add(queryCacheData);
+          }
+        }
+      } else {
+        if (this.isQueryConcerned(collectionSchema, queryCacheData, data)) {
+          result.add(queryCacheData);
+        }
       }
     }
     return result;

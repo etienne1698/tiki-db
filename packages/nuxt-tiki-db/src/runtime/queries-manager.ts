@@ -1,6 +1,6 @@
 import { useState } from "nuxt/app";
-import { QueriesManager, QueryCacheData } from "tiki-db";
-import { shallowRef, ShallowRef } from "vue";
+import { QueriesManager, type QueryCacheData } from "tiki-db";
+import { shallowRef, type ShallowRef } from "vue";
 
 export class NuxtQueriesManager extends QueriesManager<ShallowRef> {
   queries: ShallowRef<{
@@ -10,9 +10,11 @@ export class NuxtQueriesManager extends QueriesManager<ShallowRef> {
   getQueryCache(queryHash: string): QueryCacheData<ShallowRef> {
     return this.queries.value[queryHash];
   }
+
   getAllQueryCache(): QueryCacheData<ShallowRef>[] {
     return Object.values(this.queries);
   }
+
   setQueryCache(
     queryHash: string,
     queryCacheData: Partial<QueryCacheData<ShallowRef>>

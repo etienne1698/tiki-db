@@ -1,4 +1,4 @@
-import { Database, DatabaseFullSchema, Migrations, Storage } from "tiki-db";
+import type { Database, DatabaseFullSchema, Migrations, Storage } from "tiki-db";
 import { VueDatabaseWrapper } from "tiki-db-vue";
 import { NuxtCollectionWrapper } from "./collection-wrapper";
 import { NuxtQueriesManager } from "./queries-manager";
