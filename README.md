@@ -51,12 +51,12 @@ npx tiki-db-storage-contributor-cli
 | `Angular`          | ❌     | -              |
 | `Svelte`           | ❌     | -              |
 
-| Extension              | Status | Notes                         | NPM package |
-| ---------------------- | ------ | ----------------------------- | ----------- |
-| `Migrations`           | 🚧     | Migrations plugin             | -           |
-| `syncEngine`           | ❌     | Core sync logic               | -           |
-| `httpReplication`      | ❌     | Sync over HTTP                | -           |
-| `websocketReplication` | ❌     | Real-time sync with WebSocket | -           |
+| Extension              | Status | Notes                                         | NPM package |
+| ---------------------- | ------ | --------------------------------------------- | ----------- |
+| `Migrations`           | 🚧     | Migrations plugin (for storages that need it) | -           |
+| `syncEngine`           | ❌     | Core sync logic                               | -           |
+| `httpReplication`      | ❌     | Sync over HTTP                                | -           |
+| `websocketReplication` | ❌     | Real-time sync with WebSocket                 | -           |
 
 ---
 
@@ -66,4 +66,4 @@ npx tiki-db-storage-contributor-cli
 - The `asyncDatabase()` function is expected to be removed in favor of a unified `database()` function.
 - The generic TypeScript parameter "IsAsync" (on Database, QueryBuilder, Storage, and Collection) is planned to be removed.
 
-Most of the current issues I'm facing are related to TypeScript's limitations with higher-kinded types. Once I find elegant solutions to work around these, I'll release a new major version
+Most of the current issues I'm facing are related to TypeScript's limitations with higher-kinded types. Once I find elegant solutions to work around these, I'll release a stable v1
