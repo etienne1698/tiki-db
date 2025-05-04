@@ -1,4 +1,4 @@
-import { collection, QueriesManager, type QueryCacheData } from "tiki-db";
+import { QueriesManager, type QueryCacheData } from "tiki-db";
 import {
   definePayloadPlugin,
   definePayloadReducer,

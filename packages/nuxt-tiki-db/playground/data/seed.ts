@@ -41,8 +41,23 @@ export function seed<
     }
   }
 
-  console.error(database)
+  for (const qc of [
+    ...database.queriesManager.getQueriesConcerned(
+      database.database.collections.users.schema,
+      users
+    ),
+  ]) {
+    console.error(qc);
+  }
+  console.error(
+    [
+      ...database.queriesManager.getQueriesConcerned(
+        database.database.collections.posts.schema,
+        posts
+      ),
+    ].length
+  );
 
   database.collections.posts.insertMany(posts);
-  database.collections.users.insertMany(users);
+  database.collections.users.insertMany(users); 
 }

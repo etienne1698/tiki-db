@@ -16,6 +16,23 @@ test("test rerun query on insert", async () => {
   expect(queryResult.value.firstname).toBe("Etienne");
 });
 
+test("test rerun query on insertMany", async () => {
+  const { db } = getTestDatabase();
+
+  const queryResult = db.collections.users.findFirst({});
+
+  expect(queryResult.value).toBe(undefined);
+
+  db.collections.users.insertMany([
+    { id: "1", firstname: "Etienne" },
+    { id: "2", firstname: "Geoffroy" },
+  ]);
+
+  await nextTick();
+
+  expect(queryResult.value.firstname).toBe("Etienne");
+});
+
 test("test rerun query on remove", async () => {
   const { db } = getTestDatabase();
 

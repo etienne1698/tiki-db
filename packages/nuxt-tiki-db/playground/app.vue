@@ -2,7 +2,13 @@
   <div v-for="user of users" :key="user.id!">
     <pre>{{ user }}</pre>
     <button
-      style="background-color: red; color: white; border: none; padding: 6px; cursor: pointer;"
+      style="
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 6px;
+        cursor: pointer;
+      "
       @click="removeUser(user.id!)"
     >
       DELETE
@@ -15,6 +21,7 @@ import { db } from "./data/database";
 import { seed } from "./data/seed";
 
 const database = await useDB(db);
+
 
 if (import.meta.server) {
   seed(database);
