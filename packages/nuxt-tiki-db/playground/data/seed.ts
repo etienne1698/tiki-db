@@ -11,7 +11,7 @@ export function seed<
   const users = [];
   const posts = [];
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 10; i++) {
     const userId = faker.string.uuid();
     const firstname = faker.person.firstName();
     const lastname = faker.person.lastName();
@@ -40,23 +40,6 @@ export function seed<
       });
     }
   }
-
-  for (const qc of [
-    ...database.queriesManager.getQueriesConcerned(
-      database.database.collections.users.schema,
-      users
-    ),
-  ]) {
-    console.error(qc);
-  }
-  console.error(
-    [
-      ...database.queriesManager.getQueriesConcerned(
-        database.database.collections.posts.schema,
-        posts
-      ),
-    ].length
-  );
 
   database.collections.posts.insertMany(posts);
   database.collections.users.insertMany(users); 
