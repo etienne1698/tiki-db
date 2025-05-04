@@ -4,7 +4,6 @@ import { DeepPartial } from "../types";
 import { QueryBuilder } from "../query/query_builder";
 import { Query } from "../query/query";
 import { Collection } from "../collection/collection";
-import { Migrations, Migrator } from "./migration";
 
 export type DatabaseFullSchema<
   Schema extends Record<string, CollectionSchema> = Record<
@@ -43,8 +42,7 @@ function extractFullSchema<
 export class Database<
   IsAsync extends boolean = false,
   FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
-  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>,
-  M extends Migrations<FullSchema> = Migrations<FullSchema>
+  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>
 > {
   collections: {
     [K in keyof FullSchema["schema"]]: Collection<
@@ -60,29 +58,17 @@ export class Database<
     >;
   };
 
-  declare migrator?: Migrator;
-
-  constructor(
-    public schema: FullSchema,
-    public storage: S,
-    public migrations?: Partial<M>
-  ) {
-    if (this.migrations) {
-      this.migrator = new Migrator(this as Database);
-    }
-    for (const [key, collection] of Object.entries(schema.schema)) {
+  constructor(public schema: FullSchema, public storage: S) {
+    for (const [collectionName, collectionSchema] of Object.entries(
+      schema.schema
+    )) {
       // @ts-ignore
-      this.collections[key] = new Collection(this, collection);
+      this.collections[collectionName] = new Collection(this, collectionSchema);
     }
   }
 
   init() {
     return this.storage.init(this);
-  }
-
-  async migrate() {
-    if (!this.migrator) return;
-    await this.migrator.migrate();
   }
 
   query<C extends CollectionSchema>(
@@ -101,15 +87,11 @@ export function database<
   S extends Storage<DatabaseFullSchema<Collections>, false> = Storage<
     DatabaseFullSchema<Collections>,
     false
-  >,
-  M extends Migrations<DatabaseFullSchema<Collections>> = Migrations<
-    DatabaseFullSchema<Collections>
   >
->(collections: Collections, storage: Storage, migrations?: Partial<M>) {
+>(collections: Collections, storage: Storage) {
   return new Database<false, DatabaseFullSchema<Collections>, S>(
     extractFullSchema(collections),
-    storage as S,
-    migrations
+    storage as S
   );
 }
 
@@ -121,14 +103,10 @@ export function asyncDatabase<
   S extends Storage<DatabaseFullSchema<Collections>, true> = Storage<
     DatabaseFullSchema<Collections>,
     true
-  >,
-  M extends Migrations<DatabaseFullSchema<Collections>> = Migrations<
-    DatabaseFullSchema<Collections>
   >
->(collections: Collections, storage: S, migrations?: Partial<M>) {
+>(collections: Collections, storage: S) {
   return new Database<true, DatabaseFullSchema<Collections>, S>(
     extractFullSchema(collections),
-    storage,
-    migrations
+    storage
   );
 }

@@ -22,11 +22,11 @@ export {
 } from "./database/database";
 
 export {
-  Migration,
-  MigrationContext,
-  Migrations,
-  Migrator,
-} from "./database/migration";
+  pluginMigrations,
+  type PluginMigrationsOptions,
+  type MigrationContext,
+  type Migration
+} from "./plugins/migration";
 
 export {
   type Query,

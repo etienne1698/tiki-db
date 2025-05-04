@@ -1,6 +1,6 @@
 {
   "name": "nuxt-tiki-db",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "My new Nuxt module",
   "repository": "your-org/my-module",
   "license": "MIT",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.17.1",
-    "tiki-db-vue": "^0.18.10"
+    "tiki-db-vue": "^0.18.12"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.4.0",
@@ -52,6 +52,6 @@
     "vue-tsc": "^2.2.10"
   },
   "peerDependencies": {
-    "tiki-db": "^0.18.11"
+    "tiki-db": "^0.18.12"
   }
 }

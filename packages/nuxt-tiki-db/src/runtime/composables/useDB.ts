@@ -1,6 +1,5 @@
 import {
   type DatabaseFullSchema,
-  type Migrations,
   type Database,
   type Storage,
   QueriesManager,
@@ -24,17 +23,15 @@ if (import.meta.client) {
 export async function useDB<
   IsAsync extends boolean = false,
   FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
-  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>,
-  M extends Migrations<FullSchema> = Migrations<FullSchema>
->(database: Database<IsAsync, FullSchema, S, M>, dbName: string = "_dbName") {
+  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>
+>(database: Database<IsAsync, FullSchema, S>, dbName: string = "_dbName") {
   // TODO: do the same on server (⚠ no gloabal state, otherwise data will leak between session)
   if (import.meta.client && window.tikiDatabases[dbName]) {
     console.error("qsdqs");
     return window.tikiDatabases[dbName] as VueDatabaseWrapper<
       IsAsync,
       FullSchema,
-      S,
-      M
+      S
     >;
   }
 
@@ -42,7 +39,7 @@ export async function useDB<
     shallowRef(new QueriesManager<Ref>())
   );
 
-  const db = new VueDatabaseWrapper<IsAsync, FullSchema, S, M>(
+  const db = new VueDatabaseWrapper<IsAsync, FullSchema, S>(
     database,
     VueCollectionWrapper,
     queriesManager.value
