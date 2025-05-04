@@ -82,22 +82,6 @@ export class InMemoryStorage<
     } as QueryFilters<C>;
   }
 
-  #getQueryFiltersByPrimaries<C extends CollectionSchema>(
-    collectionSchema: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[]
-  ) {
-    const primaries = data.reduce((prev, current) => {
-      const primary = collectionSchema.model.primary(current);
-      prev.push(primary);
-      return prev;
-    }, [] as Primary[]);
-    return {
-      [collectionSchema.model.primaryKey as InferModelFieldName<C["model"]>]: {
-        $in: primaries,
-      },
-    } as QueryFilters<C>;
-  }
-
   upsert<C extends CollectionSchema>(
     collectionSchema: C,
     data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
