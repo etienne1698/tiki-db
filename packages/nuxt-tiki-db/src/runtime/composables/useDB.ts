@@ -24,12 +24,14 @@ export async function useDB<
   const allStorageState = useState<{ [key: string]: any }>(
     `${dbName}_all_storage_state`
   );
-  const allDatabases = useState("databases", () =>
+  const allDatabases = useState("_nuxt_databases", () =>
     shallowRef(new NuxtDatabases())
   );
 
   const cached = allDatabases.value.get(dbName);
-  if (cached) return cached;
+  if (cached) {
+    return cached as unknown as VueDatabaseWrapper<IsAsync, FullSchema, S>;
+  }
 
   const db = new VueDatabaseWrapper<IsAsync, FullSchema, S>(
     database(),
