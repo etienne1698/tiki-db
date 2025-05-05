@@ -1,5 +1,7 @@
 ## Concepts
 
+**[Back to table of contents](../index.md)**
+
 Tiki-DB is built around a few core concepts:
 
 - **Models**: Define the structure of your data entities

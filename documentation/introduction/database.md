@@ -1,5 +1,7 @@
 ## Creating a Database
 
+**[Back to table of contents](../index.md)**
+
 To create a database, use the `database()` function, which takes an object of collections schema and a storage implementation:
 
 If your storage is asynchronous, you have to use the `asyncDatabase()` function that works the same as the `database()` function but takes an async storage.

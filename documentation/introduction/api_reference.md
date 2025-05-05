@@ -1,5 +1,7 @@
 ## API Reference
 
+**[Back to table of contents](../index.md)**
+
 ### Model Functions
 
 - `model(name, schema)`: Define a new model

@@ -1,5 +1,7 @@
 ## Defining Models
 
+**[Back to table of contents](../index.md)**
+
 Models are defined using the `model()` function, which takes a name and a schema object:
 
 ```javascript

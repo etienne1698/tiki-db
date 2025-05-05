@@ -1,5 +1,7 @@
 ## Data Types
 
+**[Back to table of contents](../index.md)**
+
 Tiki-DB supports several data types for defining model fields:
 
 - `string(name, defaultValue)`: Creates a string field

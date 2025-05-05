@@ -1,5 +1,7 @@
 ## Defining Relations
 
+**[Back to table of contents](../index.md)**
+
 Relations are defined using the `relations()` function, which takes a model and a callback function:
 
 ### One-to-Many Relations
