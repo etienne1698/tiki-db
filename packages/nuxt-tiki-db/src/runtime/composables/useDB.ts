@@ -3,6 +3,7 @@ import {
   type Database,
   type Storage,
   QueriesManager,
+  type InMemoryStorage,
 } from "tiki-db";
 import { VueCollectionWrapper, VueDatabaseWrapper } from "tiki-db-vue";
 
@@ -25,9 +26,11 @@ export async function useDB<
   FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>
 >(database: Database<IsAsync, FullSchema, S>, dbName: string = "_dbName") {
+  const allStorageState = useState<{ [key: string]: any }>(
+    `${dbName}_all_storage_state`
+  );
   // TODO: do the same on server (⚠ no gloabal state, otherwise data will leak between session)
   if (import.meta.client && window.tikiDatabases[dbName]) {
-    console.error("qsdqs");
     return window.tikiDatabases[dbName] as VueDatabaseWrapper<
       IsAsync,
       FullSchema,
@@ -35,27 +38,29 @@ export async function useDB<
     >;
   }
 
-  const queriesManager = useState(dbName, () =>
-    shallowRef(new QueriesManager<Ref>())
-  );
-
   const db = new VueDatabaseWrapper<IsAsync, FullSchema, S>(
     database,
     VueCollectionWrapper,
-    queriesManager.value
+    new QueriesManager<Ref>()
   );
 
   await db.init();
 
+  if (import.meta.server) {
+    allStorageState.value = (db.storage as unknown as InMemoryStorage).stores;
+  }
   if (import.meta.client) {
-    for (const qc of Object.values(db.queriesManager.queries)) {
-      const collectionDbName = qc.schema.model.dbName;
-      qc.schema = db.database.schema.schemaDbName[collectionDbName];
-      if (qc.isFindFirst) {
-        await db.database.storage.upsert(qc.schema, qc.result.value, true);
-      } else {
-        await db.database.storage.upsertMany(qc.schema, qc.result.value, true);
-      }
+    for (const [collectionDBName, collectionData] of Object.entries(
+      allStorageState.value
+    )) {
+      const collectionSchema =
+        db.database.schema.schemaDbName[collectionDBName];
+
+      await db.database.storage.upsertMany(
+        collectionSchema,
+        collectionData,
+        false
+      );
     }
 
     // @ts-ignore

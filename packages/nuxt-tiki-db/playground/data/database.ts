@@ -40,5 +40,5 @@ export const collections = {
   posts: collection(posts, postsRelations),
 };
 
-const storage = new InMemoryStorage();
+const storage = nuxtStorage<false>(() => new InMemoryStorage());
 export const db = database(collections, storage);

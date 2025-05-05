@@ -17,7 +17,7 @@ export class InMemoryStorage<
 > implements Storage<DBFullSchema>
 {
   stores: {
-    [key in keyof DBFullSchema["schema"]]: Array<
+    [key in keyof DBFullSchema["schemaDbName"]]: Array<
       ReturnType<DBFullSchema["schemaDbName"][key]["model"]["normalize"]>
     >;
   } = {} as {
