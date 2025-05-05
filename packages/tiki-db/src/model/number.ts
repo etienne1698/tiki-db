@@ -1,8 +1,8 @@
 import { Field } from "./field";
 
 export class NumberField extends Field<number> {
-  constructor(name: string, defaultValue: number | null) {
-    super(name, defaultValue);
+  constructor(dbName: string, defaultValue: number | null) {
+    super(dbName, defaultValue);
   }
 
   check(data: any): data is number {
@@ -10,6 +10,6 @@ export class NumberField extends Field<number> {
   }
 }
 
-export function number(name: string, defaultValue: number) {
-  return new NumberField(name, defaultValue);
+export function number(dbName: string, defaultValue: number) {
+  return new NumberField(dbName, defaultValue);
 }

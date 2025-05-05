@@ -1,7 +1,7 @@
 export abstract class Field<T = unknown, Default extends T | null = T | null> {
   isNullable: boolean = true;
 
-  constructor(public name: string, public defaultValue: Default) {}
+  constructor(public dbName: string, public defaultValue: Default) {}
 
   protected abstract check(data: any): data is T;
 

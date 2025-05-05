@@ -1,8 +1,8 @@
 import { Field } from "./field";
 
 export class StringField extends Field<string> {
-  constructor(name: string, defaultValue: string | null) {
-    super(name, defaultValue);
+  constructor(dbName: string, defaultValue: string | null) {
+    super(dbName, defaultValue);
   }
 
   check(data: any): data is string {
@@ -10,6 +10,6 @@ export class StringField extends Field<string> {
   }
 }
 
-export function string(name: string, defaultValue: string) {
-  return new StringField(name, defaultValue);
+export function string(dbName: string, defaultValue: string) {
+  return new StringField(dbName, defaultValue);
 }

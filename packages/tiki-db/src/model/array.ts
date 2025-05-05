@@ -6,8 +6,8 @@ export class ArrayField<F extends Field> extends Field<
 > {
   protected declare contentField: F;
 
-  constructor(name: string, defaultValue: Array<any> | null) {
-    super(name, defaultValue);
+  constructor(dbName: string, defaultValue: Array<any> | null) {
+    super(dbName, defaultValue);
   }
 
   check(data: any): data is Array<InferNormalizedField<F>> {
@@ -17,6 +17,6 @@ export class ArrayField<F extends Field> extends Field<
   }
 }
 
-export function array(name: string, defaultValue: Array<any>) {
-  return new ArrayField(name, defaultValue);
+export function array(dbName: string, defaultValue: Array<any>) {
+  return new ArrayField(dbName, defaultValue);
 }
