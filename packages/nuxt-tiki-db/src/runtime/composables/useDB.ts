@@ -6,15 +6,7 @@ import {
   type InMemoryStorage,
 } from "tiki-db";
 import { VueCollectionWrapper, VueDatabaseWrapper } from "tiki-db-vue";
-
-declare global {
-  interface Window {
-    tikiDatabases: { [key: string]: VueDatabaseWrapper };
-  }
-}
-if (import.meta.client) {
-  window.tikiDatabases = {};
-}
+import { NuxtDatabases } from "../utils/NuxtDatabases";
 
 /**
  *
@@ -25,24 +17,27 @@ export async function useDB<
   IsAsync extends boolean = false,
   FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>
->(database: Database<IsAsync, FullSchema, S>, dbName: string = "_dbName") {
+>(
+  database: () => Database<IsAsync, FullSchema, S>,
+  dbName: string = "_dbName"
+) {
   const allStorageState = useState<{ [key: string]: any }>(
     `${dbName}_all_storage_state`
   );
-  // TODO: do the same on server (⚠ no gloabal state, otherwise data will leak between session)
-  if (import.meta.client && window.tikiDatabases[dbName]) {
-    return window.tikiDatabases[dbName] as VueDatabaseWrapper<
-      IsAsync,
-      FullSchema,
-      S
-    >;
-  }
+  const allDatabases = useState("databases", () =>
+    shallowRef(new NuxtDatabases())
+  );
+
+  const cached = allDatabases.value.get(dbName);
+  if (cached) return cached;
 
   const db = new VueDatabaseWrapper<IsAsync, FullSchema, S>(
-    database,
+    database(),
     VueCollectionWrapper,
     new QueriesManager<Ref>()
   );
+
+  allDatabases.value.set(dbName, db);
 
   await db.init();
 
@@ -62,9 +57,6 @@ export async function useDB<
         false
       );
     }
-
-    // @ts-ignore
-    window.tikiDatabases[dbName] = db;
   }
 
   return db;

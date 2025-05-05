@@ -45,7 +45,7 @@ npx tiki-db-storage-contributor-cli
 | Reactive Framework | Status | NPM package    |
 | ------------------ | ------ | -------------- |
 | `Vue`              | ✅     | `tiki-db-vue`  |
-| `Nuxt`             | 🚧     | `nuxt-tiki-db` |
+| `Nuxt`             | ✅     | `nuxt-tiki-db` |
 | `React`            | ❌     | -              |
 | `Next`             | ❌     | -              |
 | `Angular`          | ❌     | -              |
@@ -67,3 +67,9 @@ npx tiki-db-storage-contributor-cli
 - The generic TypeScript parameter "IsAsync" (on Database, QueryBuilder, Storage, and Collection) is planned to be removed.
 
 Most of the current issues I'm facing are related to TypeScript's limitations with higher-kinded types. Once I find elegant solutions to work around these, I'll release a stable v1
+
+
+⚠️ **Limitations for Server-Side Rendering (SSR)**
+While `TikiDB` is compatible with both client-side and server-side environments, care must be taken when using it in SSR contexts (such as Nuxt or Next.js).
+- **Avoid using global or shared database/storage instances on the server**, as this can lead to state leaking between concurrent user requests. Instead, create a fresh storage and database instance per request, or use a properly scoped dependency injection mechanism.
+- **Be cautious when using different storage backends** on the client and the server (e.g., `InMemoryStorage` on the server and `IndexedDBStorage` on the client). If the storage contents differ, it can cause **hydration mismatches** or inconsistent initial states.

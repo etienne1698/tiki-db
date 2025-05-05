@@ -41,4 +41,4 @@ export const collections = {
 };
 
 const storage = nuxtStorageWrapper<false>(() => new InMemoryStorage());
-export const db = database(collections, storage);
+export const db = () => database(collections, storage);

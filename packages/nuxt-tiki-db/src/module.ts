@@ -1,4 +1,9 @@
-import { defineNuxtModule, createResolver, addImports } from "@nuxt/kit";
+import {
+  defineNuxtModule,
+  createResolver,
+  addImports,
+  addPlugin,
+} from "@nuxt/kit";
 
 // Module options TypeScript interface definition
 export interface NuxtTikiDBModuleOptions {}
@@ -28,5 +33,7 @@ export default defineNuxtModule<NuxtTikiDBModuleOptions>({
         from: resolver.resolve("./runtime/utils/nuxtStorageWrapper"),
       },
     ]);
+
+    addPlugin(resolver.resolve("./runtime/plugins/databases_plugins"));
   },
 });
