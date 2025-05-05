@@ -1,6 +1,6 @@
 import { InMemoryStorage, type Storage } from "tiki-db";
 
-export function nuxtStorage<
+export function nuxtStorageWrapper<
   IsAsync extends boolean,
   S extends Storage<any, IsAsync> = Storage<any, IsAsync>
 >(storage: () => S): S {

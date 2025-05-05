@@ -23,9 +23,9 @@ export default defineNuxtModule<NuxtTikiDBModuleOptions>({
 
     addImports([
       {
-        name: "nuxtStorage",
-        as: "nuxtStorage",
-        from: resolver.resolve("./runtime/utils/nuxtStorage"),
+        name: "nuxtStorageWrapper",
+        as: "nuxtStorageWrapper",
+        from: resolver.resolve("./runtime/utils/nuxtStorageWrapper"),
       },
     ]);
   },
