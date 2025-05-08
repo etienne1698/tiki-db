@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-tiki-db",
+  "name": "tiki-db-nuxt",
   "version": "0.18.12",
   "description": "TikiDB nuxt adapter",
   "repository": "your-org/my-module",

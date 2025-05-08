@@ -10,7 +10,7 @@ export interface NuxtTikiDBModuleOptions {}
 
 export default defineNuxtModule<NuxtTikiDBModuleOptions>({
   meta: {
-    name: "nuxt-tiki-db",
+    name: "tiki-db-nuxt",
     configKey: "tikiDB",
   },
   // Default configuration options of the Nuxt module
