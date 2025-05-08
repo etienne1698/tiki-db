@@ -14,6 +14,5 @@ It supports multiple storage backends and can optionally integrate with any reac
   - [One-to-One Relations](./introduction/relations.md#one-to-one-relations)
 - [Creating a Database](./introduction/database.md)
 - [API Reference](./introduction/api_reference.md)
-- [SSR Limitations](./introduction/ssr_limitations.md)
 - Extensions
   - [Nuxt](./extensions/nuxt.md)
