@@ -5,7 +5,7 @@ import {
   addPlugin,
 } from "@nuxt/kit";
 
-// Module options TypeScript interface definition
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface NuxtTikiDBModuleOptions {}
 
 export default defineNuxtModule<NuxtTikiDBModuleOptions>({
@@ -20,9 +20,9 @@ export default defineNuxtModule<NuxtTikiDBModuleOptions>({
 
     addImports([
       {
-        name: "useDB",
-        as: "useDB",
-        from: resolver.resolve("./runtime/composables/useDB"),
+        name: "useDatabase",
+        as: "useDatabase",
+        from: resolver.resolve("./runtime/composables/useDatabase"),
       },
     ]);
 

@@ -20,7 +20,7 @@
 import { db } from "./data/database";
 import { seed } from "./data/seed";
 
-const database = await useDB(db);
+const database = await useDatabase(db);
 
 
 if (import.meta.server) {
