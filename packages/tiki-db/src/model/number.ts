@@ -10,6 +10,6 @@ export class NumberField extends Field<number> {
   }
 }
 
-export function number(dbName: string, defaultValue: number) {
-  return new NumberField(dbName, defaultValue);
+export function number(dbName: string, defaultValue?: number | null) {
+  return new NumberField(dbName, defaultValue || null);
 }

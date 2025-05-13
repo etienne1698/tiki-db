@@ -7,11 +7,7 @@ export interface Storage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   IsAsync extends boolean = false
 > {
-  /**
-   *
-   * @param database
-   * To create the migrations collection in the storage and/or create all collections
-   */
+  
   init(database: Database): Promise<void>;
 
   findMany<

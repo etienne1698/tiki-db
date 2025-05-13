@@ -18,11 +18,11 @@ export class InMemoryStorage<
 {
   stores: {
     [key in keyof DBFullSchema["schemaDbName"]]: Array<
-      ReturnType<DBFullSchema["schemaDbName"][key]["model"]["normalize"]>
+      InferModelNormalizedType<DBFullSchema["schemaDbName"][key]["model"]>
     >;
   } = {} as {
     [key in keyof DBFullSchema["schemaDbName"]]: Array<
-      ReturnType<DBFullSchema["schemaDbName"][key]["model"]["normalize"]>
+      InferModelNormalizedType<DBFullSchema["schemaDbName"][key]["model"]>
     >;
   };
 
@@ -38,29 +38,27 @@ export class InMemoryStorage<
 
   insert<C extends CollectionSchema>(
     collectionSchema: C,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
-  ): ReturnType<C["model"]["normalize"]> {
+  ): InferModelNormalizedType<C["model"]> {
     const inserted = collectionSchema.model.normalize(data);
     if (saveRelations) {
       this.#saveRelations(collectionSchema, data);
     }
     this.stores[collectionSchema.model.dbName].push(
-      inserted as ReturnType<C["model"]["normalize"]>
+      inserted as InferModelNormalizedType<C["model"]>
     );
-    return inserted as ReturnType<C["model"]["normalize"]>;
+    return inserted as InferModelNormalizedType<C["model"]>;
   }
 
   insertMany<C extends CollectionSchema>(
     collectionSchema: C,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>[],
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
     saveRelations?: boolean
-  ): ReturnType<C["model"]["normalize"]>[] {
-    const allInserted: ReturnType<C["model"]["normalize"]>[] = [];
+  ): InferModelNormalizedType<C["model"]>[] {
+    const allInserted: InferModelNormalizedType<C["model"]>[] = [];
     for (const d of data) {
-      const inserted = collectionSchema.model.normalize(d) as ReturnType<
-        C["model"]["normalize"]
-      >;
+      const inserted = collectionSchema.model.normalize(d) as InferModelNormalizedType<C["model"]>;
       if (saveRelations) {
         this.#saveRelations(collectionSchema, d);
       }
@@ -84,9 +82,9 @@ export class InMemoryStorage<
 
   upsert<C extends CollectionSchema>(
     collectionSchema: C,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
     saveRelations?: boolean
-  ): ReturnType<C["model"]["normalize"]> | undefined {
+  ): InferModelNormalizedType<C["model"]> | undefined {
     const queryFilters = this.#getQueryFiltersByPrimary(collectionSchema, data);
     const found = this.findFirst(collectionSchema, {
       filters: queryFilters,
@@ -99,14 +97,14 @@ export class InMemoryStorage<
 
   upsertMany<C extends CollectionSchema>(
     collectionSchema: C,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>[],
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
     saveRelations?: boolean
-  ): ReturnType<C["model"]["normalize"]>[] {
+  ): InferModelNormalizedType<C["model"]>[] {
     return data.reduce((prev, current) => {
       const res = this.upsert(collectionSchema, current, saveRelations);
       if (res) prev.push(res);
       return prev;
-    }, []) as ReturnType<C["model"]["normalize"]>[];
+    }, []) as InferModelNormalizedType<C["model"]>[];
   }
 
   findMany<
@@ -151,8 +149,8 @@ export class InMemoryStorage<
   update<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: QueryFilters<C>,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>
-  ): ReturnType<C["model"]["normalize"]> | undefined {
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
+  ): InferModelNormalizedType<C["model"]> | undefined {
     const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
       filters: queryFilters,
     });
@@ -169,8 +167,8 @@ export class InMemoryStorage<
   updateMany<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: QueryFilters<C>,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>
-  ): ReturnType<C["model"]["normalize"]>[] {
+    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
+  ): InferModelNormalizedType<C["model"]>[] {
     const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
       filters: queryFilters,
     });

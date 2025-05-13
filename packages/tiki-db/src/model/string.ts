@@ -10,6 +10,6 @@ export class StringField extends Field<string> {
   }
 }
 
-export function string(dbName: string, defaultValue: string) {
-  return new StringField(dbName, defaultValue);
+export function string(dbName: string, defaultValue?: string | null) {
+  return new StringField(dbName, defaultValue || null);
 }

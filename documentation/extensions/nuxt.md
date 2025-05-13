@@ -6,5 +6,7 @@
 
 `nuxt-tiki-db` provides a solution to these SSR limitations
 
+⚠️ This is experimental, not really production ready
+
 - The `useDatabase` hook is used to manage database instances. You pass a callback to create the database, and useDatabase will create (or reuse) it when needed.
 - In your database definition, wrap the storage with `nuxtStorageWrapper`. This will create an `InMemoryStorage` on the server and your chosen storage on the client. The `useDatabase` hook takes care of merging the state between these two.

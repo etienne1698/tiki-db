@@ -23,7 +23,7 @@ export class Model<
     return this.primaryKey.map((k) => data[k]).join();
   }
 
-  normalize(data: any) {
+  normalize(data: AnyButMaybeT<{ [K in keyof S]: S[K]["defaultValue"] }>) {
     const normalizedData: { [K in keyof S]: S[K]["defaultValue"] } = {} as {
       [K in keyof S]: S[K]["defaultValue"];
     };

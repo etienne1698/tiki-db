@@ -4,6 +4,7 @@ export { model, Model } from "./model/model";
 export { Field } from "./model/field";
 export { string, StringField } from "./model/string";
 export { array, ArrayField } from "./model/array";
+export { number, NumberField } from "./model/number";
 
 export { Relation, Relations } from "./relation/relation";
 export { relations } from "./relation/relation_functions";

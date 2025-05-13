@@ -123,7 +123,7 @@ export class VueCollectionWrapper<
   insertMany(
     data: Parameters<typeof this.collection.insertMany>[0],
     opts?: Parameters<typeof this.collection.insertMany>[1]
-  ): Partial<ReturnType<Schema["model"]["normalize"]>>[] {
+  ) {
     const queryResult = this.collection.insertMany(data, opts);
     this.reRunQueryConcerned(data);
     return queryResult;
@@ -131,7 +131,7 @@ export class VueCollectionWrapper<
   updateMany(
     queryFilters: Parameters<typeof this.collection.updateMany>[0],
     data: Parameters<typeof this.collection.updateMany>[1]
-  ): Partial<ReturnType<Schema["model"]["normalize"]>>[] {
+  ) {
     const queryResult = this.collection.updateMany(queryFilters, data);
     this.reRunQueryConcerned(data);
     return queryResult;
@@ -139,7 +139,7 @@ export class VueCollectionWrapper<
   upsertMany(
     data: Parameters<typeof this.collection.upsertMany>[0],
     opts?: Parameters<typeof this.collection.upsertMany>[1]
-  ): Partial<ReturnType<Schema["model"]["normalize"]>>[] {
+  ) {
     const queryResult = this.collection.upsertMany(data, opts);
     this.reRunQueryConcerned(data);
     return queryResult;
