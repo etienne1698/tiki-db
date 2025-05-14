@@ -68,24 +68,12 @@ export class InMemoryStorage<
     return allInserted;
   }
 
-  #getQueryFiltersByPrimary<C extends CollectionSchema>(
-    collectionSchema: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
-  ) {
-    const primary = collectionSchema.model.primary(data);
-    return {
-      [collectionSchema.model.primaryKey as InferModelFieldName<C["model"]>]: {
-        $eq: primary,
-      },
-    } as QueryFilters<C>;
-  }
-
   upsert<C extends CollectionSchema>(
     collectionSchema: C,
     data: InferCollectionUpdate<C, DBFullSchema>,
     saveRelations?: boolean
   ): InferModelNormalizedType<C["model"]> | undefined {
-    const queryFilters = this.#getQueryFiltersByPrimary(collectionSchema, data);
+    const queryFilters = collectionSchema.model.getFilterByPrimary<C>(data);
     const found = this.findFirst(collectionSchema, {
       filters: queryFilters,
     });
@@ -104,7 +92,9 @@ export class InMemoryStorage<
       const res = this.upsert(collectionSchema, current, saveRelations);
       if (res) prev.push(res);
       return prev;
-    }, [] as  InferModelNormalizedType<C["model"]>[]) as InferModelNormalizedType<C["model"]>[];
+    }, [] as InferModelNormalizedType<C["model"]>[]) as InferModelNormalizedType<
+      C["model"]
+    >[];
   }
 
   findMany<

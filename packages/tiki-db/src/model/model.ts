@@ -1,11 +1,14 @@
 import type { Field } from "./field";
 import type {
   AnyButMaybeT,
+  InferModelFieldName,
   InferModelNormalizedInDatabaseType,
   InferModelNormalizedType,
   Primary,
   PrimaryKey,
 } from "../types";
+import { CollectionSchema } from "../collection/collection_schema";
+import { QueryFilters } from "../query/query";
 
 export class Model<
   Schema extends Record<string, Field> = Record<string, Field<unknown>>,
@@ -52,6 +55,27 @@ export class Model<
       result[key] = data[field.dbName];
     }
     return result;
+  }
+
+  getFilterByPrimary<C extends CollectionSchema<this> = CollectionSchema<this>>(
+    data: InferModelNormalizedType<this>
+  ): QueryFilters<C> {
+    if (typeof this.primaryKey === "string") {
+      return {
+        [this.primaryKey as InferModelFieldName<this>]: {
+          $eq: data[this.primaryKey],
+        },
+      } as QueryFilters<C>;
+    } else {
+      const result = {} as QueryFilters<C>;
+      for (const p of this.primaryKey) {
+        // @ts-ignore
+        result[p] = {
+          $eq: data[p],
+        };
+      }
+      return result;
+    }
   }
 }
 
