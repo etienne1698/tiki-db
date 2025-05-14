@@ -1,4 +1,3 @@
-
 ## 🗺️ Roadmap (suggest more if needed!)
 
 **[TikiDB README.md](../README.md)**
@@ -11,25 +10,23 @@
 | `OPFS`         | ❌     | -             |
 | `sql.js`       | ❌     | -             |
 
-| Reactive Framework | Status | NPM package    |
-| ------------------ | ------ | -------------- |
-| `Vue`              | ✅     | `tiki-db-vue`  |
-| `Nuxt`             | ✅     | `tiki-db-nuxt` |
-| `React`            | ❌     | -              |
-| `Next`             | ❌     | -              |
-| `Angular`          | ❌     | -              |
-| `Svelte`           | ❌     | -              |
+| Reactive Framework | Status | NPM package     |
+| ------------------ | ------ | --------------- |
+| `Vue`              | ✅     | `tiki-db-vue`   |
+| `Nuxt`             | 🚧     | `tiki-db-nuxt`  |
+| `React`            | ✅     | `tiki-db-react` |
+| `Angular`          | ❌     | -               |
+| `Svelte`           | ❌     | -               |
 
-| Extension              | Status | Notes                                         | NPM package |
-| ---------------------- | ------ | --------------------------------------------- | ----------- |
-| `Migrations`           | 🚧     | Migrations plugin (for storages that need it) | -           |
-| `syncEngine`           | ❌     | Core sync logic                               | -           |
-| `httpReplication`      | ❌     | Sync over HTTP                                | -           |
-| `websocketReplication` | ❌     | Real-time sync with WebSocket                 | -           |
+| Extension    | Status | Notes                                         | NPM package |
+| ------------ | ------ | --------------------------------------------- | ----------- |
+| `Migrations` | 🚧     | Migrations plugin (for storages that need it) | -           |
+| `syncEngine` | 🚧     | Core sync logic                               | -           |
 
 ---
 
 Prior to releasing a stable v1, the following items need to be completed:
+
 - The dbName properties (in both Model and Field) are not yet used. Add optional support for mapping fields to and from the database during insert, update, and find operations.
 - Complete and thoroughly test the migration plugin.
 - Add more field types (object, boolean, date...)

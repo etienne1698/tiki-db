@@ -17,4 +17,3 @@ It supports multiple storage backends and can optionally integrate with any reac
 - [Creating a Database](./introduction/database.md)
 - Extensions
   - [Nuxt](./extensions/nuxt.md)
-  - [Next](./extensions/next.md)
