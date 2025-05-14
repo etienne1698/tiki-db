@@ -1,6 +1,6 @@
 ## ⚠️ Limitations for Server-Side Rendering (SSR)
 
-**[Back to table of contents](../index.md)**
+**[Back to table of contents](./index.md)**
 
 While `TikiDB` is compatible with both client-side and server-side environments, care must be taken when using it in SSR contexts (such as Nuxt or Next.js).
 
