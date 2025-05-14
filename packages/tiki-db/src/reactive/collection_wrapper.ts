@@ -1,54 +1,33 @@
-import {
-  Collection,
-  CollectionSchema,
-  DatabaseFullSchema,
-  QueriesManager,
-  Query,
-  QueryResult,
-} from "tiki-db";
-import { ref, Ref } from "vue";
+import { Collection } from "../collection/collection";
+import { CollectionSchema } from "../collection/collection_schema";
+import { DatabaseFullSchema } from "../database/database";
+import { QueriesManager } from "../query/queries_manager";
+import { Query } from "../query/query";
 
-export type IVueCollectionWrapper<
-  IsAsync extends boolean,
+export abstract class ReactiveCollectionWrapper<
   Schema extends CollectionSchema,
-  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
-> = Omit<
-  Collection<IsAsync, Schema, DBFullSchema>,
-  "findMany" | "findFirst" | "schema" | "database" | "query"
-> & {
-  findMany<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
-    query: Q
-  ): Ref<QueryResult<Schema, DBFullSchema, Q>>;
-
-  findFirst<
-    Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>
-  >(
-    query: Q
-  ): Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
-};
-
-export class VueCollectionWrapper<
-  Schema extends CollectionSchema,
-  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
-> implements IVueCollectionWrapper<false, Schema, DBFullSchema>
-{
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
+  ReactivePrimitive = unknown
+> {
   constructor(
     private collection: Collection<false, Schema, DBFullSchema>,
-    private queriesManager: QueriesManager<Ref>
+    private queriesManager: QueriesManager<ReactivePrimitive>
   ) {}
+
+  abstract setReactiveValue(oldVal: ReactivePrimitive, val: unknown): void;
+  abstract createReactiveValue(val: unknown): ReactivePrimitive;
 
   findFirst<
     Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>
-  >(query: Q) {
+  >(query: Q): unknown {
     const queryHash = this.queriesManager.hashQuery(
       this.collection.schema,
-      query as Parameters<typeof this.collection.findFirst>[0],
+      // @ts-ignore
+      query,
       true
     );
     if (this.queriesManager.has(queryHash)) {
-      return this.queriesManager.subscribe(queryHash) as Ref<
-        QueryResult<Schema, DBFullSchema, Q>[0]
-      >;
+      return this.queriesManager.subscribe(queryHash);
     }
     const queryResult = this.collection.findFirst(
       query as Parameters<typeof this.collection.findFirst>[0]
@@ -58,8 +37,8 @@ export class VueCollectionWrapper<
       this.collection.schema,
       true,
       query,
-      ref(queryResult)
-    ) as Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
+      this.createReactiveValue(queryResult)
+    );
   }
 
   findMany<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
@@ -67,13 +46,12 @@ export class VueCollectionWrapper<
   ) {
     const queryHash = this.queriesManager.hashQuery(
       this.collection.schema,
-      query as Parameters<typeof this.collection.findMany>[0],
+      // @ts-ignore
+      query,
       false
     );
     if (this.queriesManager.has(queryHash)) {
-      return this.queriesManager.subscribe(queryHash) as Ref<
-        QueryResult<Schema, DBFullSchema, Q>
-      >;
+      return this.queriesManager.subscribe(queryHash);
     }
     const queryResult = this.collection.findMany(
       query as Parameters<typeof this.collection.findMany>[0]
@@ -83,8 +61,8 @@ export class VueCollectionWrapper<
       this.collection.schema,
       false,
       query,
-      ref(queryResult)
-    ) as Ref<QueryResult<Schema, DBFullSchema, Q>>;
+      this.createReactiveValue(queryResult)
+    );
   }
 
   update(
@@ -151,17 +129,20 @@ export class VueCollectionWrapper<
         queryFilters
       );
     for (const queryCacheData of queryCacheDataConcerned) {
-      queryCacheData.result.value = queryCacheData.isFindFirst
-        ? this.collection.findFirst(
-            queryCacheData.query as Parameters<
-              typeof this.collection.findFirst
-            >[0]
-          )
-        : this.collection.findMany(
-            queryCacheData.query as Parameters<
-              typeof this.collection.findMany
-            >[0]
-          );
+      this.setReactiveValue(
+        queryCacheData.result,
+        queryCacheData.isFindFirst
+          ? this.collection.findFirst(
+              queryCacheData.query as Parameters<
+                typeof this.collection.findFirst
+              >[0]
+            )
+          : this.collection.findMany(
+              queryCacheData.query as Parameters<
+                typeof this.collection.findMany
+              >[0]
+            )
+      );
     }
   }
 
@@ -171,17 +152,20 @@ export class VueCollectionWrapper<
       data
     );
     for (const queryCacheData of queryCacheDataConcerned) {
-      queryCacheData.result.value = queryCacheData.isFindFirst
-        ? this.collection.findFirst(
-            queryCacheData.query as Parameters<
-              typeof this.collection.findFirst
-            >[0]
-          )
-        : this.collection.findMany(
-            queryCacheData.query as Parameters<
-              typeof this.collection.findMany
-            >[0]
-          );
+      this.setReactiveValue(
+        queryCacheData.result,
+        queryCacheData.isFindFirst
+          ? this.collection.findFirst(
+              queryCacheData.query as Parameters<
+                typeof this.collection.findFirst
+              >[0]
+            )
+          : this.collection.findMany(
+              queryCacheData.query as Parameters<
+                typeof this.collection.findMany
+              >[0]
+            )
+      );
     }
   }
 }

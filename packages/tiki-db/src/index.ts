@@ -26,7 +26,7 @@ export {
   pluginMigrations,
   type PluginMigrationsOptions,
   type MigrationContext,
-  type Migration
+  type Migration,
 } from "./plugins/migration";
 
 export {
@@ -37,3 +37,5 @@ export {
 } from "./query/query";
 export { QueryBuilder } from "./query/query_builder";
 export { QueriesManager, QueryCacheData } from "./query/queries_manager";
+
+export { ReactiveCollectionWrapper, ReactiveDatabaseWrapper } from "./reactive";
