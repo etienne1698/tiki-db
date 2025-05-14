@@ -9,4 +9,10 @@ While `TikiDB` is compatible with both client-side and server-side environments,
 
 
 To address these SSR limitations, you can use 
-- [tiki-db-nuxt](../extensions/nuxt.md)
+- [tiki-db-nuxt](./extensions/nuxt.md)
+- [tiki-db-next](./extensions/next.md)
+
+These packages implement this strategy to provide a good SSR experience: 
+- Expose a hook to get the current DB instance (create or reuse it when needed)
+- Use `InMemoryStorage` on the server and merge the state during hydration
+- Reuse the results of server-side queries and re-run queries once hydration is complete
