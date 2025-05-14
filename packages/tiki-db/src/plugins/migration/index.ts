@@ -1,9 +1,9 @@
-import { collection } from "../collection/collection_schema";
-import { Database, DatabaseFullSchema } from "../database/database";
-import { model } from "../model/model";
-import { number } from "../model/number";
-import { Plugin } from "./plugin";
-import { InferModelNormalizedType } from "../types";
+import { collection } from "../../collection/collection_schema";
+import { Database, DatabaseFullSchema } from "../../database/database";
+import { model } from "../../model/model";
+import { number } from "../../model/number";
+import { Plugin } from "./../plugin";
+import { InferModelNormalizedType } from "../../types";
 
 export interface Migration<DBFullSchema extends DatabaseFullSchema> {
   version: number;
@@ -48,6 +48,7 @@ export function pluginMigrations(options: PluginMigrationsOptions): Plugin {
           if (m.version > currentVersion) {
             await m.up({ db });
             await db.collections[migrationCollectionName].insert({
+              // @ts-ignore
               version: m.version,
             });
           }

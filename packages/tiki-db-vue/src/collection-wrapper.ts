@@ -1,5 +1,4 @@
 import {
-  AnyButMaybeT,
   Collection,
   CollectionSchema,
   DatabaseFullSchema,
