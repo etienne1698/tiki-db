@@ -4,7 +4,7 @@
 
 `TikiDB` has some limitations on SSR, see [Limitations for Server-Side Rendering (SSR)](../ssr_limitations.md)
 
-`nuxt-tiki-db` provides a solution to these SSR limitations
+`tiki-db-nuxt` provides a solution to these SSR limitations
 
 ⚠️ This is experimental, not really production ready
 

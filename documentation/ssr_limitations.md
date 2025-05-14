@@ -9,4 +9,4 @@ While `TikiDB` is compatible with both client-side and server-side environments,
 
 
 To address these SSR limitations, you can use 
-- [nuxt-tiki-db](../extensions/nuxt.md)
+- [tiki-db-nuxt](../extensions/nuxt.md)
