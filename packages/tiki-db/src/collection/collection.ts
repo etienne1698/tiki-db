@@ -1,7 +1,7 @@
 import { Database, DatabaseFullSchema } from "../database/database";
 import { createDefaultQuery, Query, QueryFilters } from "../query/query";
 import { Relation } from "../relation/relation";
-import { AnyButMaybeT, InferCollectionInsert, InferModelNormalizedType } from "../types";
+import { InferCollectionInsert, InferCollectionUpdate } from "../types";
 import { CollectionSchema } from "./collection_schema";
 
 export class Collection<
@@ -42,7 +42,7 @@ export class Collection<
   }
 
   insert(
-    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>,
+    data: InferCollectionInsert<Schema, DBFullSchema>,
     opts?: Partial<{
       saveRelations: boolean;
       createMissingRelatedFields: boolean;
@@ -73,20 +73,20 @@ export class Collection<
 
   update<QF extends QueryFilters<Schema>>(
     queryFilters: QF,
-    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>
+    data: InferCollectionUpdate<Schema, DBFullSchema>
   ) {
     return this.database.storage.update(this.schema, queryFilters, data);
   }
 
   updateMany<QF extends QueryFilters<Schema>>(
     queryFilters: QF,
-    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>
+    data: InferCollectionUpdate<Schema, DBFullSchema>
   ) {
     return this.database.storage.updateMany(this.schema, queryFilters, data);
   }
 
   upsert(
-    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>,
+    data: InferCollectionUpdate<Schema, DBFullSchema>,
     opts?: Partial<{
       saveRelations: boolean;
       createMissingRelatedFields: boolean;
@@ -101,7 +101,7 @@ export class Collection<
   }
 
   upsertMany(
-    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>[],
+    data: InferCollectionUpdate<Schema, DBFullSchema>[],
     opts?: Partial<{
       saveRelations: boolean;
       createMissingRelatedFields: boolean;

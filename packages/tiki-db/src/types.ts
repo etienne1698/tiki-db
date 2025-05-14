@@ -2,6 +2,7 @@ import type { Model } from "./model/model";
 import type { Field } from "./model/field";
 import { CollectionSchema } from "./collection/collection_schema";
 import { DatabaseFullSchema } from "./database/database";
+import { Relations } from "./relation/relation";
 
 export type DeepPartial<T> = Partial<{
   [P in keyof T]?: DeepPartial<T[P]>;
@@ -24,6 +25,21 @@ export type InferModelFieldName<M extends Model> = keyof M["schema"];
 
 export type InferNormalizedField<F extends Field> = ReturnType<F["normalize"]>;
 
+export type InferCollectionInsertRelations<
+  R extends Relations,
+  DBFullSchema extends DatabaseFullSchema
+> = Partial<{
+  [key in keyof R["schema"]]: R["schema"][key]["multiple"] extends true
+    ? InferCollectionInsert<
+        DBFullSchema["schemaDbName"][R["schema"][key]["related"]["dbName"]],
+        DBFullSchema
+      >[]
+    : InferCollectionInsert<
+        DBFullSchema["schemaDbName"][R["schema"][key]["related"]["dbName"]],
+        DBFullSchema
+      >;
+}>;
+
 // TODO: Some fields are not optionnal on insert
 export type InferCollectionInsert<
   C extends CollectionSchema,
@@ -31,12 +47,7 @@ export type InferCollectionInsert<
 > = Partial<{
   [key in keyof C["model"]["schema"]]: C["model"]["schema"][key]["defaultValue"];
 }> &
-  Partial<{
-    [key in keyof C["relations"]["schema"]]: InferCollectionInsert<
-      DBFullSchema["schemaDbName"][C["relations"]["schema"][key]["model"]["dbName"]],
-      DBFullSchema
-    >;
-  }>;
+  InferCollectionInsertRelations<C["relations"], DBFullSchema>;
 
 export type InferCollectionUpdate<
   C extends CollectionSchema,
@@ -44,9 +55,4 @@ export type InferCollectionUpdate<
 > = Partial<{
   [key in keyof C["model"]["schema"]]: C["model"]["schema"][key]["defaultValue"];
 }> &
-  Partial<{
-    [key in keyof C["relations"]["schema"]]: InferCollectionInsert<
-      DBFullSchema["schemaDbName"][C["relations"]["schema"][key]["model"]["dbName"]],
-      DBFullSchema
-    >;
-  }>;
+  InferCollectionInsertRelations<C["relations"], DBFullSchema>;

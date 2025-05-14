@@ -1,13 +1,16 @@
 import type { CollectionSchema } from "../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../database/database";
 import type { Query, QueryFilters, QueryResult } from "../query/query";
-import type { AnyButMaybeT, InferCollectionInsert, InferModelNormalizedType } from "../types";
+import type {
+  InferCollectionInsert,
+  InferCollectionUpdate,
+  InferModelNormalizedType,
+} from "../types";
 
 export interface Storage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   IsAsync extends boolean = false
 > {
-  
   init(database: Database): Promise<void>;
 
   findMany<
@@ -38,7 +41,7 @@ export interface Storage<
   update<C extends CollectionSchema>(
     collection: C,
     queryFilters: QueryFilters<C>,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
+    data: InferCollectionUpdate<C, DBFullSchema>
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
     : Partial<InferModelNormalizedType<C["model"]>> | undefined;
@@ -46,14 +49,14 @@ export interface Storage<
   updateMany<C extends CollectionSchema>(
     collection: C,
     queryFilters: QueryFilters<C>,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
+    data: InferCollectionUpdate<C, DBFullSchema>
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
     : Partial<InferModelNormalizedType<C["model"]>>[];
 
   insert<C extends CollectionSchema>(
     collection: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
+    data: InferCollectionInsert<C, DBFullSchema>,
     saveRelations?: boolean
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
@@ -69,7 +72,7 @@ export interface Storage<
 
   upsert<C extends CollectionSchema>(
     collection: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
+    data: InferCollectionUpdate<C, DBFullSchema>,
     saveRelations?: boolean
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>> | undefined>
@@ -77,7 +80,7 @@ export interface Storage<
 
   upsertMany<C extends CollectionSchema>(
     collection: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
+    data: InferCollectionUpdate<C, DBFullSchema>[],
     saveRelations?: boolean
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>

@@ -1,14 +1,13 @@
-import { PrimaryKey } from "drizzle-orm/gel-core";
 import { CollectionSchema } from "../../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../../database/database";
 import { Query, QueryFilters, QueryResult } from "../../query/query";
 import { Relation } from "../../relation/relation";
 import {
-  Primary,
   AnyButMaybeT,
   InferModelFieldName,
   InferModelNormalizedType,
   InferCollectionInsert,
+  InferCollectionUpdate,
 } from "../../types";
 import { Storage } from "../storage";
 import { InMemoryQueryFilter } from "./in_memory_query_filter";
@@ -39,7 +38,7 @@ export class InMemoryStorage<
 
   insert<C extends CollectionSchema>(
     collectionSchema: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
+    data: InferCollectionInsert<C, DBFullSchema>,
     saveRelations?: boolean
   ): InferModelNormalizedType<C["model"]> {
     const inserted = collectionSchema.model.normalize(data);
@@ -59,7 +58,7 @@ export class InMemoryStorage<
   ): InferModelNormalizedType<C["model"]>[] {
     const allInserted: InferModelNormalizedType<C["model"]>[] = [];
     for (const d of data) {
-      const inserted = collectionSchema.model.normalize(d) as InferModelNormalizedType<C["model"]>;
+      const inserted = collectionSchema.model.normalize(d);
       if (saveRelations) {
         this.#saveRelations(collectionSchema, d);
       }
@@ -83,7 +82,7 @@ export class InMemoryStorage<
 
   upsert<C extends CollectionSchema>(
     collectionSchema: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>,
+    data: InferCollectionUpdate<C, DBFullSchema>,
     saveRelations?: boolean
   ): InferModelNormalizedType<C["model"]> | undefined {
     const queryFilters = this.#getQueryFiltersByPrimary(collectionSchema, data);
@@ -98,14 +97,14 @@ export class InMemoryStorage<
 
   upsertMany<C extends CollectionSchema>(
     collectionSchema: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
+    data: InferCollectionUpdate<C, DBFullSchema>[],
     saveRelations?: boolean
   ): InferModelNormalizedType<C["model"]>[] {
     return data.reduce((prev, current) => {
       const res = this.upsert(collectionSchema, current, saveRelations);
       if (res) prev.push(res);
       return prev;
-    }, []) as InferModelNormalizedType<C["model"]>[];
+    }, [] as  InferModelNormalizedType<C["model"]>[]) as InferModelNormalizedType<C["model"]>[];
   }
 
   findMany<
@@ -150,7 +149,7 @@ export class InMemoryStorage<
   update<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: QueryFilters<C>,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
+    data: InferCollectionUpdate<C, DBFullSchema>
   ): InferModelNormalizedType<C["model"]> | undefined {
     const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
       filters: queryFilters,
@@ -168,7 +167,7 @@ export class InMemoryStorage<
   updateMany<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: QueryFilters<C>,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>
+    data: InferCollectionUpdate<C, DBFullSchema>
   ): InferModelNormalizedType<C["model"]>[] {
     const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
       filters: queryFilters,
