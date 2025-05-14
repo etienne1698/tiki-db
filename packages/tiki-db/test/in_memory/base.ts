@@ -9,7 +9,7 @@ import { getTestStorage } from "./base_storage";
 
 export function getTestDatabase() {
   const users = model("usersDbName", {
-    id: string("id", ""),
+    id: string("identifier", ""),
     firstname: string("firstname", ""),
     lastname: string("lastname", ""),
     email: string("email", ""),

@@ -1,12 +1,13 @@
 import type { InferNormalizedField } from "../types";
 import { Field } from "./field";
 
-export class ArrayField<F extends Field> extends Field<
-  Array<InferNormalizedField<F>>
+export class ArrayField<F extends Field, DbName extends string = string> extends Field<
+  Array<InferNormalizedField<F>>,
+  DbName
 > {
   protected declare contentField: F;
 
-  constructor(dbName: string, defaultValue: Array<any> | null) {
+  constructor(dbName: DbName, defaultValue: Array<any> | null) {
     super(dbName, defaultValue);
   }
 
@@ -17,6 +18,6 @@ export class ArrayField<F extends Field> extends Field<
   }
 }
 
-export function array(dbName: string, defaultValue: Array<any>) {
+export function array<DbName extends string = string>(dbName: DbName, defaultValue: Array<any>) {
   return new ArrayField(dbName, defaultValue);
 }

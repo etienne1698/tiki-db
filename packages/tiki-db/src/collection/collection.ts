@@ -1,7 +1,7 @@
 import { Database, DatabaseFullSchema } from "../database/database";
 import { createDefaultQuery, Query, QueryFilters } from "../query/query";
 import { Relation } from "../relation/relation";
-import { AnyButMaybeT, InferModelNormalizedType } from "../types";
+import { AnyButMaybeT, InferCollectionInsert, InferModelNormalizedType } from "../types";
 import { CollectionSchema } from "./collection_schema";
 
 export class Collection<
@@ -57,7 +57,7 @@ export class Collection<
   }
 
   insertMany(
-    data: AnyButMaybeT<InferModelNormalizedType<Schema["model"]>>[],
+    data: InferCollectionInsert<Schema, DBFullSchema>[],
     opts?: Partial<{
       saveRelations: boolean;
       createMissingRelatedFields: boolean;

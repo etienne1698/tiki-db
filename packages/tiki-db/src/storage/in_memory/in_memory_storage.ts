@@ -8,6 +8,7 @@ import {
   AnyButMaybeT,
   InferModelFieldName,
   InferModelNormalizedType,
+  InferCollectionInsert,
 } from "../../types";
 import { Storage } from "../storage";
 import { InMemoryQueryFilter } from "./in_memory_query_filter";
@@ -53,7 +54,7 @@ export class InMemoryStorage<
 
   insertMany<C extends CollectionSchema>(
     collectionSchema: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
+    data: InferCollectionInsert<C, DBFullSchema>[],
     saveRelations?: boolean
   ): InferModelNormalizedType<C["model"]>[] {
     const allInserted: InferModelNormalizedType<C["model"]>[] = [];

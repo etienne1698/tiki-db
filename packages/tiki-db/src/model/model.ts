@@ -1,18 +1,19 @@
 import type { Field } from "./field";
 import type {
   AnyButMaybeT,
+  InferModelNormalizedInDatabaseType,
   InferModelNormalizedType,
   Primary,
   PrimaryKey,
 } from "../types";
 
 export class Model<
-  S extends Record<string, Field> = Record<string, Field<unknown>>,
+  Schema extends Record<string, Field> = Record<string, Field<unknown>>,
   DbName extends string = string
 > {
   constructor(
     public dbName: DbName,
-    public schema: S,
+    public schema: Schema,
     public primaryKey: PrimaryKey
   ) {}
 
@@ -23,15 +24,34 @@ export class Model<
     return this.primaryKey.map((k) => data[k]).join();
   }
 
-  normalize(data: AnyButMaybeT<{ [K in keyof S]: S[K]["defaultValue"] }>) {
-    const normalizedData: { [K in keyof S]: S[K]["defaultValue"] } = {} as {
-      [K in keyof S]: S[K]["defaultValue"];
-    };
+  normalize(data: AnyButMaybeT<InferModelNormalizedType<this>>) {
+    const normalizedData: InferModelNormalizedType<this> =
+      {} as InferModelNormalizedType<this>;
     for (const key in this.schema) {
       const field = this.schema[key];
       normalizedData[key] = field.normalize(data[key]);
     }
     return normalizedData;
+  }
+
+  mapToDB(data: InferModelNormalizedType<this>) {
+    const result: InferModelNormalizedInDatabaseType<this> =
+      {} as InferModelNormalizedInDatabaseType<this>;
+    for (const [key, field] of Object.entries(this.schema)) {
+      // @ts-ignore
+      result[field.dbName] = data[key];
+    }
+    return result;
+  }
+
+  mapFromDB(data: InferModelNormalizedInDatabaseType<this>) {
+    const result: InferModelNormalizedType<this> =
+      {} as InferModelNormalizedType<this>;
+    for (const [key, field] of Object.entries(this.schema)) {
+      // @ts-ignore
+      result[key] = data[field.dbName];
+    }
+    return result;
   }
 }
 

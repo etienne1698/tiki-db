@@ -1,7 +1,7 @@
 import type { CollectionSchema } from "../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../database/database";
 import type { Query, QueryFilters, QueryResult } from "../query/query";
-import type { AnyButMaybeT, InferModelNormalizedType } from "../types";
+import type { AnyButMaybeT, InferCollectionInsert, InferModelNormalizedType } from "../types";
 
 export interface Storage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
@@ -61,7 +61,7 @@ export interface Storage<
 
   insertMany<C extends CollectionSchema>(
     collection: C,
-    data: AnyButMaybeT<InferModelNormalizedType<C["model"]>>[],
+    data: InferCollectionInsert<C, DBFullSchema>[],
     saveRelations?: boolean
   ): IsAsync extends true
     ? Promise<Partial<InferModelNormalizedType<C["model"]>>[]>
