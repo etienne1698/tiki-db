@@ -26,6 +26,18 @@ export class InMemoryStorage<
     >;
   };
 
+  clear<C extends CollectionSchema>(collectionSchema: C) {
+    // @ts-ignore
+    this.stores[collectionSchema.model.dbName] = [];
+  }
+
+  clearAll() {
+    for (const collection of Object.values(this.database.schema.schema)) {
+      // @ts-ignore
+      this.stores[collection.model.dbName] = [];
+    }
+  }
+
   declare database: Database;
 
   async init(database: Database): Promise<void> {

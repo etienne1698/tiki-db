@@ -13,6 +13,12 @@ export interface Storage<
 > {
   init(database: Database): Promise<void>;
 
+  clear<C extends CollectionSchema>(
+    collection: C
+  ): IsAsync extends true ? Promise<void> : void;
+
+  clearAll(): IsAsync extends true ? Promise<void> : void;
+
   findMany<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
