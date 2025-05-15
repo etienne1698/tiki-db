@@ -32,6 +32,7 @@ export {
 export {
   type Query,
   type QueryResult,
+  type QueryFilters,
   type FiltersValueType as OperatorValueType,
   type Filters as Operator,
 } from "./query/query";

@@ -4,8 +4,10 @@ import {
   CollectionSchema,
   Database,
   DatabaseFullSchema,
-  MaybeAsArray,
-  Primary,
+  InferCollectionUpdate,
+  InferCollectionInsert,
+  InferModelNormalizedType,
+  QueryFilters,
   Query,
   QueryResult,
   Storage,
@@ -43,34 +45,68 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     this.abstractDatabase = database;
   }
 
+  // TODO: insert relations
   async insert<C extends CollectionSchema>(
-    collection: C,
-    data: MaybeAsArray<AnyButMaybeT<ReturnType<C["model"]["normalize"]>>>
-  ): Promise<ReturnType<C["model"]["normalize"]>> {
+    collectionSchema: C,
+    data: InferCollectionInsert<C, DBFullSchema>,
+    saveRelations?: boolean
+  ): Promise<InferModelNormalizedType<C["model"]>> {
     const db = await this.getDB();
-    const tx = db.transaction(collection.model.dbName, "readwrite");
-    const store = tx.objectStore(collection.model.dbName);
+    const tx = db.transaction(collectionSchema.model.dbName, "readwrite");
+    const store = tx.objectStore(collectionSchema.model.dbName);
 
-    const arrayData = Array.isArray(data) ? data : [data];
-    for (const item of arrayData) {
-      await store.put(item);
+    await store.add(data);
+
+    await tx.done;
+    return data;
+  }
+
+  // TODO: insert relations
+  async insertMany<C extends CollectionSchema>(
+    collectionSchema: C,
+    data: InferCollectionInsert<C, DBFullSchema>[],
+    saveRelations?: boolean
+  ): Promise<InferModelNormalizedType<C["model"]>[]> {
+    const db = await this.getDB();
+    const tx = db.transaction(collectionSchema.model.dbName, "readwrite");
+    const store = tx.objectStore(collectionSchema.model.dbName);
+
+    for (const d of data) {
+      await store.add(data);
     }
 
     await tx.done;
-    return arrayData[0];
+    return data;
   }
 
-  async find<
+  upsert<C extends CollectionSchema>(
+    collectionSchema: C,
+    data: InferCollectionUpdate<C, DBFullSchema>,
+    saveRelations?: boolean
+  ): Promise<InferModelNormalizedType<C["model"]> | undefined> {
+    throw "Not implemented yet";
+  }
+
+  upsertMany<C extends CollectionSchema>(
+    collectionSchema: C,
+    data: InferCollectionUpdate<C, DBFullSchema>[],
+    saveRelations?: boolean
+  ): Promise<InferModelNormalizedType<C["model"]>[]> {
+    throw "Not implemented yet";
+  }
+
+  // TODO: filter + add relations
+  async findMany<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
   >(
-    collection: C,
+    collectionSchema: C,
     query?: Q | undefined
   ): Promise<QueryResult<C, DBFullSchema, Q>> {
     const db = await this.getDB();
 
-    const tx = db.transaction(collection.model.dbName, "readonly");
-    const store = tx.objectStore(collection.model.dbName);
+    const tx = db.transaction(collectionSchema.model.dbName, "readonly");
+    const store = tx.objectStore(collectionSchema.model.dbName);
 
     const all = await store.getAll();
     const filtered = all;
@@ -78,34 +114,45 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     return filtered;
   }
 
+  // TODO: filter + add relations
   async findFirst<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
-  >(collection: C, query?: Q | undefined) {
-    return (await this.find(collection, query))?.[0];
+  >(
+    collectionSchema: C,
+    query?: Q | undefined
+  ): Promise<QueryResult<C, DBFullSchema, Q>[0]> {
+    const db = await this.getDB();
+
+    const tx = db.transaction(collectionSchema.model.dbName, "readonly");
+    const store = tx.objectStore(collectionSchema.model.dbName);
+
+    const all = await store.getAll();
+    const filtered = all;
+
+    return filtered[0];
   }
 
   remove<C extends CollectionSchema>(
-    collection: C,
-    primary: Primary,
-    query?: Query<C, DBFullSchema> | undefined
-  ): Promise<Partial<ReturnType<C["model"]["normalize"]>> | undefined> {
-    throw new Error("Method not implemented.");
-  }
-  update<C extends CollectionSchema>(
-    collection: C,
-    primary: Primary,
-    data: AnyButMaybeT<ReturnType<C["model"]["normalize"]>>,
-    query?: Query<C, DBFullSchema> | undefined
-  ): Promise<Partial<ReturnType<C["model"]["normalize"]>> | undefined> {
-    throw new Error("Method not implemented.");
+    collectionSchema: C,
+    queryFilters: QueryFilters<C>
+  ): Promise<void> {
+    throw "Not implemented yet";
   }
 
-  insertRelations<C extends CollectionSchema>(
-    collection: C,
-    relation: keyof C["relations"],
-    data: Record<string, any>
-  ): Promise<void> {
-    throw new Error("Method not implemented.");
+  update<C extends CollectionSchema>(
+    collectionSchema: C,
+    queryFilters: QueryFilters<C>,
+    data: InferCollectionUpdate<C, DBFullSchema>
+  ): Promise<InferModelNormalizedType<C["model"]> | undefined> {
+    throw "Not implemented yet";
+  }
+
+  updateMany<C extends CollectionSchema>(
+    collectionSchema: C,
+    queryFilters: QueryFilters<C>,
+    data: InferCollectionUpdate<C, DBFullSchema>
+  ): Promise<InferModelNormalizedType<C["model"]>[]> {
+    throw "Not implemented yet";
   }
 }
