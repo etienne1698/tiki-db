@@ -73,6 +73,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const store = tx.objectStore(collectionSchema.model.dbName);
 
     await store.add(data);
+    await this.#saveRelations(collectionSchema, data);
 
     await tx.done;
     return data;
@@ -90,26 +91,36 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
 
     for (const d of data) {
       await store.add(d);
+      await this.#saveRelations(collectionSchema, d);
     }
 
     await tx.done;
     return data;
   }
 
-  upsert<C extends CollectionSchema>(
+  async upsert<C extends CollectionSchema>(
     collectionSchema: C,
     data: InferCollectionUpdate<C, DBFullSchema>,
     saveRelations?: boolean
   ): Promise<InferModelNormalizedType<C["model"]> | undefined> {
-    throw "Not implemented yet";
+    const result = await this.update(
+      collectionSchema,
+      collectionSchema.model.getFilterByPrimary(data),
+      data
+    );
+    return result || await this.insert(collectionSchema, data, saveRelations);
   }
 
-  upsertMany<C extends CollectionSchema>(
+  async upsertMany<C extends CollectionSchema>(
     collectionSchema: C,
     data: InferCollectionUpdate<C, DBFullSchema>[],
     saveRelations?: boolean
   ): Promise<InferModelNormalizedType<C["model"]>[]> {
-    throw "Not implemented yet";
+    return (
+      await Promise.all(
+        data.map((d) => this.upsert(collectionSchema, d, saveRelations))
+      )
+    ).filter((d) => d != undefined);
   }
 
   // TODO: filter + add relations
@@ -150,11 +161,20 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     return filtered[0];
   }
 
-  remove<C extends CollectionSchema>(
+  async remove<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: QueryFilters<C>
   ): Promise<void> {
-    throw "Not implemented yet";
+    const toRemove = await this.findFirst(collectionSchema, queryFilters);
+    if (!toRemove) return undefined;
+
+    const db = await this.getDB();
+    const tx = db.transaction(collectionSchema.model.dbName, "readwrite");
+    const store = tx.objectStore(collectionSchema.model.dbName);
+
+    await store.delete(collectionSchema.model.primary(toRemove));
+
+    await tx.done;
   }
 
   async update<C extends CollectionSchema>(
@@ -176,11 +196,50 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     return updated;
   }
 
-  updateMany<C extends CollectionSchema>(
+  async updateMany<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: QueryFilters<C>,
     data: InferCollectionUpdate<C, DBFullSchema>
   ): Promise<InferModelNormalizedType<C["model"]>[]> {
-    throw "Not implemented yet";
+    const toUpdate = await this.findMany(collectionSchema, queryFilters);
+    if (!toUpdate.length) return [];
+
+    const db = await this.getDB();
+    const tx = db.transaction(collectionSchema.model.dbName, "readwrite");
+    const store = tx.objectStore(collectionSchema.model.dbName);
+
+    const result = [];
+    for (const toUp of toUpdate) {
+      const updated = { ...toUp, ...data };
+      await store.put(updated);
+      result.push(updated);
+    }
+
+    await tx.done;
+    return result;
+  }
+
+  async #saveRelations<C extends CollectionSchema>(
+    collectionSchema: C,
+    data: any
+  ) {
+    for (const relationKey in collectionSchema.relations.schema) {
+      if (!data?.[relationKey]) continue;
+
+      const relation = collectionSchema.relations.schema[relationKey];
+      const relationCollectionSchemaSchema =
+        this.abstractDatabase.schema.schemaDbName[relation.related.dbName];
+
+      if (Array.isArray(data[relationKey])) {
+        if (relation.multiple) {
+          await this.upsertMany(
+            relationCollectionSchemaSchema,
+            data[relationKey]
+          );
+        }
+      } else {
+        await this.upsert(relationCollectionSchemaSchema, data[relationKey]);
+      }
+    }
   }
 }

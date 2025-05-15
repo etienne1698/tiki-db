@@ -33,10 +33,11 @@
 
 Prior to releasing a stable v1, the following items need to be completed:
 
+- update should have a "saveRelation" param
 - The dbName properties (in both Model and Field) are not yet used. Add optional support for mapping fields to and from the database during insert, update, and find operations.
 - Complete and thoroughly test the migration plugin.
 - Add more field types (object, boolean, date...)
-- Add indexes support (in model schema and in InMemoryStorage)
+- Add indexes support
 - SyncEngine
 
 ---
