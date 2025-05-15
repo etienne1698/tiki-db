@@ -5,10 +5,10 @@
 | Storage Engine | Status | NPM package   |
 | -------------- | ------ | ------------- |
 | `In-Memory`    | ✅     | `tiki-db`     |
-| `localStorage` | ❌     | -             |
 | `IndexedDB`    | 🚧     | `tiki-db-idb` |
-| `OPFS`         | ❌     | -             |
 | `sql.js`       | ❌     | -             |
+| `pg`           | ❌     | -             |
+| `node SQLite`  | ❌     | -             |
 
 | Reactive Framework | Status | NPM package     |
 | ------------------ | ------ | --------------- |
@@ -18,11 +18,11 @@
 | `Angular`          | ❌     | -               |
 | `Svelte`           | ❌     | -               |
 
-| Extension         | Status | Notes                                         | NPM package |
-| ----------------- | ------ | --------------------------------------------- | ----------- |
-| `Migrations`      | 🚧     | Migrations plugin (for storages that need it) | -           |
-| `syncEngine`      | 🚧     | Core sync logic                               | -           |
-| `Zod validatrors` | 🚧     | Create validators from your DB schema         | -           |
+| Extension        | Status | Notes                                         | NPM package |
+| ---------------- | ------ | --------------------------------------------- | ----------- |
+| `Migrations`     | 🚧     | Migrations plugin (for storages that need it) | -           |
+| `syncEngine`     | 🚧     | Core sync logic                               | -           |
+| `Zod validators` | 🚧     | Create validators from your DB schema         | -           |
 
 | CLI description Status                 | Status | Command                               |
 | -------------------------------------- | ------ | ------------------------------------- |
