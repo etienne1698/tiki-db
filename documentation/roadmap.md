@@ -18,10 +18,16 @@
 | `Angular`          | ❌     | -               |
 | `Svelte`           | ❌     | -               |
 
-| Extension    | Status | Notes                                         | NPM package |
-| ------------ | ------ | --------------------------------------------- | ----------- |
-| `Migrations` | 🚧     | Migrations plugin (for storages that need it) | -           |
-| `syncEngine` | 🚧     | Core sync logic                               | -           |
+| Extension         | Status | Notes                                         | NPM package |
+| ----------------- | ------ | --------------------------------------------- | ----------- |
+| `Migrations`      | 🚧     | Migrations plugin (for storages that need it) | -           |
+| `syncEngine`      | 🚧     | Core sync logic                               | -           |
+| `Zod validatrors` | 🚧     | Create validators from your DB schema         | -           |
+
+| CLI description Status                 | Status | Command                               |
+| -------------------------------------- | ------ | ------------------------------------- |
+| Generate tests for your storage        | 🚧     | `npx tiki-db-storage-contributor-cli` |
+| Generate migrations from you DB schema | ❌     | -                                     |
 
 ---
 
@@ -37,7 +43,6 @@ Prior to releasing a stable v1, the following items need to be completed:
 
 ⚠️ `TikiDB` is still under development, and some breaking changes may occur in the future. While the general usage shouldn't change much, a few aspects are still being reconsidered:
 
-- "Reactive wrappers" will likely wrap the storage directly, rather than the database and collections.
 - The `asyncDatabase()` function is expected to be removed in favor of a unified `database()` function.
 - The generic TypeScript parameter "IsAsync" (on Database, QueryBuilder, Storage, and Collection) is planned to be removed.
 
