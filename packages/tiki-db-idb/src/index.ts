@@ -13,14 +13,31 @@ import {
   Storage,
 } from "tiki-db";
 
+// TODO: filter with indexes
 export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
   implements Storage<DBFullSchema, true>
 {
-  private db?: IDBPDatabase;
-  private dbName = "TikiDB";
+  public db?: IDBPDatabase;
+  private declare dbName: string;
   private version = 1;
 
   private declare abstractDatabase: Database;
+
+  constructor(opts?: { dbName: string }) {
+    this.dbName = opts?.dbName || "TikiDB";
+  }
+
+  async clear<C extends CollectionSchema>(c: C) {
+    const db = await this.getDB();
+    db.clear(c.model.dbName);
+  }
+
+  async clearAll() {
+    const db = await this.getDB();
+    for (const c of Object.values(this.abstractDatabase.collections)) {
+      db.clear(c.schema.model.dbName);
+    }
+  }
 
   async getDB() {
     if (!this.db) {
@@ -72,7 +89,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const store = tx.objectStore(collectionSchema.model.dbName);
 
     for (const d of data) {
-      await store.add(data);
+      await store.add(d);
     }
 
     await tx.done;
@@ -140,12 +157,23 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     throw "Not implemented yet";
   }
 
-  update<C extends CollectionSchema>(
+  async update<C extends CollectionSchema>(
     collectionSchema: C,
     queryFilters: QueryFilters<C>,
     data: InferCollectionUpdate<C, DBFullSchema>
   ): Promise<InferModelNormalizedType<C["model"]> | undefined> {
-    throw "Not implemented yet";
+    const toUpdate = await this.findFirst(collectionSchema, queryFilters);
+    if (!toUpdate) return undefined;
+
+    const db = await this.getDB();
+    const tx = db.transaction(collectionSchema.model.dbName, "readwrite");
+    const store = tx.objectStore(collectionSchema.model.dbName);
+
+    const updated = { ...toUpdate, ...data };
+    await store.put(updated);
+
+    await tx.done;
+    return updated;
   }
 
   updateMany<C extends CollectionSchema>(

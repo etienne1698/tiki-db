@@ -1,13 +1,7 @@
-import {
-  collection,
-  model,
-  relations,
-  string,
-  asyncDatabase,
-} from "tiki-db";
+import { collection, model, relations, string, asyncDatabase } from "tiki-db";
 import { getTestStorage } from "./base_storage";
 
-export function getTestDatabase() {
+export async function getTestDatabase() {
   const users = model("usersDbName", {
     id: string("identifier", ""),
     firstname: string("firstname", ""),
@@ -60,9 +54,12 @@ export function getTestDatabase() {
     comments: collection(comments, commentsRelations),
   };
 
-  const storage = getTestStorage();
+  const storage = await getTestStorage();
+
   const db = asyncDatabase(collections, storage);
-  db.init();
+  await db.init();
+
+  await storage.clearAll();
 
   return {
     db,

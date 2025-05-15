@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { getTestDatabase } from "./base";
 
 test("$eq should work", async () => {
-  const { db } = getTestDatabase();
+  const { db } = await getTestDatabase();
 
   (await db.collections.users.insert({ id: "1", firstname: "Etienne" }));
 
@@ -12,7 +12,7 @@ test("$eq should work", async () => {
 });
 
 test("bad $eq request should not retrieve obj", async () => {
-  const { db } = getTestDatabase();
+  const { db } = await getTestDatabase();
 
   (await db.collections.users.insert({ id: "1", firstname: "Etienne" }));
 
@@ -22,7 +22,7 @@ test("bad $eq request should not retrieve obj", async () => {
 });
 
 test("$in should work", async () => {
-  const { db } = getTestDatabase();
+  const { db } = await getTestDatabase();
 
   (await db.collections.users.insertMany([
     { id: "1", firstname: "Etienne" },
@@ -44,7 +44,7 @@ test("$in should work", async () => {
 });
 
 test("$ne should work", async () => {
-  const { db } = getTestDatabase();
+  const { db } = await getTestDatabase();
 
   (await db.collections.users.insertMany([
     { id: "1", firstname: "Etienne" },
@@ -58,7 +58,7 @@ test("$ne should work", async () => {
 });
 
 test("$notIn should work", async () => {
-  const { db } = getTestDatabase();
+  const { db } = await getTestDatabase();
 
   (await db.collections.users.insertMany([
     { id: "1", firstname: "Etienne" },

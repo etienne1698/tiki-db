@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { getTestDatabase } from "./base";
 
 test("QueryBuilder should return same as direct query", async () => {
-  const { db } = getTestDatabase();
+  const { db } = await getTestDatabase();
 
   await db.collections.users.insertMany([
     { id: "1", firstname: "Etienne" },
