@@ -38,14 +38,12 @@ export type Query<
 > = Partial<{
   filters: QueryFilters<C> & QueryOrFilters<C>;
   with: {
-    [K in keyof C["relations"]["schema"]]?: C["relations"]["schema"][K]["related"]["dbName"] extends keyof DBFullSchema["schemaDbName"]
-      ?
-          | boolean
-          | Query<
-              DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
-              DBFullSchema
-            >
-      : boolean;
+    [K in keyof C["relations"]["schema"]]?:
+      | boolean
+      | Query<
+          DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
+          DBFullSchema
+        >;
   };
 }>;
 
@@ -66,14 +64,12 @@ export type QueryResult<
   Q extends DeepPartial<Query<C, DBFullSchema>> = Query<C, DBFullSchema>
 > = Array<
   InferModelNormalizedType<C["model"]> & {
-    [K in keyof Q["with"]]: K extends keyof C["relations"]["schema"]
-      ? Q["with"][K] extends true
-        ? C["relations"]["schema"][K]["multiple"] extends true
-          ? InferModelNormalizedType<C["relations"]["schema"][K]["related"]>[]
-          :
-              | InferModelNormalizedType<C["relations"]["schema"][K]["related"]>
-              | undefined
-        : never
-      : never;
+    [K in keyof Q["with"]]: Q["with"][K] extends false
+      ? never
+      : C["relations"]["schema"][K]["multiple"] extends true
+      ? InferModelNormalizedType<C["relations"]["schema"][K]["related"]>[]
+      :
+          | InferModelNormalizedType<C["relations"]["schema"][K]["related"]>
+          | undefined;
   }
 >;

@@ -36,7 +36,6 @@ Prior to releasing a stable v1, the following items need to be completed:
 - The dbName properties (in both Model and Field) are not yet used. Add optional support for mapping fields to and from the database during insert, update, and find operations.
 - Complete and thoroughly test the migration plugin.
 - Add more field types (object, boolean, date...)
-- Add indexes support
 - SyncEngine
 - insert/update/remove, in some storage can return usefull informations, these methods should return these information
 - queriesManager should realy check if query is concerned by update/remove/insert and it should juste update result if re-run is not needed
