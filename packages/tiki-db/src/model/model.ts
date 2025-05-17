@@ -4,11 +4,18 @@ import type {
   InferModelFieldName,
   InferModelNormalizedInDatabaseType,
   InferModelNormalizedType,
-  Primary,
   PrimaryKey,
 } from "../types";
 import { CollectionSchema } from "../collection/collection_schema";
 import { QueryFilters } from "../query/query";
+
+type ModelIndex<
+  Schema extends Record<string, Field> = Record<string, Field<unknown>>
+> = {
+  name: string;
+  keyPath: keyof Schema | (keyof Schema)[];
+  unique?: boolean;
+};
 
 export class Model<
   Schema extends Record<string, Field> = Record<string, Field<unknown>>,
@@ -18,16 +25,16 @@ export class Model<
     public dbName: DbName,
     public schema: Schema,
     public primaryKey: PrimaryKey,
-    indexes?: (keyof Schema | (keyof Schema)[])[]
+    public indexes: ModelIndex[]
   ) {}
 
-  
-
-  primary(data: AnyButMaybeT<InferModelNormalizedType<typeof this>>): Primary {
+  primary(
+    data: AnyButMaybeT<InferModelNormalizedType<typeof this>>
+  ): string | string[] {
     if (typeof this.primaryKey === "string") {
       return data[this.primaryKey];
     }
-    return this.primaryKey.map((k) => data[k]).join();
+    return this.primaryKey.map((k) => data[k]);
   }
 
   normalize(data: AnyButMaybeT<InferModelNormalizedType<this>>) {
@@ -90,8 +97,13 @@ export function model<
   schema: S,
   opts?: Partial<{
     primaryKey: InferModelFieldName<Model<S>>;
-    indexes?: (InferModelFieldName<Model<S>> | InferModelFieldName<Model<S>>[])[]
+    indexes?: ModelIndex<S>[];
   }>
 ) {
-  return new Model(name, schema, opts?.primaryKey as string || "id", opts?.indexes);
+  return new Model(
+    name,
+    schema,
+    (opts?.primaryKey as string) || "id",
+    opts?.indexes as ModelIndex[]
+  );
 }

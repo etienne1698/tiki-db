@@ -48,9 +48,16 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
         upgrade(db) {
           for (const collection of Object.values(schema)) {
             if (!db.objectStoreNames.contains(collection.model.dbName)) {
-              db.createObjectStore(collection.model.dbName, {
+              const store = db.createObjectStore(collection.model.dbName, {
                 keyPath: collection.model.primaryKey,
               });
+              const indexes = collection.model.indexes || [];
+              for (const index of indexes) {
+                store.createIndex(index.name, index.keyPath, {
+                  unique: index.unique ?? false,
+                  multiEntry: false,
+                });
+              }
             }
           }
         },
@@ -126,7 +133,6 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     ).filter((d) => d != undefined);
   }
 
-  // TODO: add relations
   async findMany<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
@@ -139,9 +145,19 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const tx = db.transaction(collectionSchema.model.dbName, "readonly");
     const store = tx.objectStore(collectionSchema.model.dbName);
 
+    const indexedField = this.#getIndexedField(collectionSchema, query);
     const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(query);
-    const all = await store.getAll();
-    const filtered = filtersManager.apply(all);
+
+    let filtered;
+    if (indexedField) {
+      const [indexName, condition] = indexedField;
+      const index = store.index(indexName);
+      const matching = await index.getAll(condition!.$eq);
+      filtered = filtersManager.apply(matching);
+    } else {
+      const all = await store.getAll();
+      filtered = filtersManager.apply(all);
+    }
 
     if (query?.with) {
       return Promise.all(
@@ -261,6 +277,23 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     return {
       filters,
     };
+  }
+
+  #getIndexedField<
+    C extends CollectionSchema,
+    Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
+  >(collectionSchema: C, query?: Q) {
+    if (!query?.filters) return undefined;
+
+    for (const [field, condition] of Object.entries(query.filters)) {
+      const modelIndex = collectionSchema.model.indexes?.find(
+        (idx) => idx.keyPath === field
+      );
+      if (modelIndex && typeof condition === "object" && "$eq" in condition) {
+        return [modelIndex.name, condition];
+      }
+    }
+    return undefined;
   }
 
   async #getDataWithRelations<

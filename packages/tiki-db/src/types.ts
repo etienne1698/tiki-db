@@ -11,7 +11,6 @@ export type DeepPartial<T> = Partial<{
 export type AnyButMaybeT<T> = DeepPartial<T> & Record<string, any>;
 
 export type PrimaryKey = string | string[];
-export type Primary = string;
 
 export type InferModelNormalizedType<M extends Model> = {
   [K in keyof M["schema"]]: M["schema"][K]["defaultValue"];

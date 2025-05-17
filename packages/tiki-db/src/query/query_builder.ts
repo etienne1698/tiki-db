@@ -1,7 +1,7 @@
 import type { CollectionSchema } from "../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../database/database";
 import { Storage } from "../storage/storage";
-import type { DeepPartial, InferModelFieldName, Primary } from "../types";
+import type { DeepPartial, InferModelFieldName } from "../types";
 import {
   createDefaultQuery,
   FILTER_OR,
