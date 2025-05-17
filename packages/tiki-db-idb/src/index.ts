@@ -150,9 +150,9 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
 
     let filtered;
     if (indexedField) {
-      const [indexName, condition] = indexedField;
+      const [indexName, filterValue] = indexedField;
       const index = store.index(indexName);
-      const matching = await index.getAll(condition!.$eq);
+      const matching = await index.getAll(filterValue);
       filtered = filtersManager.apply(matching);
     } else {
       const all = await store.getAll();
@@ -282,7 +282,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
   #getIndexedField<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
-  >(collectionSchema: C, query?: Q) {
+  >(collectionSchema: C, query?: Q): [string,  string] | undefined {
     if (!query?.filters) return undefined;
 
     for (const [field, condition] of Object.entries(query.filters)) {
@@ -290,7 +290,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
         (idx) => idx.keyPath === field
       );
       if (modelIndex && typeof condition === "object" && "$eq" in condition) {
-        return [modelIndex.name, condition];
+        return [modelIndex.name as string, condition.$eq as string];
       }
     }
     return undefined;
