@@ -1,6 +1,5 @@
 import { IDBPDatabase, openDB } from "idb";
 import {
-  AnyButMaybeT,
   CollectionSchema,
   Database,
   DatabaseFullSchema,
@@ -11,6 +10,8 @@ import {
   Query,
   QueryResult,
   Storage,
+  InMemoryQueryFilter,
+  Relation,
 } from "tiki-db";
 
 // TODO: filter with indexes
@@ -62,7 +63,6 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     this.abstractDatabase = database;
   }
 
-  // TODO: insert relations
   async insert<C extends CollectionSchema>(
     collectionSchema: C,
     data: InferCollectionInsert<C, DBFullSchema>,
@@ -73,13 +73,14 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const store = tx.objectStore(collectionSchema.model.dbName);
 
     await store.add(data);
-    await this.#saveRelations(collectionSchema, data);
+    if (saveRelations) {
+      await this.#saveRelations(collectionSchema, data);
+    }
 
     await tx.done;
     return data;
   }
 
-  // TODO: insert relations
   async insertMany<C extends CollectionSchema>(
     collectionSchema: C,
     data: InferCollectionInsert<C, DBFullSchema>[],
@@ -91,7 +92,9 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
 
     for (const d of data) {
       await store.add(d);
-      await this.#saveRelations(collectionSchema, d);
+      if (saveRelations) {
+        await this.#saveRelations(collectionSchema, d);
+      }
     }
 
     await tx.done;
@@ -108,7 +111,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
       collectionSchema.model.getFilterByPrimary(data),
       data
     );
-    return result || await this.insert(collectionSchema, data, saveRelations);
+    return result || (await this.insert(collectionSchema, data, saveRelations));
   }
 
   async upsertMany<C extends CollectionSchema>(
@@ -123,7 +126,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     ).filter((d) => d != undefined);
   }
 
-  // TODO: filter + add relations
+  // TODO: add relations
   async findMany<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
@@ -136,13 +139,21 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const tx = db.transaction(collectionSchema.model.dbName, "readonly");
     const store = tx.objectStore(collectionSchema.model.dbName);
 
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(query);
     const all = await store.getAll();
-    const filtered = all;
+    const filtered = filtersManager.apply(all);
+
+    if (query?.with) {
+      return Promise.all(
+        filtered.map((data) =>
+          this.#getDataWithRelations(collectionSchema, query, data)
+        )
+      );
+    }
 
     return filtered;
   }
 
-  // TODO: filter + add relations
   async findFirst<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
@@ -150,15 +161,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     collectionSchema: C,
     query?: Q | undefined
   ): Promise<QueryResult<C, DBFullSchema, Q>[0]> {
-    const db = await this.getDB();
-
-    const tx = db.transaction(collectionSchema.model.dbName, "readonly");
-    const store = tx.objectStore(collectionSchema.model.dbName);
-
-    const all = await store.getAll();
-    const filtered = all;
-
-    return filtered[0];
+    return (await this.findMany(collectionSchema, query))?.[0];
   }
 
   async remove<C extends CollectionSchema>(
@@ -241,5 +244,57 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
         await this.upsert(relationCollectionSchemaSchema, data[relationKey]);
       }
     }
+  }
+
+  #getRelationQuery<C extends CollectionSchema>(
+    collectionSchema: C,
+    relation: Relation,
+    data: any
+  ): Query<any, any> {
+    const filters: Query<any, any>["filters"] = {};
+    for (const fieldIndex in relation.fields) {
+      filters[relation.references[fieldIndex]] = {
+        $eq: data[relation.fields[fieldIndex]],
+      };
+    }
+
+    return {
+      filters,
+    };
+  }
+
+  async #getDataWithRelations<
+    C extends CollectionSchema,
+    Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
+  >(collectionSchema: C, query: Q | undefined, data: any) {
+    if (!query?.with) return;
+    for (const [relationKey, relationQueryOrBoolean] of Object.entries(
+      query.with
+    )) {
+      if (!relationQueryOrBoolean) return data;
+      const relation = collectionSchema.relations.schema[relationKey];
+
+      const relationCollectionSchema =
+        this.abstractDatabase.schema.schemaDbName[relation.related.dbName];
+
+      const relationQuery = this.#getRelationQuery(
+        collectionSchema,
+        relation,
+        data
+      );
+      if (typeof relationQueryOrBoolean !== "boolean") {
+        relationQuery.filters = {
+          ...(relationQueryOrBoolean?.filters || {}),
+          ...relationQuery.filters,
+        };
+      }
+      data[relationKey] = await this[
+        relation.multiple ? "findMany" : "findFirst"
+      ](
+        relationCollectionSchema,
+        relationQuery as Query<typeof relationCollectionSchema, DBFullSchema>
+      );
+    }
+    return data;
   }
 }

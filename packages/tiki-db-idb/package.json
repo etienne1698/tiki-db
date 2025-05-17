@@ -25,7 +25,7 @@
   },
   "peerDependencies": {
     "idb": "^8.0.3",
-    "tiki-db": "^0.18.18"
+    "tiki-db": "^0.18.19"
   },
   "keywords": [
     "typescript",
