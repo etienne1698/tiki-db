@@ -50,19 +50,36 @@ export class Model<
   mapToDB(data: InferModelNormalizedType<this>) {
     const result: InferModelNormalizedInDatabaseType<this> =
       {} as InferModelNormalizedInDatabaseType<this>;
-    for (const [key, field] of Object.entries(this.schema)) {
+    for (const [key, value] of Object.entries(data)) {
+      if (!this.schema[key]) continue;
+      const dbName = this.schema[key].dbName;
       // @ts-ignore
-      result[field.dbName] = data[key];
+      result[dbName] = value;
     }
     return result;
   }
 
-  mapFromDB(data: InferModelNormalizedInDatabaseType<this>) {
+  /**
+   * If mapFromDB finds a field that is not part of the schema,
+   * it inserts it into the result without modifying the key.
+   * This is useful for mapping relations that are set externally (see inMemoryStorage.findMany).
+   */
+  mapFromDB(data: AnyButMaybeT<InferModelNormalizedInDatabaseType<this>>) {
     const result: InferModelNormalizedType<this> =
       {} as InferModelNormalizedType<this>;
-    for (const [key, field] of Object.entries(this.schema)) {
-      // @ts-ignore
-      result[key] = data[field.dbName];
+    for (const [key, value] of Object.entries(data)) {
+      // TODO: this is heavy, save tsNames on "extractFullSchema" and use it
+      const matchedEntry = Object.entries(this.schema).find(
+        ([_, v]) => v.dbName == key
+      );
+      if (!matchedEntry) {
+        // @ts-ignore
+        result[key] = value;
+      } else {
+        const tsName = matchedEntry[0];
+        // @ts-ignore
+        result[tsName] = value;
+      }
     }
     return result;
   }

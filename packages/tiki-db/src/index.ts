@@ -14,7 +14,8 @@ export { Collection } from "./collection/collection";
 
 export { Storage } from "./storage/storage";
 export { InMemoryStorage } from "./storage/in_memory/in_memory_storage";
-export { InMemoryQueryFilter } from "./storage/in_memory/in_memory_query_filter";
+
+export { InMemoryQueryFilter } from "./storage/helpers/in_memory_query_filter";
 
 export {
   Database,

@@ -34,6 +34,8 @@ test("query with 'many' should return data with related data", () => {
     relatedPosts: [{ id: "123", title: "post 1", userId: "1" }],
   });
 
+  console.error( db.collections.posts.findFirst({ with: { relatedUser: true } }))
+
   expect(
     db.collections.posts.findFirst({ with: { relatedUser: true } }).relatedUser!
       .id

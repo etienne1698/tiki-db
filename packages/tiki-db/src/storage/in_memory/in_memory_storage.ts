@@ -8,9 +8,11 @@ import {
   InferModelNormalizedType,
   InferCollectionInsert,
   InferCollectionUpdate,
+  InferModelNormalizedInDatabaseType,
 } from "../../types";
 import { Storage } from "../storage";
-import { InMemoryQueryFilter } from "./in_memory_query_filter";
+import { InMemoryQueryFilter } from "../helpers/in_memory_query_filter";
+import { mapQueryForDBFields } from "../helpers/database_query_mapper";
 
 export class InMemoryStorage<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
@@ -18,11 +20,15 @@ export class InMemoryStorage<
 {
   stores: {
     [key in keyof DBFullSchema["schemaDbName"]]: Array<
-      InferModelNormalizedType<DBFullSchema["schemaDbName"][key]["model"]>
+      InferModelNormalizedInDatabaseType<
+        DBFullSchema["schemaDbName"][key]["model"]
+      >
     >;
   } = {} as {
     [key in keyof DBFullSchema["schemaDbName"]]: Array<
-      InferModelNormalizedType<DBFullSchema["schemaDbName"][key]["model"]>
+      InferModelNormalizedInDatabaseType<
+        DBFullSchema["schemaDbName"][key]["model"]
+      >
     >;
   };
 
@@ -53,14 +59,12 @@ export class InMemoryStorage<
     data: InferCollectionInsert<C, DBFullSchema>,
     saveRelations?: boolean
   ): InferModelNormalizedType<C["model"]> {
-    const inserted = collectionSchema.model.normalize(data);
+    const inserted = collectionSchema.model.mapToDB(data);
     if (saveRelations) {
       this.#saveRelations(collectionSchema, data);
     }
-    this.stores[collectionSchema.model.dbName].push(
-      inserted as InferModelNormalizedType<C["model"]>
-    );
-    return inserted as InferModelNormalizedType<C["model"]>;
+    this.stores[collectionSchema.model.dbName].push(inserted);
+    return data;
   }
 
   insertMany<C extends CollectionSchema>(
@@ -70,12 +74,12 @@ export class InMemoryStorage<
   ): InferModelNormalizedType<C["model"]>[] {
     const allInserted: InferModelNormalizedType<C["model"]>[] = [];
     for (const d of data) {
-      const inserted = collectionSchema.model.normalize(d);
+      const inserted = collectionSchema.model.mapToDB(d);
       if (saveRelations) {
         this.#saveRelations(collectionSchema, d);
       }
       this.stores[collectionSchema.model.dbName].push(inserted);
-      allInserted.push(inserted);
+      allInserted.push(d);
     }
     return allInserted;
   }
@@ -116,16 +120,18 @@ export class InMemoryStorage<
     collectionSchema: C,
     query?: Q | undefined
   ): QueryResult<C, DBFullSchema, Q> {
-    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(query);
-    const res = filtersManager.apply(
-      this.stores[collectionSchema.model.dbName]
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(
+      mapQueryForDBFields(collectionSchema, query)
     );
+    let res = filtersManager.apply(this.stores[collectionSchema.model.dbName]);
     if (query?.with) {
-      return res.map((data) =>
+      res = res.map((data) =>
         this.#getDataWithRelations(collectionSchema, query, data)
       );
     }
-    return res;
+    return res.map(
+      collectionSchema.model.mapFromDB.bind(collectionSchema.model)
+    );
   }
 
   findFirst<
@@ -139,9 +145,11 @@ export class InMemoryStorage<
     collectionSchema: C,
     queryFilters: QueryFilters<C>
   ): void {
-    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
-      filters: queryFilters,
-    });
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>(
+      mapQueryForDBFields(collectionSchema, {
+        filters: queryFilters,
+      })
+    );
     // @ts-ignore
     this.stores[collectionSchema.model.dbName] = this.stores[
       collectionSchema.model.dbName
@@ -153,17 +161,21 @@ export class InMemoryStorage<
     queryFilters: QueryFilters<C>,
     data: InferCollectionUpdate<C, DBFullSchema>
   ): InferModelNormalizedType<C["model"]> | undefined {
-    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
-      filters: queryFilters,
-    });
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>(
+      mapQueryForDBFields(collectionSchema, {
+        filters: queryFilters,
+      })
+    );
     const index = this.stores[collectionSchema.model.dbName].findIndex(
       filtersManager.filter.bind(filtersManager)
     );
     this.stores[collectionSchema.model.dbName][index] = {
       ...this.stores[collectionSchema.model.dbName][index],
-      ...data,
+      ...collectionSchema.model.mapToDB(data),
     };
-    return this.stores[collectionSchema.model.dbName][index];
+    return collectionSchema.model.mapFromDB(
+      this.stores[collectionSchema.model.dbName][index]
+    );
   }
 
   updateMany<C extends CollectionSchema>(
@@ -171,9 +183,11 @@ export class InMemoryStorage<
     queryFilters: QueryFilters<C>,
     data: InferCollectionUpdate<C, DBFullSchema>
   ): InferModelNormalizedType<C["model"]>[] {
-    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>({
-      filters: queryFilters,
-    });
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C>(
+      mapQueryForDBFields(collectionSchema, {
+        filters: queryFilters,
+      })
+    );
     // @ts-ignore
     return (this.stores[collectionSchema.model.dbName] = this.stores[
       collectionSchema.model.dbName
@@ -181,10 +195,10 @@ export class InMemoryStorage<
       if (!filtersManager.filter(current)) return prev;
       const updated = {
         ...this.stores[collectionSchema.model.dbName][currentIndex],
-        ...data,
-      } as InferModelNormalizedType<C["model"]>;
+        ...collectionSchema.model.mapToDB(data),
+      };
       this.stores[collectionSchema.model.dbName][currentIndex] = updated;
-      prev.push(updated);
+      prev.push(collectionSchema.model.mapFromDB(updated));
       return prev;
     }, [] as InferModelNormalizedType<C["model"]>[]));
   }
@@ -235,6 +249,13 @@ export class InMemoryStorage<
         relationCollectionSchema,
         relationQuery as Query<typeof relationCollectionSchema, DBFullSchema>
       );
+      data[relationKey] = relation.multiple
+        ? data.map(
+            relationCollectionSchema.model.mapFromDB.bind(
+              relationCollectionSchema.model
+            )
+          )
+        : relationCollectionSchema.model.mapFromDB(data[relationKey]);
     }
     return data;
   }
