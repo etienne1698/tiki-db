@@ -131,7 +131,7 @@ export class InMemoryStorage<
     }
     return res.map(
       collectionSchema.model.mapFromDB.bind(collectionSchema.model)
-    );
+    ) as QueryResult<C, DBFullSchema, Q>;
   }
 
   findFirst<

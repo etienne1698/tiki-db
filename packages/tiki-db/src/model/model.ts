@@ -62,9 +62,9 @@ export class Model<
   /**
    * If mapFromDB finds a field that is not part of the schema,
    * it inserts it into the result without modifying the key.
-   * This is useful for mapping relations that are set externally (see inMemoryStorage.findMany).
+   * This is useful for mapping data with relations that are set externally (see inMemoryStorage.findMany).
    */
-  mapFromDB(data: AnyButMaybeT<InferModelNormalizedInDatabaseType<this>>) {
+  mapFromDB(data: any) {
     const result: InferModelNormalizedType<this> =
       {} as InferModelNormalizedType<this>;
     for (const [key, value] of Object.entries(data)) {
