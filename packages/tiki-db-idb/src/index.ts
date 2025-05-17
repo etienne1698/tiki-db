@@ -14,7 +14,6 @@ import {
   Relation,
 } from "tiki-db";
 
-// TODO: filter with indexes
 export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
   implements Storage<DBFullSchema, true>
 {
