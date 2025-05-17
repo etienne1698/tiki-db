@@ -4,6 +4,10 @@ import { CollectionSchema } from "./collection/collection_schema";
 import { DatabaseFullSchema } from "./database/database";
 import { Relations } from "./relation/relation";
 
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & unknown;
+
 export type DeepPartial<T> = Partial<{
   [P in keyof T]?: DeepPartial<T[P]>;
 }>;
@@ -43,15 +47,17 @@ export type InferCollectionInsertRelations<
 export type InferCollectionInsert<
   C extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema
-> = Partial<{
-  [key in keyof C["model"]["schema"]]: C["model"]["schema"][key]["defaultValue"];
-}> &
-  InferCollectionInsertRelations<C["relations"], DBFullSchema>;
+> = Prettify<
+  Partial<{
+    [key in keyof C["model"]["schema"]]: C["model"]["schema"][key]["defaultValue"];
+  }> &
+    InferCollectionInsertRelations<C["relations"], DBFullSchema>
+>;
 
 export type InferCollectionUpdate<
   C extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema
-> = Partial<{
+> = Prettify<Partial<{
   [key in keyof C["model"]["schema"]]: C["model"]["schema"][key]["defaultValue"];
 }> &
-  InferCollectionInsertRelations<C["relations"], DBFullSchema>;
+  InferCollectionInsertRelations<C["relations"], DBFullSchema>>;

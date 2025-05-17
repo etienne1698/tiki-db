@@ -55,7 +55,7 @@ test("simple remove", () => {
   const { db } = getTestDatabase();
 
   db.collections.users.insert({ id: "1", firstname: "Etienne" });
-  db.collections.users.remove({ id: { $eq: "1" } });
+  db.collections.users.remove({ id: { $eq: "1", } });
 
   expect(db.collections.users.findFirst({})).toBe(undefined);
 });

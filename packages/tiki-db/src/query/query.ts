@@ -4,6 +4,7 @@ import type {
   DeepPartial,
   InferModelFieldName,
   InferModelNormalizedType,
+  Prettify,
 } from "../types";
 
 export enum Filters {
@@ -63,13 +64,15 @@ export type QueryResult<
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema,
   Q extends DeepPartial<Query<C, DBFullSchema>> = Query<C, DBFullSchema>
 > = Array<
-  InferModelNormalizedType<C["model"]> & {
-    [K in keyof Q["with"]]: Q["with"][K] extends false
-      ? never
-      : C["relations"]["schema"][K]["multiple"] extends true
-      ? InferModelNormalizedType<C["relations"]["schema"][K]["related"]>[]
-      :
-          | InferModelNormalizedType<C["relations"]["schema"][K]["related"]>
-          | undefined;
-  }
+  Prettify<
+    InferModelNormalizedType<C["model"]> & {
+      [K in keyof Q["with"]]: Q["with"][K] extends false
+        ? never
+        : C["relations"]["schema"][K]["multiple"] extends true
+        ? Prettify<InferModelNormalizedType<C["relations"]["schema"][K]["related"]>>[]
+        :
+            | Prettify<InferModelNormalizedType<C["relations"]["schema"][K]["related"]>>
+            | undefined;
+    }
+  >
 >;
