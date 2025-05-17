@@ -1,6 +1,6 @@
 {
   "name": "tiki-db",
-  "version": "0.19.1",
+  "version": "0.19.6",
   "description": "TikiDB provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
   "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",

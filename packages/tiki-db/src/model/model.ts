@@ -28,6 +28,15 @@ export class Model<
     public indexes: ModelIndex[]
   ) {}
 
+  onDatabaseValuePrimary(
+    data: AnyButMaybeT<InferModelNormalizedInDatabaseType<typeof this>>
+  ) {
+    if (typeof this.primaryKey === "string") {
+      return data[this.schema[this.primaryKey].dbName];
+    }
+    return this.primaryKey.map((k) => data[this.schema[k].dbName]);
+  }
+
   primary(
     data: AnyButMaybeT<InferModelNormalizedType<typeof this>>
   ): string | string[] {

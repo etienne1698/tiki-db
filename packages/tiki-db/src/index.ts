@@ -16,6 +16,7 @@ export { Storage } from "./storage/storage";
 export { InMemoryStorage } from "./storage/in_memory/in_memory_storage";
 
 export { InMemoryQueryFilter } from "./storage/helpers/in_memory_query_filter";
+export { mapQueryForDBFields } from "./storage/helpers/database_query_mapper";
 
 export {
   Database,

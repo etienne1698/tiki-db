@@ -12,6 +12,7 @@ import {
   Storage,
   InMemoryQueryFilter,
   Relation,
+  mapQueryForDBFields,
 } from "tiki-db";
 
 export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
@@ -48,14 +49,26 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
           for (const collection of Object.values(schema)) {
             if (!db.objectStoreNames.contains(collection.model.dbName)) {
               const store = db.createObjectStore(collection.model.dbName, {
-                keyPath: collection.model.primaryKey,
+                keyPath: Array.isArray(collection.model.primaryKey)
+                  ? collection.model.primaryKey.map(
+                      (p) => collection.model.schema[p].dbName
+                    )
+                  : collection.model.schema[collection.model.primaryKey].dbName,
               });
               const indexes = collection.model.indexes || [];
               for (const index of indexes) {
-                store.createIndex(index.name, index.keyPath, {
-                  unique: index.unique ?? false,
-                  multiEntry: false,
-                });
+                store.createIndex(
+                  index.name,
+                  Array.isArray(index.keyPath)
+                    ? index.keyPath.map(
+                        (kp) => collection.model.schema[kp].dbName
+                      )
+                    : collection.model.schema[index.keyPath].dbName,
+                  {
+                    unique: index.unique ?? false,
+                    multiEntry: false,
+                  }
+                );
               }
             }
           }
@@ -78,7 +91,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const tx = db.transaction(collectionSchema.model.dbName, "readwrite");
     const store = tx.objectStore(collectionSchema.model.dbName);
 
-    await store.add(data);
+    await store.add(collectionSchema.model.mapToDB(data));
     if (saveRelations) {
       await this.#saveRelations(collectionSchema, data);
     }
@@ -97,7 +110,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const store = tx.objectStore(collectionSchema.model.dbName);
 
     for (const d of data) {
-      await store.add(d);
+      await store.add(collectionSchema.model.mapToDB(d));
       if (saveRelations) {
         await this.#saveRelations(collectionSchema, d);
       }
@@ -145,7 +158,9 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const store = tx.objectStore(collectionSchema.model.dbName);
 
     const indexedField = this.#getIndexedField(collectionSchema, query);
-    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(query);
+    const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(
+      mapQueryForDBFields(collectionSchema, query)
+    );
 
     let filtered;
     if (indexedField) {
@@ -159,14 +174,16 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     }
 
     if (query?.with) {
-      return Promise.all(
+      filtered = await Promise.all(
         filtered.map((data) =>
           this.#getDataWithRelations(collectionSchema, query, data)
         )
       );
     }
 
-    return filtered;
+    return filtered.map(
+      collectionSchema.model.mapFromDB.bind(collectionSchema.model)
+    ) as QueryResult<C, DBFullSchema, Q>;
   }
 
   async findFirst<
@@ -207,11 +224,12 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     const tx = db.transaction(collectionSchema.model.dbName, "readwrite");
     const store = tx.objectStore(collectionSchema.model.dbName);
 
-    const updated = { ...toUpdate, ...data };
+    const updatedWithTsNames = { ...toUpdate, ...data };
+    const updated = collectionSchema.model.mapToDB(updatedWithTsNames);
     await store.put(updated);
 
     await tx.done;
-    return updated;
+    return updatedWithTsNames;
   }
 
   async updateMany<C extends CollectionSchema>(
@@ -228,9 +246,10 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
 
     const result = [];
     for (const toUp of toUpdate) {
-      const updated = { ...toUp, ...data };
+      const updatedWithTsNames = { ...toUp, ...data };
+      const updated = collectionSchema.model.mapToDB({ ...toUp, ...data });
       await store.put(updated);
-      result.push(updated);
+      result.push(updatedWithTsNames);
     }
 
     await tx.done;
@@ -261,11 +280,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     }
   }
 
-  #getRelationQuery<C extends CollectionSchema>(
-    collectionSchema: C,
-    relation: Relation,
-    data: any
-  ): Query<any, any> {
+  #getRelationQuery(relation: Relation, data: any): Query<any, any> {
     const filters: Query<any, any>["filters"] = {};
     for (const fieldIndex in relation.fields) {
       filters[relation.references[fieldIndex]] = {
@@ -281,7 +296,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
   #getIndexedField<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
-  >(collectionSchema: C, query?: Q): [string,  string] | undefined {
+  >(collectionSchema: C, query?: Q): [string, string] | undefined {
     if (!query?.filters) return undefined;
 
     for (const [field, condition] of Object.entries(query.filters)) {
@@ -309,11 +324,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
       const relationCollectionSchema =
         this.abstractDatabase.schema.schemaDbName[relation.related.dbName];
 
-      const relationQuery = this.#getRelationQuery(
-        collectionSchema,
-        relation,
-        data
-      );
+      const relationQuery = this.#getRelationQuery(relation, data);
       if (typeof relationQueryOrBoolean !== "boolean") {
         relationQuery.filters = {
           ...(relationQueryOrBoolean?.filters || {}),
