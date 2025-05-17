@@ -17,8 +17,11 @@ export class Model<
   constructor(
     public dbName: DbName,
     public schema: Schema,
-    public primaryKey: PrimaryKey
+    public primaryKey: PrimaryKey,
+    indexes?: (keyof Schema | (keyof Schema)[])[]
   ) {}
+
+  
 
   primary(data: AnyButMaybeT<InferModelNormalizedType<typeof this>>): Primary {
     if (typeof this.primaryKey === "string") {
@@ -86,8 +89,9 @@ export function model<
   name: DBName,
   schema: S,
   opts?: Partial<{
-    primaryKey: PrimaryKey;
+    primaryKey: InferModelFieldName<Model<S>>;
+    indexes?: (InferModelFieldName<Model<S>> | InferModelFieldName<Model<S>>[])[]
   }>
 ) {
-  return new Model(name, schema, opts?.primaryKey || "id");
+  return new Model(name, schema, opts?.primaryKey as string || "id", opts?.indexes);
 }
