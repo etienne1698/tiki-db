@@ -1,0 +1,33 @@
+{
+  "name": "tiki-db-better-sqlite3",
+  "version": "0.19.0",
+  "description": "TikiDB better-sqlite3 storage",
+  "repository": "etienne1698/tiki-db",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "author": "Etienne ROBERT",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  },
+   "peerDependencies": {
+    "tiki-db": "^0.19.6",
+    "better-sqlite3": "^11.10.0"
+  },
+  "keywords": [
+    "typescript",
+    "library"
+  ]
+}
