@@ -1,3 +1,4 @@
+import { never } from "zod";
 import type { CollectionSchema } from "../collection/collection_schema";
 import { DatabaseFullSchema } from "../database/database";
 import type {
@@ -39,12 +40,14 @@ export type Query<
 > = Partial<{
   filters: QueryFilters<C> & QueryOrFilters<C>;
   with: {
-    [K in keyof C["relations"]["schema"]]?:
-      | boolean
-      | Query<
-          DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
-          DBFullSchema
-        >;
+    [K in keyof C["relations"]["schema"]]?: C["relations"]["schema"][K]["related"]["dbName"] extends keyof DBFullSchema["schemaDbName"]
+      ?
+          | boolean
+          | Query<
+              DBFullSchema["schemaDbName"][C["relations"]["schema"][K]["related"]["dbName"]],
+              DBFullSchema
+            >
+      : boolean;
   };
 }>;
 
@@ -66,13 +69,21 @@ export type QueryResult<
 > = Array<
   Prettify<
     InferModelNormalizedType<C["model"]> & {
-      [K in keyof Q["with"]]: Q["with"][K] extends false
-        ? never
-        : C["relations"]["schema"][K]["multiple"] extends true
-        ? Prettify<InferModelNormalizedType<C["relations"]["schema"][K]["related"]>>[]
-        :
-            | Prettify<InferModelNormalizedType<C["relations"]["schema"][K]["related"]>>
-            | undefined;
+      [K in keyof Q["with"]]: K extends keyof C["relations"]["schema"]
+        ? Q["with"][K] extends false
+          ? never
+          : C["relations"]["schema"][K]["multiple"] extends true
+          ? Prettify<
+              InferModelNormalizedType<C["relations"]["schema"][K]["related"]>
+            >[]
+          :
+              | Prettify<
+                  InferModelNormalizedType<
+                    C["relations"]["schema"][K]["related"]
+                  >
+                >
+              | undefined
+        : never;
     }
   >
 >;
