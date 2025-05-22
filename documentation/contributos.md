@@ -2,11 +2,6 @@
 
 **[TikiDB README.md](../README.md)**
 
-Generate tests for your storage:
-
-```sh
-npx tiki-db-storage-contributor-cli
-```
 
 ### ⚠ Storage implementations instructions
 - Storage should call model.mapToDB before insert/update/upsert
