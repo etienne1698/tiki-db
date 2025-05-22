@@ -250,7 +250,7 @@ export class InMemoryStorage<
         relationQuery as Query<typeof relationCollectionSchema, DBFullSchema>
       );
       data[relationKey] = relation.multiple
-        ? data.map(
+        ? data[relationKey].map(
             relationCollectionSchema.model.mapFromDB.bind(
               relationCollectionSchema.model
             )
