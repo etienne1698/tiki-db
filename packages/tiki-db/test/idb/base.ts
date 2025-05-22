@@ -1,6 +1,6 @@
-import { asyncDatabase } from "../..";
+import { asyncDatabase } from "../../src";
 import { getTestStorage } from "./base_storage";
-import { collections } from "./base_schema";
+import { collections } from "../base_schema";
 
 export async function getTestDatabase() {
   const storage = await getTestStorage();

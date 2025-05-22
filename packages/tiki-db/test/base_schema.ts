@@ -1,4 +1,4 @@
-import { collection, model, relations, string } from "../..";
+import { collection, model, relations, string } from "../src";
 
 const users = model("usersDbName", {
   id: string("identifier", ""),

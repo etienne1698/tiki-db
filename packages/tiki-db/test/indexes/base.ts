@@ -7,7 +7,7 @@ import {
   model,
   number,
   string,
-} from "../..";
+} from "../../src";
 import { IndexedDBStorage } from "../../src/storage/idb/idb_storage";
 
 const numberOfUsers = 150_000;
