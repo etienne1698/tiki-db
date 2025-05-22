@@ -7,8 +7,8 @@ import {
   model,
   number,
   string,
-} from "tiki-db";
-import { IndexedDBStorage } from "../../src";
+} from "../..";
+import { IndexedDBStorage } from "../../src/storage/idb";
 
 const numberOfUsers = 150_000;
 

@@ -1,7 +1,7 @@
 import "fake-indexeddb/auto";
-import { IndexedDBStorage } from "../../src";
+import { IndexedDBStorage } from "../../src/storage/idb";
 import { collections } from "./base_schema";
-import { DatabaseFullSchema } from "tiki-db";
+import { type DatabaseFullSchema } from "../..";
 
 export async function getTestStorage() {
   return new IndexedDBStorage<DatabaseFullSchema<typeof collections>>({ dbName: "myDB" });

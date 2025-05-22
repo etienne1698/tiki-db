@@ -1,4 +1,4 @@
-import { collection, model, relations, string } from "tiki-db";
+import { collection, model, relations, string } from "../..";
 
 const users = model("usersDbName", {
   id: string("identifier", ""),

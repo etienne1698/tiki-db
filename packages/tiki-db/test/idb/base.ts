@@ -1,4 +1,4 @@
-import { asyncDatabase } from "tiki-db";
+import { asyncDatabase } from "../..";
 import { getTestStorage } from "./base_storage";
 import { collections } from "./base_schema";
 

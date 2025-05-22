@@ -1,19 +1,13 @@
 import { IDBPDatabase, openDB } from "idb";
-import {
-  CollectionSchema,
-  Database,
-  DatabaseFullSchema,
-  InferCollectionUpdate,
-  InferCollectionInsert,
-  InferModelNormalizedType,
-  QueryFilters,
-  Query,
-  QueryResult,
-  Storage,
-  InMemoryQueryFilter,
-  Relation,
-  mapQueryForDBFields,
-} from "tiki-db";
+import { Database, DatabaseFullSchema } from "../../database/database";
+import { Storage } from "../storage";
+import { CollectionSchema } from "../../collection/collection_schema";
+import { InferCollectionInsert, InferCollectionUpdate, InferModelNormalizedType } from "../../types";
+import { Query, QueryFilters, QueryResult } from "../../query/query";
+import { mapQueryForDBFields } from "../helpers/database_query_mapper";
+import { InMemoryQueryFilter } from "../helpers/in_memory_query_filter";
+import { Relation } from "../../relation/relation";
+
 
 export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
   implements Storage<DBFullSchema, true>
