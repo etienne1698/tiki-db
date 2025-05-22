@@ -5,9 +5,9 @@ import {
   string,
   database,
   InMemoryStorage,
-} from "tiki-db";
+} from "../..";
 
-import { vueDatabaseWrapper } from "../../src/index";
+import { vueDatabaseWrapper } from "../../src/reactive/vue";
 
 export function getTestDatabase() {
   const users = model("usersDbName", {

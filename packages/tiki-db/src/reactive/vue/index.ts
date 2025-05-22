@@ -10,7 +10,7 @@ import {
   ReactiveDatabaseWrapper,
   AsyncReactiveCollectionWrapper,
   Storage,
-} from "tiki-db";
+} from "../..";
 import { ref, Ref } from "vue";
 
 type IVueCollectionWrapper<
