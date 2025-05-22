@@ -13,8 +13,7 @@
     "@preact/signals-react": "^3.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tiki-db": "^0.18.16",
-    "tiki-db-react": "^0.18.16"
+    "tiki-db": "^0.20.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
