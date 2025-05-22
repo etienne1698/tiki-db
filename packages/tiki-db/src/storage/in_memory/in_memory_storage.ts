@@ -64,7 +64,7 @@ export class InMemoryStorage<
       this.#saveRelations(collectionSchema, data);
     }
     this.stores[collectionSchema.model.dbName].push(inserted);
-    return data;
+    return data as InferModelNormalizedType<C["model"]>;
   }
 
   insertMany<C extends CollectionSchema>(
@@ -79,7 +79,7 @@ export class InMemoryStorage<
         this.#saveRelations(collectionSchema, d);
       }
       this.stores[collectionSchema.model.dbName].push(inserted);
-      allInserted.push(d);
+      allInserted.push(d as InferModelNormalizedType<C["model"]>);
     }
     return allInserted;
   }
@@ -121,7 +121,7 @@ export class InMemoryStorage<
     query?: Q | undefined
   ): QueryResult<C, DBFullSchema, Q> {
     const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(
-      mapQueryForDBFields(collectionSchema, query)
+      mapQueryForDBFields<DBFullSchema, C, Q>(collectionSchema, query)
     );
     let res = filtersManager.apply(this.stores[collectionSchema.model.dbName]);
     if (query?.with) {

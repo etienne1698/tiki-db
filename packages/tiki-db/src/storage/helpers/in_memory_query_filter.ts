@@ -42,9 +42,9 @@ export class InMemoryQueryFilter<
   }
 
   apply(
-    list: InferModelNormalizedInDatabaseType<C['model']>[]
-  ): QueryResult<C, DBFullSchema, Q> {
-    if (!this.query?.filters) return list as QueryResult<C, DBFullSchema, Q>;
-    return list.filter(this.filter.bind(this)) as QueryResult<C, DBFullSchema, Q>;
+    list: InferModelNormalizedInDatabaseType<C["model"]>[]
+  ): InferModelNormalizedInDatabaseType<C["model"]>[] {
+    if (!this.query?.filters) return list;
+    return list.filter(this.filter.bind(this));
   }
 }

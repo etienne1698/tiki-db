@@ -8,6 +8,7 @@ import {
   QueryResult,
   ReactiveCollectionWrapper,
   ReactiveDatabaseWrapper,
+  AsyncReactiveCollectionWrapper,
   Storage,
 } from "tiki-db";
 import { ref, Ref } from "vue";
@@ -44,12 +45,24 @@ class VueCollectionWrapper<
   }
 }
 
+class VueAsyncCollectionWrapper<
+  Schema extends CollectionSchema,
+  DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
+> extends AsyncReactiveCollectionWrapper<Schema, DBFullSchema> {
+  createReactiveValue<T>(val: T): Ref<T> {
+    return ref(val) as Ref<T>;
+  }
+
+  setReactiveValue<T>(oldVal: Ref<T>, val: T): void {
+    oldVal.value = val;
+  }
+}
+
 export function vueDatabaseWrapper<
-  IsAsync extends boolean = false,
   FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
-  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>
->(database: Database<IsAsync, FullSchema, S>) {
-  return new ReactiveDatabaseWrapper<IsAsync, FullSchema, S>(
+  S extends Storage<FullSchema, false> = Storage<FullSchema, false>
+>(database: Database<false, FullSchema, S>) {
+  return new ReactiveDatabaseWrapper<false, FullSchema, S>(
     database,
     VueCollectionWrapper,
     new QueriesManager<Ref>()
@@ -57,6 +70,25 @@ export function vueDatabaseWrapper<
     collections: {
       [K in keyof FullSchema["schema"]]: IVueCollectionWrapper<
         false,
+        FullSchema["schema"][K],
+        FullSchema
+      >;
+    };
+  };
+}
+
+export function vueAsyncDatabaseWrapper<
+  FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
+  S extends Storage<FullSchema, true> = Storage<FullSchema, true>
+>(database: Database<true, FullSchema, S>) {
+  return new ReactiveDatabaseWrapper<true, FullSchema, S>(
+    database,
+    VueAsyncCollectionWrapper,
+    new QueriesManager<Ref>()
+  ) as ReactiveDatabaseWrapper<true, FullSchema, S> & {
+    collections: {
+      [K in keyof FullSchema["schema"]]: IVueCollectionWrapper<
+        true,
         FullSchema["schema"][K],
         FullSchema
       >;

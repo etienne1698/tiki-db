@@ -97,7 +97,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     }
 
     await tx.done;
-    return data;
+    return data as InferModelNormalizedType<C["model"]>;
   }
 
   async insertMany<C extends CollectionSchema>(
@@ -117,7 +117,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
     }
 
     await tx.done;
-    return data;
+    return data as InferModelNormalizedType<C["model"]>[];
   }
 
   async upsert<C extends CollectionSchema>(
@@ -159,7 +159,7 @@ export class IndexedDBStorage<DBFullSchema extends DatabaseFullSchema>
 
     const indexedField = this.#getIndexedField(collectionSchema, query);
     const filtersManager = new InMemoryQueryFilter<DBFullSchema, C, Q>(
-      mapQueryForDBFields(collectionSchema, query)
+      mapQueryForDBFields<DBFullSchema, C, Q>(collectionSchema, query)
     );
 
     let filtered;

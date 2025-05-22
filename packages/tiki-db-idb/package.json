@@ -1,6 +1,6 @@
 {
   "name": "tiki-db-idb",
-  "version": "0.19.0",
+  "version": "0.19.7",
   "description": "TikiDB IndexedDB implementation using idb",
   "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
@@ -25,7 +25,7 @@
   },
   "peerDependencies": {
     "idb": "^8.0.3",
-    "tiki-db": "^0.19.6"
+    "tiki-db": "^0.19.7"
   },
   "keywords": [
     "typescript",

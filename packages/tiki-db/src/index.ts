@@ -42,4 +42,8 @@ export {
 export { QueryBuilder } from "./query/query_builder";
 export { QueriesManager, QueryCacheData } from "./query/queries_manager";
 
-export { ReactiveCollectionWrapper, ReactiveDatabaseWrapper } from "./reactive";
+export {
+  ReactiveCollectionWrapper,
+  ReactiveDatabaseWrapper,
+  AsyncReactiveCollectionWrapper,
+} from "./reactive";

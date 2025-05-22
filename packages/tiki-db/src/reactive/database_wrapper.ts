@@ -3,6 +3,7 @@ import { CollectionSchema } from "../collection/collection_schema";
 import { Database, DatabaseFullSchema } from "../database/database";
 import { QueriesManager } from "../query/queries_manager";
 import { Storage } from "../storage/storage";
+import { AsyncReactiveCollectionWrapper } from "./async_collection_wrapper";
 import { ReactiveCollectionWrapper } from "./collection_wrapper";
 
 export class ReactiveDatabaseWrapper<
@@ -25,9 +26,11 @@ export class ReactiveDatabaseWrapper<
   constructor(
     public database: Database<IsAsync, FullSchema, S>,
     collectionConstructor: new (
-      schema: Collection<false, CollectionSchema, FullSchema>,
+      schema: Collection<IsAsync, CollectionSchema, FullSchema>,
       qm: QueriesManager<ReactivePrimitive>
-    ) => ReactiveCollectionWrapper<CollectionSchema, FullSchema>,
+    ) =>
+      | ReactiveCollectionWrapper<CollectionSchema, FullSchema>
+      | AsyncReactiveCollectionWrapper<CollectionSchema, FullSchema>,
     public queriesManager: QueriesManager<ReactivePrimitive>
   ) {
     for (const [key, collection] of Object.entries(database.collections)) {
