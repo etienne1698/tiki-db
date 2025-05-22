@@ -1,11 +1,57 @@
 {
   "name": "tiki-db",
-  "version": "0.19.8",
+  "version": "0.20.0",
   "description": "TikiDB provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
   "repository": "etienne1698/tiki-db",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./vue": {
+      "import": {
+        "default": "./dist/reactive/vue/vue.mjs",
+        "types": "./dist/reactive/vue/vue.d.ts"
+      },
+      "require": {
+        "default": "./dist/reactive/vue/vue.js",
+        "types": "./dist/reactive/vue/vue.d.ts"
+      }
+    },
+    "./react": {
+      "import": {
+        "default": "./dist/reactive/react/react.mjs",
+        "types": "./dist/reactive/react/react.d.ts"
+      },
+      "require": {
+        "default": "./dist/reactive/react/react.js",
+        "types": "./dist/reactive/react/react.d.ts"
+      }
+    },
+    "./idb": {
+      "import": {
+        "default": "./dist/storage/idb/idb_storage.mjs",
+        "types": "./dist/storage/idb/idb_storage.d.ts"
+      },
+      "require": {
+        "default": "./dist/storage/idb/idb_storage.js",
+        "types": "./dist/storage/idb/idb_storage.d.ts"
+      }
+    },
+    "./in_memory": {
+      "import": {
+        "default": "./dist/storage/in_memory/in_memory_storage.mjs",
+        "types": "./dist/storage/in_memory/in_memory_storage.d.ts"
+      },
+      "require": {
+        "default": "./dist/storage/in_memory/in_memory_storage.js",
+        "types": "./dist/storage/in_memory/in_memory_storage.d.ts"
+      }
+    }
+  },
   "author": "Etienne ROBERT",
   "license": "MIT",
   "files": [

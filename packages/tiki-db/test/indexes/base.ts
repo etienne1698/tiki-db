@@ -8,7 +8,7 @@ import {
   number,
   string,
 } from "../..";
-import { IndexedDBStorage } from "../../src/storage/idb";
+import { IndexedDBStorage } from "../../src/storage/idb/idb_storage";
 
 const numberOfUsers = 150_000;
 

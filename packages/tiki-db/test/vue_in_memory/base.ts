@@ -7,7 +7,7 @@ import {
   InMemoryStorage,
 } from "../..";
 
-import { vueDatabaseWrapper } from "../../src/reactive/vue";
+import { vueDatabaseWrapper } from "../../src/reactive/vue/vue";
 
 export function getTestDatabase() {
   const users = model("usersDbName", {

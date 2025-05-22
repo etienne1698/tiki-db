@@ -1,6 +1,5 @@
 import { database, InMemoryStorage } from "tiki-db";
-
-import { vueDatabaseWrapper } from "tiki-db-vue";
+import { vueDatabaseWrapper } from "tiki-db/vue";
 
 import { seed } from "./seed";
 import { collections } from "./schema";

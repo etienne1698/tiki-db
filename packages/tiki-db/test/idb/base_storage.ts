@@ -1,5 +1,5 @@
 import "fake-indexeddb/auto";
-import { IndexedDBStorage } from "../../src/storage/idb";
+import { IndexedDBStorage } from "../../src/storage/idb/idb_storage";
 import { collections } from "./base_schema";
 import { type DatabaseFullSchema } from "../..";
 

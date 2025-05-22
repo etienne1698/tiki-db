@@ -45,11 +45,10 @@ class ReactCollectionWrapper<
 }
 
 export function reactDatabaseWrapper<
-  IsAsync extends boolean = false,
   FullSchema extends DatabaseFullSchema = DatabaseFullSchema,
-  S extends Storage<FullSchema, IsAsync> = Storage<FullSchema, IsAsync>
->(database: Database<IsAsync, FullSchema, S>) {
-  return new ReactiveDatabaseWrapper<IsAsync, FullSchema, S>(
+  S extends Storage<FullSchema, false> = Storage<FullSchema, false>
+>(database: Database<false, FullSchema, S>) {
+  return new ReactiveDatabaseWrapper<false, FullSchema, S>(
     database,
     ReactCollectionWrapper,
     new QueriesManager<Signal>()
