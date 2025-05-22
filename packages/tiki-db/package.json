@@ -19,13 +19,21 @@
   },
   "peerDependencies": {
     "idb": "^8.0.3",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "@preact/signals-react": "^3.0.1",
+    "react": "^19.1.0"
   },
   "peerDependenciesMeta": {
     "idb": {
       "optional": true
     },
     "vue": {
+      "optional": true
+    },
+    "@preact/signals-react": {
+      "optional": true
+    },
+    "react": {
       "optional": true
     }
   },
@@ -35,7 +43,9 @@
     "vitest": "^3.0.9",
     "fake-indexeddb": "^6.0.0",
     "idb": "^8.0.3",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "@preact/signals-react": "^3.0.1",
+    "react": "^19.1.0"
   },
   "keywords": [
     "typescript",

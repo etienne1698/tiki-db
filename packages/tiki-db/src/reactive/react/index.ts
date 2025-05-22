@@ -9,7 +9,7 @@ import {
   ReactiveCollectionWrapper,
   ReactiveDatabaseWrapper,
   Storage,
-} from "tiki-db";
+} from "../..";
 import { Signal, signal } from "@preact/signals-react";
 
 export type IReactCollectionWrapper<
