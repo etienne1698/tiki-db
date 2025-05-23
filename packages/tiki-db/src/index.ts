@@ -13,7 +13,6 @@ export { collection, CollectionSchema } from "./collection/collection_schema";
 export { Collection } from "./collection/collection";
 
 export { Storage } from "./storage/storage";
-export { InMemoryStorage } from "./storage/in_memory/in_memory_storage";
 
 export { InMemoryQueryFilter } from "./storage/helpers/in_memory_query_filter";
 export { mapQueryForDBFields } from "./storage/helpers/database_query_mapper";
@@ -25,12 +24,12 @@ export {
   asyncDatabase,
 } from "./database/database";
 
-export {
+/* export {
   pluginMigrations,
   type PluginMigrationsOptions,
   type MigrationContext,
   type Migration,
-} from "./plugins/migration";
+} from "./plugins/migration"; */
 
 export {
   type Query,
@@ -41,9 +40,3 @@ export {
 } from "./query/query";
 export { QueryBuilder } from "./query/query_builder";
 export { QueriesManager, QueryCacheData } from "./query/queries_manager";
-
-export {
-  ReactiveCollectionWrapper,
-  ReactiveDatabaseWrapper,
-  AsyncReactiveCollectionWrapper,
-} from "./reactive";

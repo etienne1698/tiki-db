@@ -6,11 +6,11 @@ import {
   QueriesManager,
   Query,
   QueryResult,
-  ReactiveCollectionWrapper,
-  ReactiveDatabaseWrapper,
   Storage,
 } from "../..";
 import { Signal, signal } from "@preact/signals-react";
+import { ReactiveCollectionWrapper } from "../collection_wrapper";
+import { ReactiveDatabaseWrapper } from "../database_wrapper";
 
 export type IReactCollectionWrapper<
   IsAsync extends boolean,

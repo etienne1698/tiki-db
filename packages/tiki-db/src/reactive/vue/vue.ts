@@ -6,12 +6,12 @@ import {
   QueriesManager,
   Query,
   QueryResult,
-  ReactiveCollectionWrapper,
-  ReactiveDatabaseWrapper,
-  AsyncReactiveCollectionWrapper,
   Storage,
 } from "../..";
 import { ref, Ref } from "vue";
+import { ReactiveCollectionWrapper } from "../collection_wrapper";
+import { ReactiveDatabaseWrapper } from "../database_wrapper";
+import { AsyncReactiveCollectionWrapper } from "../async_collection_wrapper";
 
 type IVueCollectionWrapper<
   IsAsync extends boolean,
