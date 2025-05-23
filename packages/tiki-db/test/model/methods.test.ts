@@ -1,10 +1,8 @@
 import { expect, test } from "vitest";
-import { getTestDatabase } from "../in_memory/base";
+import { collections } from "../base_schema";
 
 test("mapToDB should work", () => {
-  const { db } = getTestDatabase();
-
-  const data = db.collections.users.schema.model.mapToDB({
+  const data = collections.users.model.mapToDB({
     email: "",
     firstname: "",
     id: "1",
@@ -21,11 +19,8 @@ test("mapToDB should work", () => {
   });
 });
 
-
 test("mapFromDB should work", () => {
-  const { db } = getTestDatabase();
-
-  const data = db.collections.users.schema.model.mapFromDB({
+  const data = collections.users.model.mapFromDB({
     email: "",
     firstname: "",
     identifier: "1",

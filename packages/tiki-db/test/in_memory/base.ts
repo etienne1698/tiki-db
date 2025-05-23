@@ -1,10 +1,12 @@
 import { database } from "../../src/index";
 import { collections } from "../base_schema";
-import { getTestStorage } from "./base_storage";
+import { InMemoryStorage } from "../../src/storage/in_memory/in_memory_storage";
 
 export function getTestDatabase() {
-  const storage = getTestStorage();
+  const storage = new InMemoryStorage();
+
   const db = database(collections, storage);
+
   db.init();
 
   return {
