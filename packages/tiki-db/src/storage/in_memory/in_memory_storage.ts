@@ -137,7 +137,7 @@ export class InMemoryStorage<
   findFirst<
     C extends CollectionSchema,
     Q extends Query<C, DBFullSchema> = Query<C, DBFullSchema>
-  >(collectionSchema: C, query?: Q | undefined) {
+  >(collectionSchema: C, query?: Q | undefined): QueryResult<C, DBFullSchema, Q>[0] {
     return this.findMany(collectionSchema, query)?.[0];
   }
 

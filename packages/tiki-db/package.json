@@ -1,6 +1,6 @@
 {
   "name": "tiki-db",
-  "version": "0.20.8",
+  "version": "0.20.11",
   "description": "TikiDB provides a structured way to interact with data models and relationships while remaining storage-agnostic.",
   "author": "Etienne ROBERT",
   "license": "MIT",
@@ -21,58 +21,58 @@
     "test:watch": "vitest"
   },
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/index.mjs",
-        "types": "./dist/index.d.ts"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       },
       "require": {
-        "default": "./dist/index.js",
-        "types": "./dist/index.d.ts"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
       }
     },
     "./reactive/vue": {
       "import": {
-        "default": "./dist/reactive/vue/vue.mjs",
-        "types": "./dist/reactive/vue/vue.d.ts"
+        "types": "./dist/reactive/vue/vue.d.ts",
+        "default": "./dist/reactive/vue/vue.js"
       },
       "require": {
-        "default": "./dist/reactive/vue/vue.js",
-        "types": "./dist/reactive/vue/vue.d.ts"
+        "types": "./dist/reactive/vue/vue.d.ts",
+        "default": "./dist/reactive/vue/vue.cjs"
       }
     },
     "./reactive/react": {
       "import": {
-        "default": "./dist/reactive/react/react.mjs",
-        "types": "./dist/reactive/react/react.d.ts"
+        "types": "./dist/reactive/react/react.d.ts",
+        "default": "./dist/reactive/react/react.js"
       },
       "require": {
-        "default": "./dist/reactive/react/react.js",
-        "types": "./dist/reactive/react/react.d.ts"
+        "types": "./dist/reactive/react/react.d.ts",
+        "default": "./dist/reactive/react/react.cjs"
       }
     },
     "./storage/idb": {
       "import": {
-        "default": "./dist/storage/idb/idb_storage.mjs",
-        "types": "./dist/storage/idb/idb_storage.d.ts"
+        "types": "./dist/storage/idb/idb_storage.d.ts",
+        "default": "./dist/storage/idb/idb_storage.js"
       },
       "require": {
-        "default": "./dist/storage/idb/idb_storage.js",
-        "types": "./dist/storage/idb/idb_storage.d.ts"
+        "types": "./dist/storage/idb/idb_storage.d.ts",
+        "default": "./dist/storage/idb/idb_storage.cjs"
       }
     },
     "./storage/memory": {
       "import": {
-        "default": "./dist/storage/in_memory/in_memory_storage.mjs",
-        "types": "./dist/storage/in_memory/in_memory_storage.d.ts"
+        "types": "./dist/storage/in_memory/in_memory_storage.d.ts",
+        "default": "./dist/storage/in_memory/in_memory_storage.js"
       },
       "require": {
-        "default": "./dist/storage/in_memory/in_memory_storage.js",
-        "types": "./dist/storage/in_memory/in_memory_storage.d.ts"
+        "types": "./dist/storage/in_memory/in_memory_storage.d.ts",
+        "default": "./dist/storage/in_memory/in_memory_storage.cjs"
       }
     }
   },

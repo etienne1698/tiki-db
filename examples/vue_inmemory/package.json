@@ -12,8 +12,9 @@
     "@faker-js/faker": "^9.7.0",
     "@tailwindcss/vite": "^4.1.4",
     "tailwindcss": "^4.1.4",
-    "tiki-db": "^0.20.8",
-    "vue": "^3.5.13"
+    "tiki-db": "^0.20.11",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.2",
