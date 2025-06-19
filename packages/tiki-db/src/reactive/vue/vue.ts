@@ -13,7 +13,7 @@ import { ReactiveCollectionWrapper } from "../collection_wrapper";
 import { ReactiveDatabaseWrapper } from "../database_wrapper";
 import { AsyncReactiveCollectionWrapper } from "../async_collection_wrapper";
 
-type IVueCollectionWrapper<
+export type IVueCollectionWrapper<
   IsAsync extends boolean,
   Schema extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
@@ -23,16 +23,16 @@ type IVueCollectionWrapper<
 > & {
   findMany<Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>>(
     query: Q
-  ): Ref<QueryResult<Schema, DBFullSchema, Q>>;
+  ): IsAsync extends true ? Promise<Ref<QueryResult<Schema, DBFullSchema, Q>>> : Ref<QueryResult<Schema, DBFullSchema, Q>>;
 
   findFirst<
     Q extends Query<Schema, DBFullSchema> = Query<Schema, DBFullSchema>
   >(
     query: Q
-  ): Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
+  ):  IsAsync extends true ? Promise<Ref<QueryResult<Schema, DBFullSchema, Q>[0]>> : Ref<QueryResult<Schema, DBFullSchema, Q>[0]>;
 };
 
-class VueCollectionWrapper<
+export class VueCollectionWrapper<
   Schema extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
 > extends ReactiveCollectionWrapper<Schema, DBFullSchema> {
@@ -45,7 +45,7 @@ class VueCollectionWrapper<
   }
 }
 
-class VueAsyncCollectionWrapper<
+export class VueAsyncCollectionWrapper<
   Schema extends CollectionSchema,
   DBFullSchema extends DatabaseFullSchema = DatabaseFullSchema
 > extends AsyncReactiveCollectionWrapper<Schema, DBFullSchema> {
@@ -66,7 +66,7 @@ export function vueDatabaseWrapper<
     database,
     VueCollectionWrapper,
     new QueriesManager<Ref>()
-  ) as ReactiveDatabaseWrapper & {
+  ) as unknown as Omit<ReactiveDatabaseWrapper<false, FullSchema, S>, 'collections'> & {
     collections: {
       [K in keyof FullSchema["schema"]]: IVueCollectionWrapper<
         false,
@@ -85,7 +85,7 @@ export function vueAsyncDatabaseWrapper<
     database,
     VueAsyncCollectionWrapper,
     new QueriesManager<Ref>()
-  ) as ReactiveDatabaseWrapper<true, FullSchema, S> & {
+  ) as unknown as Omit<ReactiveDatabaseWrapper<true, FullSchema, S>, 'collections'> & {
     collections: {
       [K in keyof FullSchema["schema"]]: IVueCollectionWrapper<
         true,

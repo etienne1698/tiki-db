@@ -22,7 +22,6 @@ import { seed } from "./data/seed";
 
 const database = await useDatabase(db);
 
-
 if (import.meta.server) {
   seed(database);
 }

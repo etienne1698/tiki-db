@@ -3,9 +3,9 @@ import {
   type Database,
   type Storage,
   QueriesManager,
-  type InMemoryStorage,
 } from "tiki-db";
-import { VueCollectionWrapper, VueDatabaseWrapper } from "tiki-db-vue";
+import { VueCollectionWrapper } from "tiki-db/reactive/vue";
+import type { InMemoryStorage } from "tiki-db/storage/memory";
 import { NuxtDatabases } from "../utils/NuxtDatabases";
 
 /**

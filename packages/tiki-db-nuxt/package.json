@@ -34,8 +34,7 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.17.1",
-    "tiki-db-vue": "^0.18.15"
+    "@nuxt/kit": "^3.17.1"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.4.0",
@@ -52,6 +51,6 @@
     "vue-tsc": "^2.2.10"
   },
   "peerDependencies": {
-    "tiki-db": "^0.18.15"
+    "tiki-db": "^0.20.12"
   }
 }
