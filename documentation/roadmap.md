@@ -13,7 +13,7 @@
 | Reactive Framework | Status | NPM package     |
 | ------------------ | ------ | --------------- |
 | `Vue`              | ✅     | `tiki-db-vue`   |
-| `Nuxt`             | 🚧     | `tiki-db-nuxt`  |
+| `Nuxt`             | ❌     | `tiki-db-nuxt`  |
 | `React`            | ✅     | `tiki-db-react` |
 | `Angular`          | ❌     | -               |
 | `Svelte`           | ❌     | -               |
@@ -22,14 +22,9 @@
 
 | Extension        | Status | Notes                                         | NPM package |
 | ---------------- | ------ | --------------------------------------------- | ----------- |
-| `Migrations`     | 🚧     | Migrations plugin (for storages that need it) | -           |
-| `syncEngine`     | 🚧     | Core sync logic                               | -           |
-| `Zod validators` | 🚧     | Create zod validators from your DB schema     | -           |
-
-| CLI description Status                 | Status | Command                               |
-| -------------------------------------- | ------ | ------------------------------------- |
-| Generate tests for your storage        | 🚧     | `npx tiki-db-storage-contributor-cli` |
-| Generate migrations from you DB schema | ❌     | -                                     |
+| `Migrations`     | 🤔      | Migrations plugin (for storages that need it) | -           |
+| `syncEngine`     | 🤔     | Core sync logic                               | -           |
+| `Zod validators` | 🤔     | Create zod validators from your DB schema     | -           |
 
 ---
 
