@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "idb": "^8.0.3",
-    "tiki-db": "^0.20.11",
-    "vue": "^3.5.13"
+    "tiki-db": "^0.20.13",
+    "vue": "^3.5.17"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
